@@ -13,7 +13,7 @@ public class GameState {
 	
 	public int AimX, AimY, locX, locY, diam;
 	public boolean gameOver;
-	
+	public double tankBodyAngle;
 	private boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
 	private boolean mouseStateChanged;
 	private int mouseX, mouseY;	
@@ -37,6 +37,8 @@ public class GameState {
 		mouseX = 0;
 		mouseY = 0;
 		//
+        tankBodyAngle = 0;
+        //
 		keyHandler = new KeyHandler();
 		mouseHandler = new MouseHandler();
 	}
@@ -49,14 +51,22 @@ public class GameState {
 			AimY = mouseY - diam / 2;
 			AimX = mouseX - diam / 2;
 		}
-		if (keyUP)
-			locY -= 8;
-		if (keyDOWN)
-			locY += 8;
-		if (keyLEFT)
-			locX -= 8;
-		if (keyRIGHT)
-			locX += 8;
+		if (keyUP) {
+            locY -= 8;
+            changeTankBodyAngle("up");
+        }
+		if (keyDOWN) {
+            locY += 8;
+            changeTankBodyAngle("down");
+        }
+		if (keyLEFT) {
+            locX -= 8;
+            changeTankBodyAngle("left");
+        }
+		if (keyRIGHT) {
+            locX += 8;
+            changeTankBodyAngle("right");
+        }
 
 		locX = Math.max(locX, 0);
 		locX = Math.min(locX, GameFrame.GAME_WIDTH - diam);
@@ -154,6 +164,46 @@ public class GameState {
             mouseX = e.getX();
             mouseY = e.getY();
         }
+
+    }
+
+    public void changeTankBodyAngle (String orientation) {
+	    double firstQuarter = 1.570796;
+	    double secondQuarter = 3.141592;
+	    double thirdQuarter = -1.570796;
+	    double forthQuarter = -3.141592;
+	    double zeroQuarter = 0;
+	    double move = 0.03272492347;
+        switch (orientation) {
+            case "up":
+                if (tankBodyAngle <= firstQuarter && tankBodyAngle >= thirdQuarter && (Math.abs(tankBodyAngle-firstQuarter)) > 0.03)
+                    tankBodyAngle+= move;
+                else if ((Math.abs(tankBodyAngle-firstQuarter)) > 0.03)
+                    tankBodyAngle-= move;
+                break;
+            case "right":
+                if (tankBodyAngle >= zeroQuarter && tankBodyAngle <= secondQuarter && (Math.abs(tankBodyAngle-zeroQuarter)) > 0.03)
+                    tankBodyAngle-= move;
+                else if ((Math.abs(tankBodyAngle-zeroQuarter)) > 0.03)
+                    tankBodyAngle+= move;
+                break;
+            case "down":
+                if (tankBodyAngle <= firstQuarter && tankBodyAngle >= thirdQuarter && (Math.abs(tankBodyAngle-thirdQuarter)) > 0.03)
+                    tankBodyAngle-= move;
+                else if ((Math.abs(tankBodyAngle-thirdQuarter)) > 0.03)
+                    tankBodyAngle+= move;
+                break;
+            case "left":
+                if (tankBodyAngle >= zeroQuarter && tankBodyAngle <= secondQuarter && (Math.abs(tankBodyAngle-secondQuarter)) > 0.03)
+                    tankBodyAngle+= move;
+                else if ((Math.abs(tankBodyAngle-secondQuarter)) > 0.03)
+                    tankBodyAngle-= move;
+                break;
+        }
+        while (tankBodyAngle > 3.14)
+            tankBodyAngle -= (6.28);
+        while (tankBodyAngle <= -3)
+            tankBodyAngle += (6.28);
 
     }
 

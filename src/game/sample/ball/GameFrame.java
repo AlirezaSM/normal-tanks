@@ -109,17 +109,15 @@ public class GameFrame extends JFrame {
 	//	g2d.setColor(Color.BLACK);
 	//	g2d.fillOval(state.locX, state.locY, state.diam, state.diam);
 
-		g2d.drawImage(tankBody,state.locX,state.locY,null);
 
-        double locationX = tankGun.getWidth() / 2;
-        double locationY = tankGun.getHeight() / 2;
-        double angle = Math.atan2(state.AimY - state.locY,state.AimX - state.locX);
-        AffineTransform tx = AffineTransform.getRotateInstance(angle, locationX , locationY);
-        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+        // Drawing the rotated image at the required drawing locations
 
-// Drawing the rotated image at the required drawing locations
-        g2d.drawImage(op.filter(tankGun, null), state.locX, state.locY, null);
-	//
+        double tankGunAngle = Math.atan2(state.AimY - state.locY,state.AimX - state.locX);
+
+        g2d.drawImage(rotatePic(tankBody,state.tankBodyAngle),state.locX,state.locY,null);
+
+        g2d.drawImage(rotatePic(tankGun,tankGunAngle), state.locX, state.locY, null);
+
         // 	g2d.drawImage(tankGun,state.locX,state.locY,null);
 
 
@@ -135,8 +133,8 @@ public class GameFrame extends JFrame {
 				avg += fps;
 			}
 			avg /= fpsHistory.size();
-			String str = String.format("Average FPS = %.1f , Last Interval = %d ms, LocX: %d, LocY: %d, AimX = %d, AimY = %d",
-					avg, (currentRender - lastRender),state.locX,state.locY,state.AimX,state.AimY);
+			String str = String.format("Average FPS = %.1f , Last Interval = %d ms, LocX: %d, LocY: %d, AimX = %d, AimY = %d, angle = %f",
+					avg, (currentRender - lastRender),state.locX,state.locY,state.AimX,state.AimY,state.tankBodyAngle);
 			g2d.setColor(Color.CYAN);
 			g2d.setFont(g2d.getFont().deriveFont(18.0f));
 			int strWidth = g2d.getFontMetrics().stringWidth(str);
@@ -159,5 +157,13 @@ public class GameFrame extends JFrame {
 			g2d.drawString(str, (GAME_WIDTH - strWidth) / 2, GAME_HEIGHT / 2);
 		}
 	}
+
+	public BufferedImage rotatePic (BufferedImage img, double angle) {
+        double locationX = img.getWidth() / 2;
+        double locationY = img.getHeight() / 2;
+        AffineTransform tx = AffineTransform.getRotateInstance(angle, locationX , locationY);
+        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+        return op.filter(img,null);
+    }
 	
 }

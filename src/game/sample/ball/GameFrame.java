@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -29,7 +31,8 @@ public class GameFrame extends JFrame {
 	public static final int GAME_WIDTH = 16 * GAME_HEIGHT / 9;  // wide aspect ratio
 
 	//uncomment all /*...*/ in the class for using Tank icon instead of a simple circle
-	/*private BufferedImage image;*/ 
+	private BufferedImage tankBody;
+	private BufferedImage tankGun;
 
 	private long lastRender;
 	private ArrayList<Float> fpsHistory;
@@ -43,12 +46,13 @@ public class GameFrame extends JFrame {
 		lastRender = -1;
 		fpsHistory = new ArrayList<>(100);
 
-	/*	try{
-			image = ImageIO.read(new File("Icon.png"));
+		try{
+			tankBody = ImageIO.read(new File("tankBody.png"));
+			tankGun = ImageIO.read(new File("tankGun.png"));
 		}
 		catch(IOException e){
 			System.out.println(e);
-		}*/
+		}
 	}
 	
 	/**
@@ -102,10 +106,21 @@ public class GameFrame extends JFrame {
 		g2d.setColor(Color.GRAY);
 		g2d.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 		// Draw ball
-		g2d.setColor(Color.BLACK);
-		g2d.fillOval(state.locX, state.locY, state.diam, state.diam);
+	//	g2d.setColor(Color.BLACK);
+	//	g2d.fillOval(state.locX, state.locY, state.diam, state.diam);
 
-/*		g2d.drawImage(image,state.locX,state.locY,null);*/
+		g2d.drawImage(tankBody,state.locX,state.locY,null);
+
+        double locationX = tankGun.getWidth() / 2;
+        double locationY = tankGun.getHeight() / 2;
+        double angle = Math.atan2(state.AimY - state.locY,state.AimX - state.locX);
+        AffineTransform tx = AffineTransform.getRotateInstance(angle, locationX , locationY);
+        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+
+// Drawing the rotated image at the required drawing locations
+        g2d.drawImage(op.filter(tankGun, null), state.locX, state.locY, null);
+	//
+        // 	g2d.drawImage(tankGun,state.locX,state.locY,null);
 
 
 		// Print FPS info
@@ -120,8 +135,8 @@ public class GameFrame extends JFrame {
 				avg += fps;
 			}
 			avg /= fpsHistory.size();
-			String str = String.format("Average FPS = %.1f , Last Interval = %d ms",
-					avg, (currentRender - lastRender));
+			String str = String.format("Average FPS = %.1f , Last Interval = %d ms, LocX: %d, LocY: %d, AimX = %d, AimY = %d",
+					avg, (currentRender - lastRender),state.locX,state.locY,state.AimX,state.AimY);
 			g2d.setColor(Color.CYAN);
 			g2d.setFont(g2d.getFont().deriveFont(18.0f));
 			int strWidth = g2d.getFontMetrics().stringWidth(str);

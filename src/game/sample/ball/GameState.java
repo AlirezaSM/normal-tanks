@@ -1,13 +1,7 @@
 /*** In The Name of Allah ***/
 package game.sample.ball;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 
 /**
  * This class holds the state of game and all of its elements.
@@ -17,11 +11,11 @@ import java.awt.event.MouseMotionListener;
  */
 public class GameState {
 	
-	public int locX, locY, diam;
+	public int AimX, AimY, locX, locY, diam;
 	public boolean gameOver;
 	
 	private boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
-	private boolean mousePress;
+	private boolean mouseStateChanged;
 	private int mouseX, mouseY;	
 	private KeyHandler keyHandler;
 	private MouseHandler mouseHandler;
@@ -29,6 +23,8 @@ public class GameState {
 	public GameState() {
 		locX = 100;
 		locY = 100;
+		AimX = 150;
+		AimY = 150;
 		diam = 32;
 		gameOver = false;
 		//
@@ -37,7 +33,7 @@ public class GameState {
 		keyRIGHT = false;
 		keyLEFT = false;
 		//
-		mousePress = false;
+		mouseStateChanged = false;
 		mouseX = 0;
 		mouseY = 0;
 		//
@@ -49,9 +45,9 @@ public class GameState {
 	 * The method which updates the game state.
 	 */
 	public void update() {
-		if (mousePress) {
-			locY = mouseY - diam / 2;
-			locX = mouseX - diam / 2;
+		if (mouseStateChanged) {
+			AimY = mouseY - diam / 2;
+			AimX = mouseX - diam / 2;
 		}
 		if (keyUP)
 			locY -= 8;
@@ -138,12 +134,12 @@ public class GameState {
 		public void mousePressed(MouseEvent e) {
 			mouseX = e.getX();
 			mouseY = e.getY();
-			mousePress = true;
+			mouseStateChanged = true;
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			mousePress = false;
+			mouseStateChanged = false;
 		}
 
 		@Override
@@ -151,6 +147,15 @@ public class GameState {
 			mouseX = e.getX();
 			mouseY = e.getY();
 		}
-	}
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
+            mouseStateChanged = true;
+            mouseX = e.getX();
+            mouseY = e.getY();
+        }
+
+    }
+
 }
 

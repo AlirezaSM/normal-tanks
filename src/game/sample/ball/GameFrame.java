@@ -34,16 +34,19 @@ public class GameFrame extends JFrame {
 	private BufferedImage tankBody;
 	private BufferedImage tankGun;
 
+
 	private long lastRender;
 	private ArrayList<Float> fpsHistory;
 
 	private BufferStrategy bufferStrategy;
+	Map a = new Map();
 	
 	public GameFrame(String title) {
 		super(title);
 		setResizable(false);
 		setSize(GAME_WIDTH, GAME_HEIGHT);
 		lastRender = -1;
+		ThreadPool.init();
 		fpsHistory = new ArrayList<>(100);
 
 		try{
@@ -103,11 +106,17 @@ public class GameFrame extends JFrame {
 	 */
 	private void doRendering(Graphics2D g2d, GameState state) {
 		// Draw background
-		g2d.setColor(Color.GRAY);
-		g2d.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+	//	g2d.setColor(Color.GRAY);
+	//	g2d.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 		// Draw ball
 	//	g2d.setColor(Color.BLACK);
 	//	g2d.fillOval(state.locX, state.locY, state.diam, state.diam);
+
+
+        // draw the map
+
+		a.designMap();
+        a.drawMap(g2d);
 
 
         // Drawing the rotated image at the required drawing locations
@@ -165,5 +174,6 @@ public class GameFrame extends JFrame {
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
         return op.filter(img,null);
     }
-	
+
+
 }

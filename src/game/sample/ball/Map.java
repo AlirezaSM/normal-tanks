@@ -33,7 +33,7 @@ public class Map implements Serializable{
 
     public Map() {
         try {
-            soilImg = ImageIO.read(new File("soil1.png"));
+            soilImg = ImageIO.read(new File("soil.png"));
             plantImg = ImageIO.read(new File("plant.png"));
             wallImg = ImageIO.read(new File("wall.png"));
             plantedSoilImg = ImageIO.read(new File("plantedSoil.png"));

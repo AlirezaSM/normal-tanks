@@ -11,7 +11,7 @@ import java.awt.event.*;
  */
 public class GameState {
 	
-	public int AimX, AimY, locX, locY, diam;
+	public int tankCenterX,tankCenterY,aimX, aimY, cameraY, diam;
 	public boolean gameOver;
 	public double tankBodyAngle;
 	private boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
@@ -21,11 +21,12 @@ public class GameState {
 	private MouseHandler mouseHandler;
 	
 	public GameState() {
-		locX = 100;
-		locY = 100;
-		AimX = 150;
-		AimY = 150;
-		diam = 32;
+		cameraY = 0;
+		tankCenterX = 190;
+		tankCenterY = 190;
+		aimX = 150;
+		aimY = 150;
+		diam = 75;
 		gameOver = false;
 		//
 		keyUP = false;
@@ -48,30 +49,42 @@ public class GameState {
 	 */
 	public void update() {
 		if (mouseStateChanged) {
-			AimY = mouseY - diam / 2;
-			AimX = mouseX - diam / 2;
+			aimX = mouseX;
+			aimY = mouseY;
 		}
 		if (keyUP) {
-            locY -= 8;
+		    if (Math.abs(tankCenterY - (diam)) > 100)
+                tankCenterY -= 8;
+		    else
+                cameraY += 8;
             changeTankBodyAngle("up");
         }
 		if (keyDOWN) {
-            locY += 8;
+            if (Math.abs(tankCenterY - (720 - diam)) < 10)
+                cameraY -= 8;
+            else
+                tankCenterY += 8;
             changeTankBodyAngle("down");
         }
 		if (keyLEFT) {
-            locX -= 8;
+            tankCenterX -= 8;
             changeTankBodyAngle("left");
         }
 		if (keyRIGHT) {
-            locX += 8;
+            tankCenterX += 8;
             changeTankBodyAngle("right");
         }
 
-		locX = Math.max(locX, 0);
-		locX = Math.min(locX, GameFrame.GAME_WIDTH - diam);
-		locY = Math.max(locY, 0);
-		locY = Math.min(locY, GameFrame.GAME_HEIGHT - diam);
+		tankCenterX = Math.max(tankCenterX, diam);
+		tankCenterX = Math.min(tankCenterX, GameFrame.GAME_WIDTH - diam);
+		tankCenterY = Math.max(tankCenterY, diam);
+		tankCenterY = Math.min(tankCenterY, GameFrame.GAME_HEIGHT - diam);
+
+		if (cameraY < 0)
+		    cameraY = 0;
+		if (cameraY > 2850)
+		    cameraY = 2850;
+
 	}
 	
 	

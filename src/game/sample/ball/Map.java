@@ -19,8 +19,8 @@ public class Map implements Serializable{
     public static int tileHorizontalSize = 32;
     public static int tileVerticalSize = 24;
     public static int numOfHorizontalTiles = 40;
-    public static int numOfVerticalTiles = 30;
-    public static int numOfPlantedSoilPlants = 20;
+    public static int numOfVerticalTiles = 150;
+    public static int numOfPlantedSoilPlants = 400;
     static int [][] tiles = new int[numOfHorizontalTiles][numOfVerticalTiles];
     public BufferedImage soilImg;
     public BufferedImage plantImg;
@@ -46,11 +46,6 @@ public class Map implements Serializable{
         mapImages.put(plantedSoil,plantedSoilImg);
         mapImages.put(wall,wallImg);
         Random r = new Random();
-        for (int i = 0; i < numOfPlantedSoilPlants;i++ )
-        plantedSoilPoints.put(r.nextInt(numOfHorizontalTiles),r.nextInt(numOfHorizontalTiles));
-    }
-
-    public void designMap () {
 
         for (int i = 0; i < numOfHorizontalTiles;i++) {
             for (int j = 0; j < numOfVerticalTiles; j++) {
@@ -58,12 +53,12 @@ public class Map implements Serializable{
             }
         }
 
-        for (int i = 0; i < numOfHorizontalTiles; i++) {
-            for (int j = 0; j < numOfVerticalTiles ; j++) {
-                if (plantedSoilPoints.containsKey(i) && plantedSoilPoints.get(i) == j)
-                    tiles[i][j] = plantedSoil;
-            }
-        }
+        for (int i = 0; i < numOfPlantedSoilPlants;i++ )
+            tiles[r.nextInt(numOfHorizontalTiles)][r.nextInt(numOfVerticalTiles)] = plantedSoil;
+
+    }
+
+    public void designMap () {
 
         for (int i = 30; i < 33; i++){
             for (int j = 0; j < 10;j++) {
@@ -78,13 +73,15 @@ public class Map implements Serializable{
 
     }
 
-    public void drawMap (Graphics2D g2d) {
+    public void drawMap (Graphics2D g2d,int startingY) {
 
-        for (int i = 0; i < numOfHorizontalTiles;i++) {
-          for (int j = 0; j < numOfVerticalTiles;j++) {
-              int tileImg = tiles[i][j];
-              g2d.drawImage(mapImages.get(tileImg),i * tileHorizontalSize, j * tileVerticalSize,null );
-          }
+        for (int i = 0; i < numOfHorizontalTiles; i++) {
+            if (startingY / tileVerticalSize >= 0) {
+                for (int j = startingY / tileVerticalSize; j < ((startingY / tileVerticalSize) + (numOfVerticalTiles / 5)); j++) {
+                    int tileImg = tiles[i][j];
+                    g2d.drawImage(mapImages.get(tileImg), i * tileHorizontalSize, 720 - (j - startingY / tileVerticalSize) * tileVerticalSize, null);
+                }
+            }
         }
     }
 

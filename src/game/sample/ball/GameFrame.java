@@ -120,7 +120,7 @@ public class GameFrame extends JFrame {
 
         double tankGunAngle = Math.atan2((state.aimY - state.tankCenterY),(state.aimX - state.tankCenterX ));
 
-        g2d.drawImage(rotatePic(tankBody,state.tankBodyAngle),state.tankCenterX - 90,state.tankCenterY - 90,null);
+        g2d.drawImage(rotatePic(tankBody, state.tankBodyAngle),state.tankCenterX - 90,state.tankCenterY - 90,null);
 
         g2d.drawImage(rotatePic(tankGun, tankGunAngle), state.tankCenterX - 90, state.tankCenterY -90, null);
 
@@ -142,9 +142,9 @@ public class GameFrame extends JFrame {
 				avg += fps;
 			}
 			avg /= fpsHistory.size();
-			String str = String.format("Average FPS = %.1f , Last Interval = %d ms,tankX = %d, tankY = %d,aimX = %d, aimY = %d, angle = %.1f" +
+			String str = String.format("Average FPS = %.1f , Last Interval = %d ms,tankX = %d, tankY = %d,aimX = %d, aimY = %d, direction = %d" +
 							"cameraY = %d",
-					avg, (currentRender - lastRender),state.tankCenterX,state.tankCenterY,state.aimX,state.aimY, state.tankBodyAngle * 57.29,state.cameraY);
+					avg, (currentRender - lastRender),state.tankCenterX,state.tankCenterY,state.aimX,state.aimY, state.tankDirection, state.cameraY);
 			g2d.setColor(Color.CYAN);
 			g2d.setFont(g2d.getFont().deriveFont(18.0f));
 			int strWidth = g2d.getFontMetrics().stringWidth(str);

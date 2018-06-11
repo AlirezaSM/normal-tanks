@@ -11,17 +11,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
+
 public class Map implements Serializable{
     public static int soil = 1;
     public static int plant = 2;
     public static int plantedSoil = 3;
     public static int wall = 4;
-    public static int tileHorizontalSize = 32;
-    public static int tileVerticalSize = 24;
-    public static int numOfHorizontalTiles = 40;
-    public static int numOfVerticalTiles = 150;
     public static int numOfPlantedSoilPlants = 400;
-    static int [][] tiles = new int[numOfHorizontalTiles][numOfVerticalTiles];
+    public static int numOfVerticalScreens = 5;
+    static Tile [][] tiles = new Tile[Tile.numOfHorizontalTiles][Tile.numOfVerticalTiles];
     public BufferedImage soilImg;
     public BufferedImage plantImg;
     public BufferedImage wallImg;
@@ -47,14 +45,14 @@ public class Map implements Serializable{
         mapImages.put(wall,wallImg);
         Random r = new Random();
 
-        for (int i = 0; i < numOfHorizontalTiles;i++) {
-            for (int j = 0; j < numOfVerticalTiles; j++) {
-                tiles[i][j] = soil;
+        for (int i = 0; i < Tile.numOfHorizontalTiles;i++) {
+            for (int j = 0; j < Tile.numOfVerticalTiles; j++) {
+                tiles[i][j] = new Tile(soil,false);
             }
         }
 
         for (int i = 0; i < numOfPlantedSoilPlants;i++ )
-            tiles[r.nextInt(numOfHorizontalTiles)][r.nextInt(numOfVerticalTiles)] = plantedSoil;
+            tiles[r.nextInt(Tile.numOfHorizontalTiles)][r.nextInt(Tile.numOfVerticalTiles)] = new Tile(plantedSoil,false);
 
     }
 
@@ -62,30 +60,29 @@ public class Map implements Serializable{
 
         for (int i = 30; i < 33; i++){
             for (int j = 0; j < 10;j++) {
-                tiles[i][j] = wall;
+                tiles[i][j] = new Tile(wall,true);
             }
         }
         for (int i = 30; i < 33; i++){
-            for (int j = 20; j < numOfVerticalTiles;j++) {
-                tiles[i][j] = wall;
+            for (int j = 20; j < Tile.numOfVerticalTiles;j++) {
+                tiles[i][j] = new Tile (wall,true);
             }
         }
-
     }
 
     public void drawMap (Graphics2D g2d,int startingY) {
 
-        for (int i = 0; i < numOfHorizontalTiles; i++) {
-            if (startingY / tileVerticalSize >= 0) {
-                for (int j = startingY / tileVerticalSize; j < ((startingY / tileVerticalSize) + (numOfVerticalTiles / 5)); j++) {
-                    int tileImg = tiles[i][j];
-                    g2d.drawImage(mapImages.get(tileImg), i * tileHorizontalSize, 720 - (j - startingY / tileVerticalSize) * tileVerticalSize, null);
+        for (int i = 0; i < Tile.numOfHorizontalTiles; i++) {
+            if (startingY / Tile.tileHeight >= 0) {
+                for (int j = startingY / Tile.tileHeight; j < ((startingY / Tile.tileHeight) + (Tile.numOfVerticalTiles / 5)); j++) {
+                    int tileImg = tiles[i][j].getImg();
+                    g2d.drawImage(mapImages.get(tileImg), i * Tile.tileWidth, 720 - (j - startingY / Tile.tileHeight) * Tile.tileHeight, null);
                 }
             }
         }
     }
 
-    public static int[][] getTiles() {
+    public static Tile[][] getTiles() {
         return tiles;
     }
 }

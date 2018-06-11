@@ -3,6 +3,7 @@ package game.sample.ball;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.logging.Level;
 
 /**
  * This class holds the state of game and all of its elements.
@@ -244,43 +245,190 @@ public class GameState {
     public void checkForCollision () {
         int startTile = cameraY / Tile.tileHeight  ;
         int endTile = startTile + (Tile.numOfVerticalTiles / Map.numOfVerticalScreens);
-        Point tankCenterTile = new Point(tankCenterX / Tile.tileWidth, startTile + (tankCenterY / Tile.tileHeight));
-        if (Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY()].isObstacle() && tankDirection == Right){
+        Point tankCenterTile = new Point(tankCenterX / Tile.tileWidth, startTile + ((720 - tankCenterY) / Tile.tileHeight));
+
+        if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY()].isObstacle()){
             tankCenterX -= 8;
         }
-        if (Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY()].isObstacle() && tankDirection == LEFT){
-            tankCenterX += 8;
-        }
-        if (Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() + 2].isObstacle() && tankDirection == UP){
-            tankCenterY += 8;
-        }
-        if (Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() - 2].isObstacle() && tankDirection == DOWN){
-            tankCenterY -= 8;
-        }
-        if (Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY()].isObstacle() && tankDirection == Right){
+        else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() + 1].isObstacle()){
             tankCenterX -= 8;
         }
-        if (Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY()].isObstacle() && tankDirection == LEFT){
-            tankCenterX += 8;
-        }
-        if (Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() + 1].isObstacle() && tankDirection == UP){
-            tankCenterY += 8;
-        }
-        if (Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() - 1].isObstacle() && tankDirection == DOWN){
-            tankCenterY -= 8;
-        }
-        if (Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY()].isObstacle() && tankDirection == Right){
+        else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() + 2].isObstacle()){
             tankCenterX -= 8;
         }
-        if (Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY()].isObstacle() && tankDirection == LEFT){
+        else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() - 1].isObstacle()){
+            tankCenterX -= 8;
+        }
+        else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() - 2].isObstacle()){
+            tankCenterX -= 8;
+        }
+        else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY()].isObstacle()){
+            tankCenterX -= 8;
+        }
+        else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY() + 1].isObstacle()){
+            tankCenterX -= 8;
+        }
+        else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY() + 2].isObstacle()){
+            tankCenterX -= 8;
+        }
+        else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY() - 1].isObstacle()){
+            tankCenterX -= 8;
+        }
+        else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY() - 2].isObstacle()){
+            tankCenterX -= 8;
+        }
+        else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY()].isObstacle()){
+            tankCenterX -= 8;
+        }
+        else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY() + 1].isObstacle()){
+            tankCenterX -= 8;
+        }
+        else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY() + 2].isObstacle()){
+            tankCenterX -= 8;
+        }
+        else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY() - 1].isObstacle()){
+            tankCenterX -= 8;
+        }
+        else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY() - 2].isObstacle()){
+            tankCenterX -= 8;
+        }
+        else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY()].isObstacle()){
             tankCenterX += 8;
         }
-        if (Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY()].isObstacle() && tankDirection == UP){
+        else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() + 1].isObstacle()){
+            tankCenterX += 8;
+        }
+        else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() + 2].isObstacle()){
+            tankCenterX += 8;
+        }
+        else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() - 1].isObstacle()){
+            tankCenterX += 8;
+        }
+        else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() - 2].isObstacle()){
+            tankCenterX += 8;
+        }
+        else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY()].isObstacle()){
+            tankCenterX += 8;
+        }
+        else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY() + 1].isObstacle()){
+            tankCenterX += 8;
+        }
+        else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY() + 2].isObstacle()){
+            tankCenterX += 8;
+        }
+        else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY() - 1].isObstacle()){
+            tankCenterX += 8;
+        }
+        else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY() - 2].isObstacle()){
+            tankCenterX += 8;
+        }
+        else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY()].isObstacle()){
+            tankCenterX += 8;
+        }
+        else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY() + 1].isObstacle()){
+            tankCenterX += 8;
+        }
+        else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY() + 2].isObstacle()){
+            tankCenterX += 8;
+        }
+        else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY() - 1].isObstacle()){
+            tankCenterX += 8;
+        }
+        else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY() - 2].isObstacle()){
+            tankCenterX += 8;
+        }
+        else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY()].isObstacle()){
             tankCenterY += 8;
         }
-        if (Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY()].isObstacle() && tankDirection == DOWN){
+        else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY()].isObstacle()){
+            tankCenterY += 8;
+        }
+        else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY()].isObstacle()){
+            tankCenterY += 8;
+        }
+        else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY()].isObstacle()){
+            tankCenterY += 8;
+        }
+        else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY()].isObstacle()){
+            tankCenterY += 8;
+        }
+        else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() + 1].isObstacle()){
+            tankCenterY += 8;
+        }
+        else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY() + 1].isObstacle()){
+            tankCenterY += 8;
+        }
+        else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY() + 1].isObstacle()){
+            tankCenterY += 8;
+        }
+        else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY() + 1].isObstacle()){
+            tankCenterY += 8;
+        }
+        else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY() + 1].isObstacle()){
+            tankCenterY += 8;
+        }
+        else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() + 2].isObstacle()){
+            tankCenterY += 8;
+        }
+        else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY() + 2].isObstacle()){
+            tankCenterY += 8;
+        }
+        else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY() + 2].isObstacle()){
+            tankCenterY += 8;
+        }
+        else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY() + 2].isObstacle()){
+            tankCenterY += 8;
+        }
+        else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY() + 2].isObstacle()){
+            tankCenterY += 8;
+        }
+
+        else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY()].isObstacle()){
             tankCenterY -= 8;
         }
+        else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY()].isObstacle()){
+            tankCenterY -= 8;
+        }
+        else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY()].isObstacle()){
+            tankCenterY -= 8;
+        }
+        else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY()].isObstacle()){
+            tankCenterY -= 8;
+        }
+        else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY()].isObstacle()){
+            tankCenterY -= 8;
+        }
+        else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() - 1].isObstacle()){
+            tankCenterY -= 8;
+        }
+        else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY() - 1].isObstacle()){
+            tankCenterY -= 8;
+        }
+        else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY() - 1].isObstacle()){
+            tankCenterY -= 8;
+        }
+        else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY() - 1].isObstacle()){
+            tankCenterY -= 8;
+        }
+        else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY() - 1].isObstacle()){
+            tankCenterY -= 8;
+        }
+        else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() - 2].isObstacle()){
+            tankCenterY -= 8;
+        }
+        else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY() - 2].isObstacle()){
+            tankCenterY -= 8;
+        }
+        else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY() - 2].isObstacle()){
+            tankCenterY -= 8;
+        }
+        else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY() - 2].isObstacle()){
+            tankCenterY -= 8;
+        }
+        else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY() - 2].isObstacle()){
+            tankCenterY -= 8;
+        }
+
     }
 }
 

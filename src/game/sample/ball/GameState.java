@@ -1,6 +1,7 @@
 /*** In The Name of Allah ***/
 package game.sample.ball;
 
+import java.awt.*;
 import java.awt.event.*;
 
 /**
@@ -16,10 +17,15 @@ public class GameState {
 	public double tankBodyAngle;
 	private boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
 	private boolean mouseStateChanged;
-	private int mouseX, mouseY;	
+	private int mouseX, mouseY;
+	public int tankDirection;
 	private KeyHandler keyHandler;
 	private MouseHandler mouseHandler;
-	
+	public static final int Right = 1;
+	public static final int UP = 2;
+	public static final int LEFT = 3;
+	public static final int DOWN = 4;
+
 	public GameState() {
 		cameraY = 0;
 		tankCenterX = 190;
@@ -58,21 +64,25 @@ public class GameState {
 		    else
                 cameraY += 8;
             changeTankBodyAngle("up");
+            tankDirection = UP;
         }
 		if (keyDOWN) {
-            if (Math.abs(tankCenterY - (720 - diam)) < 10)
+            if (Math.abs(tankCenterY - (720 - diam)) < 25)
                 cameraY -= 8;
             else
                 tankCenterY += 8;
             changeTankBodyAngle("down");
+            tankDirection = DOWN;
         }
 		if (keyLEFT) {
             tankCenterX -= 8;
             changeTankBodyAngle("left");
+            tankDirection = LEFT;
         }
 		if (keyRIGHT) {
             tankCenterX += 8;
             changeTankBodyAngle("right");
+            tankDirection = Right;
         }
 
 		tankCenterX = Math.max(tankCenterX, diam);
@@ -84,6 +94,17 @@ public class GameState {
 		    cameraY = 0;
 		if (cameraY > 2850)
 		    cameraY = 2850;
+
+		// check for walls collision
+
+     /*   if (cameraY < 120)
+            if (Math.abs(tankCenterX + diam - 960) < 5 && (tankCenterY  < 250 || tankCenterY > 500))
+                tankCenterX -= 8;
+        if (cameraY > 1900 && cameraY < 2000)
+            if (Math.abs(tankCenterX + diam - 960) < 5)
+                tankCenterX -= 8; */
+
+        checkForCollision();
 
 	}
 	
@@ -220,5 +241,46 @@ public class GameState {
 
     }
 
+    public void checkForCollision () {
+        int startTile = cameraY / Tile.tileHeight  ;
+        int endTile = startTile + (Tile.numOfVerticalTiles / Map.numOfVerticalScreens);
+        Point tankCenterTile = new Point(tankCenterX / Tile.tileWidth, startTile + (tankCenterY / Tile.tileHeight));
+        if (Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY()].isObstacle() && tankDirection == Right){
+            tankCenterX -= 8;
+        }
+        if (Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY()].isObstacle() && tankDirection == LEFT){
+            tankCenterX += 8;
+        }
+        if (Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() + 2].isObstacle() && tankDirection == UP){
+            tankCenterY += 8;
+        }
+        if (Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() - 2].isObstacle() && tankDirection == DOWN){
+            tankCenterY -= 8;
+        }
+        if (Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY()].isObstacle() && tankDirection == Right){
+            tankCenterX -= 8;
+        }
+        if (Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY()].isObstacle() && tankDirection == LEFT){
+            tankCenterX += 8;
+        }
+        if (Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() + 1].isObstacle() && tankDirection == UP){
+            tankCenterY += 8;
+        }
+        if (Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() - 1].isObstacle() && tankDirection == DOWN){
+            tankCenterY -= 8;
+        }
+        if (Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY()].isObstacle() && tankDirection == Right){
+            tankCenterX -= 8;
+        }
+        if (Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY()].isObstacle() && tankDirection == LEFT){
+            tankCenterX += 8;
+        }
+        if (Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY()].isObstacle() && tankDirection == UP){
+            tankCenterY += 8;
+        }
+        if (Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY()].isObstacle() && tankDirection == DOWN){
+            tankCenterY -= 8;
+        }
+    }
 }
 

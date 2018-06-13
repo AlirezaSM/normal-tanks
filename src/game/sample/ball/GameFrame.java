@@ -1,10 +1,7 @@
 /*** In The Name of Allah ***/
 package game.sample.ball;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferStrategy;
@@ -36,6 +33,7 @@ public class GameFrame extends JFrame {
 	private BufferedImage opponentTank;
 	private BufferedImage opponentTankGun;
 
+    ConstantEnemy ab = new ConstantEnemy();
 
 	private long lastRender;
 	private ArrayList<Float> fpsHistory;
@@ -117,6 +115,10 @@ public class GameFrame extends JFrame {
 
 
         // Drawing the rotated image at the required drawing locations
+        if (ab.showTank) {
+            g2d.drawImage(ab.enemyImg, 500, 500, null);
+            ab.collide();
+        }
 
         double tankGunAngle = Math.atan2((state.aimY - state.tankCenterY),(state.aimX - state.tankCenterX ));
 
@@ -174,6 +176,10 @@ public class GameFrame extends JFrame {
         AffineTransform tx = AffineTransform.getRotateInstance(angle, locationX , locationY);
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
         return op.filter(img,null);
+    }
+
+    public static Rectangle mainTankRectangle () {
+	    return new Rectangle((int) GameState.tankCenterX - 90,(int) GameState.tankCenterY - 90,150,150);
     }
 
 

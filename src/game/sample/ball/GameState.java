@@ -13,7 +13,7 @@ import java.util.logging.Level;
  */
 public class GameState {
 	
-	public int tankCenterX,tankCenterY,aimX, aimY, cameraY, diam;
+	public static int tankCenterX,tankCenterY,aimX, aimY, cameraY, diam;
 	public boolean gameOver;
 	public double tankBodyAngle;
 	private boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;

@@ -2,6 +2,8 @@
 package game.sample.ball;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferStrategy;
@@ -40,6 +42,8 @@ public class GameFrame extends JFrame {
 
 	private BufferStrategy bufferStrategy;
 	Map a = new Map();
+	double tankGunAngle;
+	ArrayList<Bullet> bullets = new ArrayList<>();
 	
 	public GameFrame(String title) {
 		super(title);
@@ -59,6 +63,35 @@ public class GameFrame extends JFrame {
 		catch(IOException e){
 			System.out.println(e);
 		}
+
+		this.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				super.mouseClicked(e);
+				if (e.getButton() == MouseEvent.BUTTON1) {
+					int firingLocXOfBullet = (int) ( GameState.tankCenterX + 75 * Math.cos(tankGunAngle));
+					int firingLocYOfBullet = (int) (GameState.tankCenterY + 75 * Math.sin(tankGunAngle));
+
+						bullets.add(new Bullet(firingLocXOfBullet,
+								firingLocYOfBullet , tankGunAngle));
+
+				/*	if (GameState.tankDirection == GameState.LEFT) {
+						bullets.add(new Bullet(GameState.tankCenterX - 100,
+								GameState.tankCenterY + Bullet.bulletHeight / 2, tankGunAngle));
+					}
+					if (GameState.tankDirection == GameState.UP) {
+						bullets.add(new Bullet(GameState.tankCenterX ,
+								GameState.tankCenterY - 100, tankGunAngle));
+					}
+					if (GameState.tankDirection == GameState.DOWN) {
+						bullets.add(new Bullet(GameState.tankCenterX,
+								GameState.tankCenterY + 100, tankGunAngle));
+					} */
+
+				}
+			}
+		});
+
 	}
 	
 	/**
@@ -120,11 +153,17 @@ public class GameFrame extends JFrame {
             ab.collide();
         }
 
-        double tankGunAngle = Math.atan2((state.aimY - state.tankCenterY),(state.aimX - state.tankCenterX ));
+        tankGunAngle = Math.atan2((state.aimY - state.tankCenterY),(state.aimX - state.tankCenterX ));
 
         g2d.drawImage(rotatePic(tankBody, state.tankBodyAngle),state.tankCenterX - 90,state.tankCenterY - 90,null);
 
         g2d.drawImage(rotatePic(tankGun, tankGunAngle), state.tankCenterX - 90, state.tankCenterY -90, null);
+
+        updateBulletsState(g2d);
+
+
+
+
 
         // 	g2d.drawImage(tankGun,state.locX,state.locY,null);
 
@@ -144,9 +183,9 @@ public class GameFrame extends JFrame {
 				avg += fps;
 			}
 			avg /= fpsHistory.size();
-			String str = String.format("Average FPS = %.1f , Last Interval = %d ms,tankX = %d, tankY = %d,aimX = %d, aimY = %d, direction = %d" +
+			String str = String.format("Average FPS = %.1f , Last Interval = %d ms, angle = %f, tankX = %d, tankY = %d,aimX = %d, aimY = %d, direction = %d" +
 							"cameraY = %d",
-					avg, (currentRender - lastRender),state.tankCenterX,state.tankCenterY,state.aimX,state.aimY, state.tankDirection, state.cameraY);
+					avg, (currentRender - lastRender),tankGunAngle,state.tankCenterX,state.tankCenterY,state.aimX,state.aimY, state.tankDirection, state.cameraY);
 			g2d.setColor(Color.CYAN);
 			g2d.setFont(g2d.getFont().deriveFont(18.0f));
 			int strWidth = g2d.getFontMetrics().stringWidth(str);
@@ -181,6 +220,16 @@ public class GameFrame extends JFrame {
     public static Rectangle mainTankRectangle () {
 	    return new Rectangle((int) GameState.tankCenterX - 90,(int) GameState.tankCenterY - 90,150,150);
     }
+
+    public void updateBulletsState (Graphics2D g2d) {
+		for (int i = 0; i < bullets.size(); i++) {
+			g2d.drawImage(rotatePic(bullets.get(i).getBulletImg(),bullets.get(i).bulletAngle),(int) bullets.get(i).bulletCenterLocX,(int) bullets.get(i).bulletCenterLocY,null);
+			bullets.get(i).moveBullet();
+			bullets.get(i).checkForBulletCollision(g2d);
+			if (bullets.get(i).isRemoved())
+				bullets.remove(i);
+		}
+	}
 
 
 }

@@ -13,13 +13,12 @@ import java.util.logging.Level;
  */
 public class GameState {
 	
-	public static int tankCenterX,tankCenterY,aimX, aimY, cameraY, diam;
+	public static int tankCenterX,tankCenterY,aimX, aimY, cameraY,tankDirection, diam;
 	public boolean gameOver;
 	public double tankBodyAngle;
 	private boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
 	private boolean mouseStateChanged;
 	private int mouseX, mouseY;
-	public int tankDirection;
 	private KeyHandler keyHandler;
 	private MouseHandler mouseHandler;
 	public static final int Right = 1;
@@ -105,7 +104,7 @@ public class GameState {
             if (Math.abs(tankCenterX + diam - 960) < 5)
                 tankCenterX -= 8; */
 
-        checkForCollision();
+        checkForMainTankCollision();
 
 	}
 	
@@ -242,7 +241,7 @@ public class GameState {
 
     }
 
-    public void checkForCollision () {
+    public void checkForMainTankCollision () {
         int startTile = cameraY / Tile.tileHeight  ;
         int endTile = startTile + (Tile.numOfVerticalTiles / Map.numOfVerticalScreens);
         Point tankCenterTile = new Point(tankCenterX / Tile.tileWidth, startTile + ((720 - tankCenterY) / Tile.tileHeight));

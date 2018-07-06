@@ -67,31 +67,14 @@ public class GameFrame extends JFrame {
 		this.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				super.mouseClicked(e);
-				if (e.getButton() == MouseEvent.BUTTON1) {
-					int firingLocXOfBullet = (int) ( GameState.tankCenterX + 75 * Math.cos(tankGunAngle));
-					int firingLocYOfBullet = (int) (GameState.tankCenterY + 75 * Math.sin(tankGunAngle));
-
-						bullets.add(new Bullet(firingLocXOfBullet,
-								firingLocYOfBullet , tankGunAngle));
-
-				/*	if (GameState.tankDirection == GameState.LEFT) {
-						bullets.add(new Bullet(GameState.tankCenterX - 100,
-								GameState.tankCenterY + Bullet.bulletHeight / 2, tankGunAngle));
-					}
-					if (GameState.tankDirection == GameState.UP) {
-						bullets.add(new Bullet(GameState.tankCenterX ,
-								GameState.tankCenterY - 100, tankGunAngle));
-					}
-					if (GameState.tankDirection == GameState.DOWN) {
-						bullets.add(new Bullet(GameState.tankCenterX,
-								GameState.tankCenterY + 100, tankGunAngle));
-					} */
-
-				}
+			super.mouseClicked(e);
+			if (e.getButton() == MouseEvent.BUTTON1) {
+				int firingLocXOfBullet = (int) ( GameState.tankCenterX + 75 * Math.cos(tankGunAngle));
+				int firingLocYOfBullet = (int) (GameState.tankCenterY + 75 * Math.sin(tankGunAngle));
+				bullets.add(new Bullet(firingLocXOfBullet, firingLocYOfBullet , tankGunAngle));
+			}
 			}
 		});
-
 	}
 	
 	/**

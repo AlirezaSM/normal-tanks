@@ -44,10 +44,9 @@ public class GameFrame extends JFrame {
 	Map a = new Map();
 	double tankGunAngle;
 	ArrayList<Bullet> bullets = new ArrayList<>();
-	MovingEnemy me = new MovingEnemy("constantEnemy.png",20,90);
-	MovingEnemy me1 = new MovingEnemy("constantEnemy.png",30,60);
-	MovingEnemy me2 = new MovingEnemy("enemyTank1.png",25,55);
-	MovingEnemy me3 = new MovingEnemy("constantEnemy.png",35,135);
+
+	MovingEnemy me2 = new MovingEnemy("constantEnemy.png",25,55,0.2,0);
+
 
 	public GameFrame(String title) {
 		super(title);
@@ -146,14 +145,10 @@ public class GameFrame extends JFrame {
 
         g2d.drawImage(rotatePic(tankGun, tankGunAngle), state.tankCenterX - 90, state.tankCenterY -90, null);
 
-        me.draw(g2d);
-        me.move();
-        me2.draw(g2d);
-        me2.move();
-        me3.draw(g2d);
-        me3.move();
-        me1.draw(g2d);
-        me1.move();
+
+        g2d.drawImage(me2.enemyImg,me2.locX,me2.locY,null);
+        me2.checkTriggered();
+        me2.move(g2d);
 
 
         updateBulletsState(g2d);
@@ -180,9 +175,9 @@ public class GameFrame extends JFrame {
 				avg += fps;
 			}
 			avg /= fpsHistory.size();
-			String str = String.format("Average FPS = %.1f , Last Interval = %d ms, enemyX = %f, enemyY = %f,TTX = %d, TTY = %d, direction = %d" +
+			String str = String.format("Average FPS = %.1f , Last Interval = %d ms,TTX = %d, TTY = %d, direction = %d" +
 							"cameraY = %d",
-					avg, (currentRender - lastRender),me.centerTileX,me.centerTileY,GameState.tankCenterTileX,GameState.tankCenterTileY, state.tankDirection, state.cameraY);
+					avg, (currentRender - lastRender),GameState.tankCenterTileX,GameState.tankCenterTileY, state.tankDirection, state.cameraY);
 			g2d.setColor(Color.CYAN);
 			g2d.setFont(g2d.getFont().deriveFont(18.0f));
 			int strWidth = g2d.getFontMetrics().stringWidth(str);
@@ -206,7 +201,7 @@ public class GameFrame extends JFrame {
 		}
 	}
 
-	public BufferedImage rotatePic (BufferedImage img, double angle) {
+	public static BufferedImage rotatePic (BufferedImage img, double angle) {
         double locationX = img.getWidth() / 2;
         double locationY = img.getHeight() / 2;
         AffineTransform tx = AffineTransform.getRotateInstance(angle, locationX , locationY);
@@ -220,9 +215,7 @@ public class GameFrame extends JFrame {
 
     public void updateBulletsState (Graphics2D g2d) {
 		for (int i = 0; i < bullets.size(); i++) {
-			g2d.drawImage(rotatePic(bullets.get(i).getBulletImg(),bullets.get(i).bulletAngle),(int) bullets.get(i).bulletCenterLocX,(int) bullets.get(i).bulletCenterLocY,null);
-			bullets.get(i).moveBullet();
-			bullets.get(i).checkForBulletCollision(g2d);
+			bullets.get(i).fire(g2d,false);
 			if (bullets.get(i).isRemoved())
 				bullets.remove(i);
 		}

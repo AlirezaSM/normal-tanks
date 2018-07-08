@@ -30,9 +30,24 @@ public class Bullet {
         this.bulletAngle = bulletAngle;
     }
 
-    public void moveBullet () {
-        bulletCenterLocX = (int) (bulletCenterLocX + bulletSpeed * Math.cos(bulletAngle));
-        bulletCenterLocY = (int) (bulletCenterLocY + bulletSpeed * Math.sin(bulletAngle));
+    public void moveBullet (boolean isEnemy) {
+        if (! removed && !isEnemy) {
+            bulletCenterLocX = (int) (bulletCenterLocX + bulletSpeed * Math.cos(bulletAngle));
+            bulletCenterLocY = (int) (bulletCenterLocY + bulletSpeed * Math.sin(bulletAngle));
+        }
+        if (! removed && isEnemy) {
+            bulletCenterLocX = (int) (bulletCenterLocX - bulletSpeed * Math.cos(bulletAngle));
+            bulletCenterLocY = (int) (bulletCenterLocY - bulletSpeed * Math.sin(bulletAngle));
+        }
+
+    }
+
+
+
+    public void draw (Graphics2D g2d) {
+        if (!removed) {
+            g2d.drawImage(GameFrame.rotatePic(bulletImg, bulletAngle), bulletCenterLocX, bulletCenterLocY, null);
+        }
     }
 
     public void checkForBulletCollision (Graphics2D g2d) {
@@ -47,6 +62,12 @@ public class Bullet {
             removed = true;
             g2d.drawImage(bulletExplodedImg, bulletCenterLocX, bulletCenterLocY,null);
         }
+    }
+
+    public void fire (Graphics2D g2d,Boolean isEnemy) {
+        draw(g2d);
+        moveBullet(isEnemy);
+        checkForBulletCollision(g2d);
     }
 
     public void setBulletAngle(double bulletAngle) {

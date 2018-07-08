@@ -13,8 +13,8 @@ import java.util.logging.Level;
  */
 public class GameState {
 	
-	public static int tankCenterX,tankCenterY,aimX, aimY, cameraY,tankDirection, diam;
-	public boolean gameOver;
+	public static int tankCenterX,tankCenterY,tankCenterTileX, tankCenterTileY, aimX, aimY, cameraY,tankDirection, diam;
+	public static boolean gameOver, cameraIsMoving = false;
 	public double tankBodyAngle;
 	private boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
 	private boolean mouseStateChanged;
@@ -59,18 +59,26 @@ public class GameState {
 			aimY = mouseY;
 		}
 		if (keyUP) {
-		    if (Math.abs(tankCenterY - (diam)) > 100)
+		    if (Math.abs(tankCenterY - (diam)) > 100) {
                 tankCenterY -= 8;
-		    else
+                cameraIsMoving = false;
+            }
+		    else {
                 cameraY += 8;
+                cameraIsMoving = true;
+            }
             changeTankBodyAngle("up");
             tankDirection = UP;
         }
 		if (keyDOWN) {
-            if (Math.abs(tankCenterY - (720 - diam)) < 25)
+            if (Math.abs(tankCenterY - (720 - diam)) < 25) {
                 cameraY -= 8;
-            else
+                cameraIsMoving = true;
+            }
+            else {
                 tankCenterY += 8;
+                cameraIsMoving = false;
+            }
             changeTankBodyAngle("down");
             tankDirection = DOWN;
         }
@@ -78,11 +86,13 @@ public class GameState {
             tankCenterX -= 8;
             changeTankBodyAngle("left");
             tankDirection = LEFT;
+            cameraIsMoving = false;
         }
 		if (keyRIGHT) {
             tankCenterX += 8;
             changeTankBodyAngle("right");
             tankDirection = Right;
+            cameraIsMoving = false;
         }
 
 		tankCenterX = Math.max(tankCenterX, diam);
@@ -90,19 +100,14 @@ public class GameState {
 		tankCenterY = Math.max(tankCenterY, diam);
 		tankCenterY = Math.min(tankCenterY, GameFrame.GAME_HEIGHT - diam);
 
+		tankCenterTileX = tankCenterX / Tile.tileWidth;
+        int startTile = GameState.cameraY / Tile.tileHeight;
+		tankCenterTileY = (Tile.numOfVerticalTilesInOneScreen - (tankCenterY / Tile.tileHeight)) + startTile;
+
 		if (cameraY < 0)
 		    cameraY = 0;
 		if (cameraY > 2850)
 		    cameraY = 2850;
-
-		// check for walls collision
-
-     /*   if (cameraY < 120)
-            if (Math.abs(tankCenterX + diam - 960) < 5 && (tankCenterY  < 250 || tankCenterY > 500))
-                tankCenterX -= 8;
-        if (cameraY > 1900 && cameraY < 2000)
-            if (Math.abs(tankCenterX + diam - 960) < 5)
-                tankCenterX -= 8; */
 
         checkForMainTankCollision();
 

@@ -24,6 +24,8 @@ public class Map implements Serializable{
     public static int hardWall4 = 9;
     public static int numOfPlantedSoilPlants = 400;
     public static int numOfVerticalScreens = 5;
+    public static int screenHeight = 720;
+  //  public static double screenRatio = 16 / 9;
     static Tile [][] tiles = new Tile[Tile.numOfHorizontalTiles][Tile.numOfVerticalTiles];
     public BufferedImage soilImg;
     public BufferedImage plantImg;
@@ -105,7 +107,7 @@ public class Map implements Serializable{
             if (startingY / Tile.tileHeight >= 0) {
                 for (int j = startingY / Tile.tileHeight; j < ((startingY / Tile.tileHeight) + (Tile.numOfVerticalTiles / 5)); j++) {
                     int tileImg = tiles[i][j].getImg();
-                    g2d.drawImage(mapImages.get(tileImg), i * Tile.tileWidth, 720 - (j - startingY / Tile.tileHeight) * Tile.tileHeight, null);
+                    g2d.drawImage(mapImages.get(tileImg), i * Tile.tileWidth, screenHeight - (j - startingY / Tile.tileHeight) * Tile.tileHeight, null);
                 }
             }
         }

@@ -99,8 +99,8 @@ public class Enemy {
 
     public void updateLocs () {
         startTile = GameState.cameraY / Tile.tileHeight;
-        locX = ((int) centerTileX * Tile.tileWidth) + (enemyWidth / 2);
-        locY = (Map.screenHeight - ((int) centerTileY - startTile) * Tile.tileHeight) + (enemyHeight / 2);
+        locX = (int) (centerTileX * Tile.tileWidth) + (enemyWidth / 2);
+        locY = (int) (Map.screenHeight - (centerTileY - startTile) * Tile.tileHeight) + (enemyHeight / 2);
     }
 
     public void updateRectangles () {

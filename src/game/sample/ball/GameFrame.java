@@ -47,6 +47,7 @@ public class GameFrame extends JFrame {
     public static ArrayList<Enemy> enemies = new ArrayList<>();
 
     KhengEnemy me2 = new KhengEnemy();
+    AlienEnemy ae = new AlienEnemy();
 
 
     public GameFrame(String title) {
@@ -79,6 +80,7 @@ public class GameFrame extends JFrame {
             }
         });
         enemies.add(me2);
+        enemies.add(ae);
     }
 
     /**
@@ -142,9 +144,9 @@ public class GameFrame extends JFrame {
 
         g2d.drawImage(rotatePic(tankGun, tankGunAngle), state.tankCenterX - 90, state.tankCenterY - 90, null);
 
-        if (me2.alive) {
-            me2.draw(g2d);
-            me2.move(g2d);
+        for (int i = 0; i < enemies.size(); i++) {
+            enemies.get(i).draw(g2d);
+            enemies.get(i).move(g2d);
         }
 
         updateBulletsState(g2d);

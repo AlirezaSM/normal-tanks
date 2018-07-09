@@ -50,7 +50,7 @@ public class Enemy {
     }
 
     public void checkTriggered () {
-        if (Math.abs(GameState.tankCenterTileY - centerTileY) < 15)
+        if (Math.abs(GameState.tankCenterTileY - centerTileY) < 30)
             triggered = true;
     }
 
@@ -58,6 +58,16 @@ public class Enemy {
         if (alive) {
             g2d.drawImage(enemyImg, locX, locY, null);
             checkTriggered();
+        }
+    }
+
+    public void move(Graphics2D g2d) {
+        if (triggered) {
+            movingAngle = Math.atan2((locY - GameState.tankCenterY), (locX - GameState.tankCenterX));
+            centerTileX = (centerTileX - speed * Math.cos(movingAngle));
+            centerTileY = (centerTileY + speed * Math.sin(movingAngle));
+            firingBullet(20);
+            updateLocs();
         }
     }
 

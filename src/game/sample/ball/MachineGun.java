@@ -11,7 +11,7 @@ public class MachineGun extends Enemy {
     BufferedImage tankGun;
     public MachineGun() {
         super("MachineTank.png", 8, 80, 75, 150,
-                0.1, 10, 200,0,20,75);
+                0.1, 2, 200,0,20,75);
         try {
             tankGun = ImageIO.read(new File("MachineTankGun.png"));
         } catch (IOException e) {

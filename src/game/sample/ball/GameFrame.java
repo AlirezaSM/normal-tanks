@@ -178,9 +178,9 @@ public class GameFrame extends JFrame {
                 avg += fps;
             }
             avg /= fpsHistory.size();
-            String str = String.format("Average FPS = %.1f , Last Interval = %d ms,angle = %f, TTY = %d,health = %d. direction = %d" +
+            String str = String.format("Average FPS = %.1f , Last Interval = %d ms,angle = %f, ctX = %f,ctY = %f, locX = %d, locY = %d,health = %d. direction = %d" +
                             "cameraY = %d",
-                    avg, (currentRender - lastRender), mg.movingAngle, GameState.tankCenterTileY, GameState.mainTankHealth, state.tankDirection, state.cameraY);
+                    avg, (currentRender - lastRender), mg.movingAngle, mg.centerTileY,mg.centerTileY , mg.locX, mg.locY, GameState.mainTankHealth, state.tankDirection, state.cameraY);
             g2d.setColor(Color.CYAN);
             g2d.setFont(g2d.getFont().deriveFont(18.0f));
             int strWidth = g2d.getFontMetrics().stringWidth(str);

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class Bullet {
     BufferedImage bulletImg;
-    BufferedImage bulletExplodedImg;
+    static BufferedImage bulletExplodedImg;
     int bulletCenterLocX;
     int bulletCenterLocY;
     static final int bulletSpeed  = 12;
@@ -69,9 +69,9 @@ public class Bullet {
         }
     }
 
-    public void fire (Graphics2D g2d,Boolean isEnemy) {
+    public void fire (Graphics2D g2d) {
         draw(g2d);
-        moveBullet(isEnemy);
+        moveBullet(firedByEnemy);
         checkForBulletCollision(g2d);
         updateBulletRectangle();
     }

@@ -43,11 +43,10 @@ public class GameFrame extends JFrame {
     private BufferStrategy bufferStrategy;
     Map a = new Map();
     double tankGunAngle;
-    ArrayList<Bullet> bullets = new ArrayList<>();
-    public ArrayList<Enemy> enemies = new ArrayList<>();
+    public static ArrayList<Bullet> bullets = new ArrayList<>();
+    public static ArrayList<Enemy> enemies = new ArrayList<>();
 
-    MovingEnemy me2 = new MovingEnemy("constantEnemy.png", 25, 55, 85, 75,
-            0.12,0.1,100);
+    KhengEnemy me2 = new KhengEnemy();
 
 
     public GameFrame(String title) {
@@ -149,8 +148,9 @@ public class GameFrame extends JFrame {
         }
 
         updateBulletsState(g2d);
-        updateHealth(g2d,enemies,bullets);
         updateEnemiesState(enemies);
+        updateHealth(g2d,enemies,bullets);
+
 
 
         // 	g2d.drawImage(tankGun,state.locX,state.locY,null);
@@ -171,9 +171,9 @@ public class GameFrame extends JFrame {
                 avg += fps;
             }
             avg /= fpsHistory.size();
-            String str = String.format("Average FPS = %.1f , Last Interval = %d ms,TTX = %d, TTY = %d, direction = %d" +
+            String str = String.format("Average FPS = %.1f , Last Interval = %d ms,TTX = %d, TTY = %d,health = %d. direction = %d" +
                             "cameraY = %d",
-                    avg, (currentRender - lastRender), GameState.tankCenterTileX, GameState.tankCenterTileY, state.tankDirection, state.cameraY);
+                    avg, (currentRender - lastRender), GameState.tankCenterTileX, GameState.tankCenterTileY, GameState.mainTankHealth, state.tankDirection, state.cameraY);
             g2d.setColor(Color.CYAN);
             g2d.setFont(g2d.getFont().deriveFont(18.0f));
             int strWidth = g2d.getFontMetrics().stringWidth(str);
@@ -207,7 +207,7 @@ public class GameFrame extends JFrame {
 
     public void updateBulletsState(Graphics2D g2d) {
         for (int i = 0; i < bullets.size(); i++) {
-            bullets.get(i).fire(g2d, false);
+            bullets.get(i).fire(g2d);
             if (bullets.get(i).isRemoved())
                 bullets.remove(i);
         }
@@ -215,6 +215,7 @@ public class GameFrame extends JFrame {
 
     public void updateEnemiesState (ArrayList <Enemy> enemies) {
         for (int i = 0; i < enemies.size(); i++) {
+            enemies.get(i).updateRectangles();
             if (! enemies.get(i).alive)
                 enemies.remove(i);
         }
@@ -222,6 +223,9 @@ public class GameFrame extends JFrame {
 
     public void updateHealth(Graphics2D g2d, ArrayList<Enemy> enemies, ArrayList<Bullet> bullets) {
         for (int j = 0; j < bullets.size(); j++) {
+            /**
+             * case 1 : if enemies fire a bullet toward the main tank
+             */
             if (bullets.get(j).bulletRectangle.intersects(GameState.mainTankRectangle()) && bullets.get(j).firedByEnemy) {
                 g2d.drawImage(bullets.get(j).bulletExplodedImg, bullets.get(j).bulletCenterLocX, bullets.get(j).bulletCenterLocY, null);
                 GameState.mainTankHealth -= 25;
@@ -229,9 +233,12 @@ public class GameFrame extends JFrame {
                 bullets.get(j).removed = true;
             }
             for (int i = 0; i < enemies.size(); i++) {
-                enemies.get(i).updateRectangles();
-                g2d.drawRect(enemies.get(i).locX,enemies.get(i).locY,enemies.get(i).enemyWidth,enemies.get(j).enemyHeight);
-                g2d.fillRect(enemies.get(i).locX,enemies.get(i).locY,enemies.get(i).enemyWidth,enemies.get(j).enemyHeight);
+//                g2d.drawRect(enemies.get(i).locX,enemies.get(i).locY,enemies.get(i).enemyWidth,enemies.get(j).enemyHeight);
+  //              g2d.fillRect(enemies.get(i).locX,enemies.get(i).locY,enemies.get(i).enemyWidth,enemies.get(j).enemyHeight);
+
+                /**
+                 * case 2 : if main tank fires a bullet toward the enemies
+                 */
                 if (bullets.get(j).bulletRectangle.intersects(enemies.get(i).enemyRectangle) && !bullets.get(j).firedByEnemy) {
                     g2d.drawImage(bullets.get(j).bulletExplodedImg, bullets.get(j).bulletCenterLocX, bullets.get(j).bulletCenterLocY, null);
                     enemies.get(i).health -= 50;
@@ -242,5 +249,17 @@ public class GameFrame extends JFrame {
                 }
             }
         }
+        /**
+         * case 3 : if enemies (except tank) collide with the main tank
+         */
+        for (int i = 0; i < enemies.size(); i++) {
+            if (enemies.get(i).enemyRectangle.intersects(GameState.mainTankRectangle())
+                    && !(enemies.get(i) instanceof EnemyTank)) {
+                g2d.drawImage(Bullet.bulletExplodedImg, enemies.get(i).locX, enemies.get(i).locY, null);
+                GameState.mainTankHealth -= 25;
+                enemies.get(i).alive = false;
+            }
+        }
+
     }
 }

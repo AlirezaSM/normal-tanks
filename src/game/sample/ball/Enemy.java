@@ -26,7 +26,6 @@ public class Enemy {
     boolean triggered;
     boolean alive = true;
     int health = 100;
-    ArrayList<Bullet> bullets = new ArrayList<>();
     Rectangle enemyRectangle;
     int i = 0;
 
@@ -67,7 +66,7 @@ public class Enemy {
         if (r.nextInt((int) (60 / firingSpeed)) == 1) {
             int firingLocX = (int) (locX + distanceBetweenFiringPointAndCenter * Math.cos(movingAngle));
             int firingLocY = (int) (locY + distanceBetweenFiringPointAndCenter * Math.sin(movingAngle));
-            bullets.add(new Bullet(firingLocX, firingLocY, movingAngle,true));
+            GameFrame.bullets.add(new Bullet(firingLocX, firingLocY, movingAngle,true));
             i++;
             System.out.println(i);
         }
@@ -83,14 +82,6 @@ public class Enemy {
         locX = (int) centerTileX * Tile.tileWidth;
         locY = Map.screenHeight - ((int) centerTileY - startTile) * Tile.tileHeight;
         startTile = GameState.cameraY / Tile.tileHeight;
-    }
-
-    public void updateBulletsState (Graphics2D g2d) {
-        for (int i = 0; i < bullets.size(); i++) {
-            bullets.get(i).fire(g2d,true);
-            if (bullets.get(i).isRemoved())
-                bullets.remove(i);
-        }
     }
 
     public void updateRectangles () {

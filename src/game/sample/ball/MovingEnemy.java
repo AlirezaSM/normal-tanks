@@ -16,7 +16,6 @@ public class MovingEnemy extends Enemy {
             centerTileX = (centerTileX - speed * Math.cos(movingAngle));
             centerTileY = (centerTileY + speed * Math.sin(movingAngle));
             firingBullet(20);
-            updateBulletsState(g2d);
             updateLocs();
         }
     }

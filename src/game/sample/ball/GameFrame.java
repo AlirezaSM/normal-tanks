@@ -48,6 +48,7 @@ public class GameFrame extends JFrame {
 
     KhengEnemy me2 = new KhengEnemy();
     AlienEnemy ae = new AlienEnemy();
+    MachineGun mg = new MachineGun();
 
 
     public GameFrame(String title) {
@@ -81,6 +82,7 @@ public class GameFrame extends JFrame {
         });
         enemies.add(me2);
         enemies.add(ae);
+        enemies.add(mg);
     }
 
     /**
@@ -160,6 +162,9 @@ public class GameFrame extends JFrame {
         g2d.setColor(Color.RED);
         g2d.fillOval(state.tankCenterX, state.tankCenterY, 10, 10);
 
+        g2d.setColor(Color.RED);
+        g2d.fillOval(mg.locX + 25,mg.locY + 35,10,10);
+
 
         // Print FPS info
         long currentRender = System.currentTimeMillis();
@@ -173,9 +178,9 @@ public class GameFrame extends JFrame {
                 avg += fps;
             }
             avg /= fpsHistory.size();
-            String str = String.format("Average FPS = %.1f , Last Interval = %d ms,TTX = %d, TTY = %d,health = %d. direction = %d" +
+            String str = String.format("Average FPS = %.1f , Last Interval = %d ms,angle = %f, TTY = %d,health = %d. direction = %d" +
                             "cameraY = %d",
-                    avg, (currentRender - lastRender), GameState.tankCenterTileX, GameState.tankCenterTileY, GameState.mainTankHealth, state.tankDirection, state.cameraY);
+                    avg, (currentRender - lastRender), mg.movingAngle, GameState.tankCenterTileY, GameState.mainTankHealth, state.tankDirection, state.cameraY);
             g2d.setColor(Color.CYAN);
             g2d.setFont(g2d.getFont().deriveFont(18.0f));
             int strWidth = g2d.getFontMetrics().stringWidth(str);
@@ -256,7 +261,7 @@ public class GameFrame extends JFrame {
          */
         for (int i = 0; i < enemies.size(); i++) {
             if (enemies.get(i).enemyRectangle.intersects(GameState.mainTankRectangle())
-                    && !(enemies.get(i) instanceof EnemyTank)) {
+                    && !(enemies.get(i) instanceof MachineGun)) {
                 g2d.drawImage(Bullet.bulletExplodedImg, enemies.get(i).locX, enemies.get(i).locY, null);
                 GameState.mainTankHealth -= 25;
                 enemies.get(i).alive = false;

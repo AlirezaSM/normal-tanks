@@ -20,16 +20,22 @@ public class Enemy {
     int enemyHeight;
     int locX;
     int locY;
+    int firingLocX;
+    int firingLocY;
     int startTile;
     public double movingAngle = 1;
     boolean visible;
     boolean triggered;
     boolean alive = true;
     int health = 100;
+    int distanceBetweenFiringPointAndCenter;
     Rectangle enemyRectangle;
     int i = 0;
 
-    public Enemy(String imageName, double centerTileX, double centerTileY,int width,int height, double speed, double firingSpeed, int health) {
+
+    public Enemy(String imageName, double centerTileX, double centerTileY,
+                 int width,int height, double speed, double firingSpeed, int health, int distance,
+                 int firingLocX,int firingLocY) {
         try {
             enemyImg = ImageIO.read(new File(imageName));
         } catch (IOException e) {
@@ -39,14 +45,17 @@ public class Enemy {
         this.centerTileY = centerTileY;
         enemyWidth = width;
         enemyHeight = height;
-        locX = (int) centerTileX * Tile.tileWidth;
-        locY = Map.screenHeight - ((int) centerTileY - startTile) * Tile.tileHeight;
+        locX = ((int) centerTileX * Tile.tileWidth) + (enemyWidth / 2);
+        locY = (Map.screenHeight - ((int) centerTileY - startTile) * Tile.tileHeight) + (enemyHeight / 2);
         startTile = GameState.cameraY / Tile.tileHeight;
         this.speed = speed;
         this.firingSpeed = firingSpeed;
         visible = false;
         triggered = false;
         this.health = health;
+        distanceBetweenFiringPointAndCenter = distance;
+        this.firingLocX =  firingLocX;
+        this.firingLocY =  firingLocY;
     }
 
     public void checkTriggered () {
@@ -66,17 +75,17 @@ public class Enemy {
             movingAngle = Math.atan2((locY - GameState.tankCenterY), (locX - GameState.tankCenterX));
             centerTileX = (centerTileX - speed * Math.cos(movingAngle));
             centerTileY = (centerTileY + speed * Math.sin(movingAngle));
-            firingBullet(20);
+            firingBullet();
             updateLocs();
         }
     }
 
-    public void firingBullet (int distanceBetweenFiringPointAndCenter) {
+    public void firingBullet () {
         Random r = new Random();
         if (r.nextInt((int) (60 / firingSpeed)) == 1) {
-            int firingLocX = (int) (locX + distanceBetweenFiringPointAndCenter * Math.cos(movingAngle));
-            int firingLocY = (int) (locY + distanceBetweenFiringPointAndCenter * Math.sin(movingAngle));
-            GameFrame.bullets.add(new Bullet(firingLocX, firingLocY, movingAngle,true));
+            int currentFiringLocX = (int) (locX + firingLocX + distanceBetweenFiringPointAndCenter * Math.cos(movingAngle));
+            int currentFiringLocY = (int) (locY + firingLocY - distanceBetweenFiringPointAndCenter * Math.sin(movingAngle));
+            GameFrame.bullets.add(new Bullet(currentFiringLocX, currentFiringLocY, movingAngle,true));
             i++;
             System.out.println(i);
         }
@@ -89,9 +98,9 @@ public class Enemy {
     }
 
     public void updateLocs () {
-        locX = (int) centerTileX * Tile.tileWidth;
-        locY = Map.screenHeight - ((int) centerTileY - startTile) * Tile.tileHeight;
         startTile = GameState.cameraY / Tile.tileHeight;
+        locX = ((int) centerTileX * Tile.tileWidth) + (enemyWidth / 2);
+        locY = (Map.screenHeight - ((int) centerTileY - startTile) * Tile.tileHeight) + (enemyHeight / 2);
     }
 
     public void updateRectangles () {

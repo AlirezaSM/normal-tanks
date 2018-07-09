@@ -16,6 +16,7 @@ public class GameState {
 	public static int tankCenterX,tankCenterY,tankCenterTileX, tankCenterTileY, aimX, aimY, cameraY,tankDirection, diam;
 	public static boolean gameOver, cameraIsMoving = false;
 	public double tankBodyAngle;
+	public static int mainTankHealth;
 	private boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
 	private boolean mouseStateChanged;
 	private int mouseX, mouseY;
@@ -48,6 +49,8 @@ public class GameState {
         //
 		keyHandler = new KeyHandler();
 		mouseHandler = new MouseHandler();
+		//
+        mainTankHealth = 100;
 	}
 	
 	/**
@@ -433,6 +436,10 @@ public class GameState {
             tankCenterY -= 8;
         }
 
+    }
+
+    public static Rectangle mainTankRectangle () {
+        return new Rectangle((int) GameState.tankCenterX - 90,(int) GameState.tankCenterY - 90,150,150);
     }
 }
 

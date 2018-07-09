@@ -1,10 +1,12 @@
 package game.sample.ball;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Bullet {
     BufferedImage bulletImg;
@@ -15,10 +17,11 @@ public class Bullet {
     static final int bulletWidth  = 40;
     static final int bulletHeight = 10;
     double bulletAngle;
-//    public Rectangle bulletRectangle = new Rectangle((int) bulletLoc.getX(), (int) bulletLoc.getY(),25,19);
+    public Rectangle bulletRectangle;
     boolean removed = false;
+    boolean firedByEnemy;
 
-    public Bullet(int bulletLocX, int bulletLocY,double bulletAngle) {
+    public Bullet(int bulletLocX, int bulletLocY,double bulletAngle,boolean firedByEnemy) {
         try {
             bulletImg = ImageIO.read(new File("bullet.png"));
             bulletExplodedImg = ImageIO.read(new File("bulletExploded.png"));
@@ -28,6 +31,8 @@ public class Bullet {
         bulletCenterLocX = bulletLocX;
         bulletCenterLocY = bulletLocY;
         this.bulletAngle = bulletAngle;
+        bulletRectangle = new Rectangle(bulletLocX,bulletLocY,bulletWidth,bulletHeight);
+        this.firedByEnemy = firedByEnemy;
     }
 
     public void moveBullet (boolean isEnemy) {
@@ -68,6 +73,7 @@ public class Bullet {
         draw(g2d);
         moveBullet(isEnemy);
         checkForBulletCollision(g2d);
+        updateBulletRectangle();
     }
 
     public void setBulletAngle(double bulletAngle) {
@@ -81,4 +87,9 @@ public class Bullet {
     public boolean isRemoved() {
         return removed;
     }
+
+    public void updateBulletRectangle () {
+        bulletRectangle = new Rectangle(bulletCenterLocX,bulletCenterLocY,bulletWidth,bulletHeight);
+    }
+
 }

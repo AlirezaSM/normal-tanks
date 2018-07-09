@@ -16,16 +16,21 @@ public class Enemy {
     public double firingSpeed;
     double centerTileX;
     double centerTileY;
+    int enemyWidth;
+    int enemyHeight;
     int locX;
     int locY;
     int startTile;
     public double movingAngle = 1;
     boolean visible;
     boolean triggered;
+    boolean alive = true;
+    int health = 100;
     ArrayList<Bullet> bullets = new ArrayList<>();
+    Rectangle enemyRectangle;
     int i = 0;
 
-    public Enemy(String imageName, double centerTileX, double centerTileY, double speed, double firingSpeed) {
+    public Enemy(String imageName, double centerTileX, double centerTileY,int width,int height, double speed, double firingSpeed, int health) {
         try {
             enemyImg = ImageIO.read(new File(imageName));
         } catch (IOException e) {
@@ -33,6 +38,8 @@ public class Enemy {
         }
         this.centerTileX = centerTileX;
         this.centerTileY = centerTileY;
+        enemyWidth = width;
+        enemyHeight = height;
         locX = (int) centerTileX * Tile.tileWidth;
         locY = Map.screenHeight - ((int) centerTileY - startTile) * Tile.tileHeight;
         startTile = GameState.cameraY / Tile.tileHeight;
@@ -40,6 +47,7 @@ public class Enemy {
         this.firingSpeed = firingSpeed;
         visible = false;
         triggered = false;
+        this.health = health;
     }
 
     public void checkTriggered () {
@@ -48,16 +56,18 @@ public class Enemy {
     }
 
     public void draw (Graphics2D g2d) {
-        g2d.drawImage(enemyImg,locX,locY,null);
-        checkTriggered();
+        if (alive) {
+            g2d.drawImage(enemyImg, locX, locY, null);
+            checkTriggered();
+        }
     }
 
-    public void firingBullet (int distanceBetweenFiringPointAndCenter,Graphics2D g2d) {
+    public void firingBullet (int distanceBetweenFiringPointAndCenter) {
         Random r = new Random();
         if (r.nextInt((int) (60 / firingSpeed)) == 1) {
             int firingLocX = (int) (locX + distanceBetweenFiringPointAndCenter * Math.cos(movingAngle));
             int firingLocY = (int) (locY + distanceBetweenFiringPointAndCenter * Math.sin(movingAngle));
-            bullets.add(new Bullet(firingLocX, firingLocY, movingAngle));
+            bullets.add(new Bullet(firingLocX, firingLocY, movingAngle,true));
             i++;
             System.out.println(i);
         }
@@ -81,6 +91,10 @@ public class Enemy {
             if (bullets.get(i).isRemoved())
                 bullets.remove(i);
         }
+    }
+
+    public void updateRectangles () {
+        enemyRectangle = new Rectangle(locX,locY,enemyWidth,enemyHeight);
     }
 
 

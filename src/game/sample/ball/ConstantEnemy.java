@@ -22,10 +22,4 @@ public class ConstantEnemy {
     }
 
 
-    public void collide () {
-        if (rectangle.intersects(GameFrame.mainTankRectangle())) {
-            showTank = false;
-            enemyImg = null;
-        }
-    }
 }

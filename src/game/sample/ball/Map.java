@@ -90,15 +90,6 @@ public class Map implements Serializable{
             }
         }
 
-        tiles[10][10] = new Tile(hardWall3,true);
-        tiles[10][11] = new Tile(hardWall2,true);
-        tiles[11][10] = new Tile(hardWall4,true);
-        tiles[11][11] = new Tile(hardWall1,true);
-        tiles[8][8] = new Tile(hardWall3,true);
-        tiles[8][9] = new Tile(hardWall2,true);
-        tiles[9][8] = new Tile(hardWall4,true);
-        tiles[9][9] = new Tile(hardWall1,true);
-
     }
 
     public void drawMap (Graphics2D g2d,int startingY) {

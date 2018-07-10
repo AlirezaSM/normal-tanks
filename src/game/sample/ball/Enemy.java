@@ -70,7 +70,7 @@ public class Enemy {
         }
     }
 
-    public void move(Graphics2D g2d) {
+    public void move() {
         if (triggered) {
             movingAngle = Math.atan2((locY - GameState.tankCenterY), (locX - GameState.tankCenterX));
             centerTileX = (centerTileX - speed * Math.cos(movingAngle));

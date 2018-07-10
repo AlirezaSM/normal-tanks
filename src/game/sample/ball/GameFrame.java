@@ -168,7 +168,7 @@ public class GameFrame extends JFrame {
 
         for (int i = 0; i < enemies.size(); i++) {
             enemies.get(i).draw(g2d);
-            enemies.get(i).move(g2d);
+            enemies.get(i).move();
         }
 
         updateBulletsState(g2d);

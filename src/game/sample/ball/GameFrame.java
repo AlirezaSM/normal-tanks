@@ -30,10 +30,6 @@ public class GameFrame extends JFrame {
     public static final int GAME_WIDTH = 16 * GAME_HEIGHT / 9;  // wide aspect ratio
 
     //uncomment all /*...*/ in the class for using Tank icon instead of a simple circle
-    private BufferedImage tankBody;
-    private BufferedImage tankGun;
-    private BufferedImage opponentTank;
-    private BufferedImage opponentTankGun;
 
     ConstantEnemy ab = new ConstantEnemy();
 
@@ -58,28 +54,57 @@ public class GameFrame extends JFrame {
         lastRender = -1;
         ThreadPool.init();
         fpsHistory = new ArrayList<>(100);
-
-        try {
-            tankBody = ImageIO.read(new File("tankBody.png"));
-            tankGun = ImageIO.read(new File("tankGun.png"));
-            tankGun = ImageIO.read(new File("tankGun.png"));
-            opponentTank = ImageIO.read(new File("opponentTank.png"));
-            opponentTankGun = ImageIO.read(new File("opponentTankGun.png"));
-        } catch (IOException e) {
-            System.out.println(e);
-        }
+        /**
+         *  firing a bullet with left click
+         */
 
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 if (e.getButton() == MouseEvent.BUTTON1) {
-                    int firingLocXOfBullet = (int) (GameState.tankCenterX + 75 * Math.cos(tankGunAngle));
-                    int firingLocYOfBullet = (int) (GameState.tankCenterY + 75 * Math.sin(tankGunAngle));
-                    bullets.add(new Bullet(firingLocXOfBullet, firingLocYOfBullet, tankGunAngle, false));
+                    if (GameState.isUsingHeavyGun && GameState.numOfHeavyBullets > 0) {
+                        int firingLocXOfBullet = (int) (GameState.tankCenterX + 75 * Math.cos(tankGunAngle));
+                        int firingLocYOfBullet = (int) (GameState.tankCenterY + 75 * Math.sin(tankGunAngle));
+                        bullets.add(new HeavyBullet(firingLocXOfBullet, firingLocYOfBullet, tankGunAngle, false));
+                        GameState.numOfHeavyBullets--;
+                        System.out.println(GameState.numOfHeavyBullets);
+                    }
+                    if (!GameState.isUsingHeavyGun && GameState.numOfMachineGunBullets > 0) {
+                        int firingLocXOfBullet = (int) (GameState.tankCenterX + 75 * Math.cos(tankGunAngle));
+                        int firingLocYOfBullet = (int) (GameState.tankCenterY + 75 * Math.sin(tankGunAngle));
+                        bullets.add(new MachineGunBullet(firingLocXOfBullet, firingLocYOfBullet, tankGunAngle, false));
+                        GameState.numOfMachineGunBullets--;
+                        System.out.println(GameState.numOfMachineGunBullets);
+                    }
+
                 }
+
             }
         });
+
+        /**
+         * changing tank gun with right click
+         */
+
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    if (GameState.isUsingHeavyGun) {
+                        GameState.gunInUse = GameState.machineGun;
+                        GameState.isUsingHeavyGun = false;
+                    }
+                    else {
+                        GameState.gunInUse = GameState.heavyGun;
+                        GameState.isUsingHeavyGun = true;
+                    }
+                }
+
+            }
+        });
+
         enemies.add(me2);
         enemies.add(ae);
         enemies.add(mg);
@@ -142,9 +167,9 @@ public class GameFrame extends JFrame {
 
         tankGunAngle = Math.atan2((state.aimY - state.tankCenterY), (state.aimX - state.tankCenterX));
 
-        g2d.drawImage(rotatePic(tankBody, state.tankBodyAngle), state.tankCenterX - 90, state.tankCenterY - 90, null);
+        g2d.drawImage(rotatePic(state.mainTank, state.tankBodyAngle), state.tankCenterX - 90, state.tankCenterY - 90, null);
 
-        g2d.drawImage(rotatePic(tankGun, tankGunAngle), state.tankCenterX - 90, state.tankCenterY - 90, null);
+        g2d.drawImage(rotatePic(state.gunInUse, tankGunAngle), state.tankCenterX - 90, state.tankCenterY - 90, null);
 
         for (int i = 0; i < enemies.size(); i++) {
             enemies.get(i).draw(g2d);
@@ -235,7 +260,7 @@ public class GameFrame extends JFrame {
              */
             if (bullets.get(j).bulletRectangle.intersects(GameState.mainTankRectangle()) && bullets.get(j).firedByEnemy) {
                 g2d.drawImage(bullets.get(j).bulletExplodedImg, bullets.get(j).bulletCenterLocX, bullets.get(j).bulletCenterLocY, null);
-                GameState.mainTankHealth -= 25;
+                GameState.mainTankHealth -= bullets.get(j).damagingPower;
                 System.out.println(GameState.mainTankHealth);
                 bullets.get(j).removed = true;
             }
@@ -248,7 +273,7 @@ public class GameFrame extends JFrame {
                  */
                 if (bullets.get(j).bulletRectangle.intersects(enemies.get(i).enemyRectangle) && !bullets.get(j).firedByEnemy) {
                     g2d.drawImage(bullets.get(j).bulletExplodedImg, bullets.get(j).bulletCenterLocX, bullets.get(j).bulletCenterLocY, null);
-                    enemies.get(i).health -= 50;
+                    enemies.get(i).health -= bullets.get(j).damagingPower;
                     System.out.println("enemies health = " + enemies.get(i).health);
                     if (enemies.get(i).health == 0)
                         enemies.get(i).alive = false;

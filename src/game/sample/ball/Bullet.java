@@ -13,7 +13,8 @@ public class Bullet {
     static BufferedImage bulletExplodedImg;
     int bulletCenterLocX;
     int bulletCenterLocY;
-    static final int bulletSpeed  = 12;
+    int damagingPower;
+    int bulletSpeed;
     static final int bulletWidth  = 40;
     static final int bulletHeight = 10;
     double bulletAngle;
@@ -21,9 +22,8 @@ public class Bullet {
     boolean removed = false;
     boolean firedByEnemy;
 
-    public Bullet(int bulletLocX, int bulletLocY,double bulletAngle,boolean firedByEnemy) {
+    public Bullet(int bulletLocX, int bulletLocY,double bulletAngle,boolean firedByEnemy, int damagingPower) {
         try {
-            bulletImg = ImageIO.read(new File("bullet.png"));
             bulletExplodedImg = ImageIO.read(new File("bulletExploded.png"));
         } catch (IOException e) {
             e.printStackTrace();
@@ -31,6 +31,7 @@ public class Bullet {
         bulletCenterLocX = bulletLocX;
         bulletCenterLocY = bulletLocY;
         this.bulletAngle = bulletAngle;
+        this.damagingPower = damagingPower;
         bulletRectangle = new Rectangle(bulletLocX,bulletLocY,bulletWidth,bulletHeight);
         this.firedByEnemy = firedByEnemy;
     }

@@ -1,8 +1,12 @@
 /*** In The Name of Allah ***/
 package game.sample.ball;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 
 /**
@@ -16,12 +20,14 @@ public class GameState {
 	public static int tankCenterX,tankCenterY,tankCenterTileX, tankCenterTileY, aimX, aimY, cameraY,tankDirection, diam;
 	public static boolean gameOver, cameraIsMoving = false;
 	public double tankBodyAngle;
-	public static int mainTankHealth;
+	public static int mainTankHealth, numOfHeavyBullets, numOfMachineGunBullets;
 	private boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
 	private boolean mouseStateChanged;
+	public static boolean isUsingHeavyGun;
 	private int mouseX, mouseY;
 	private KeyHandler keyHandler;
 	private MouseHandler mouseHandler;
+	public static BufferedImage mainTank, heavyGun, machineGun, gunInUse;
 	public static final int Right = 1;
 	public static final int UP = 2;
 	public static final int LEFT = 3;
@@ -51,6 +57,18 @@ public class GameState {
 		mouseHandler = new MouseHandler();
 		//
         mainTankHealth = 100;
+        numOfHeavyBullets = 30;
+        numOfMachineGunBullets = 300;
+        //
+        isUsingHeavyGun = true;
+        try {
+            mainTank = ImageIO.read(new File("tankBody.png"));
+            heavyGun = ImageIO.read(new File("tankGun.png"));
+            machineGun = ImageIO.read(new File ("tankGun02.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        gunInUse = heavyGun;
 	}
 	
 	/**

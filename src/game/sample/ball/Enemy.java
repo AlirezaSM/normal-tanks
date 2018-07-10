@@ -85,7 +85,7 @@ public class Enemy {
         if (r.nextInt((int) (60 / firingSpeed)) == 1) {
             int currentFiringLocX = (int) (locX + firingLocX + distanceBetweenFiringPointAndCenter * Math.cos(movingAngle));
             int currentFiringLocY = (int) (locY + firingLocY - distanceBetweenFiringPointAndCenter * Math.sin(movingAngle));
-            GameFrame.bullets.add(new Bullet(currentFiringLocX, currentFiringLocY, movingAngle,true));
+            GameFrame.bullets.add(new EnemyBullet(currentFiringLocX, currentFiringLocY, movingAngle,true));
             i++;
             System.out.println(i);
         }

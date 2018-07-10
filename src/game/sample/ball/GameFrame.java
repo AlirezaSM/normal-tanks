@@ -35,7 +35,7 @@ public class GameFrame extends JFrame {
     private ArrayList<Float> fpsHistory;
 
     private BufferStrategy bufferStrategy;
-    Map a = new Map();
+    Map map = new Map();
     double tankGunAngle;
     public static ArrayList<Bullet> bullets = new ArrayList<>();
     public static ArrayList<Enemy> enemies = new ArrayList<>();
@@ -75,9 +75,7 @@ public class GameFrame extends JFrame {
                         GameState.numOfMachineGunBullets--;
                         System.out.println(GameState.numOfMachineGunBullets);
                     }
-
                 }
-
             }
         });
 
@@ -157,9 +155,8 @@ public class GameFrame extends JFrame {
     private void doRendering(Graphics2D g2d, GameState state) {
 
         // draw the map
-        a.designMap();
-        a.drawMap(g2d, state.cameraY);
-
+        map.designMap();
+        map.drawMap(g2d, state.cameraY);
 
         // Drawing the rotated image at the required drawing locations
 
@@ -187,7 +184,6 @@ public class GameFrame extends JFrame {
 
         g2d.setColor(Color.RED);
         g2d.fillOval(mg.locX + 25,mg.locY + 35,10,10);
-
 
         // Print FPS info
         long currentRender = System.currentTimeMillis();

@@ -65,8 +65,8 @@ public class Enemy {
 
     public void draw (Graphics2D g2d) {
         if (alive) {
-            g2d.drawImage(enemyImg, locX, locY, null);
             checkTriggered();
+            g2d.drawImage(enemyImg, locX, locY, null);
         }
     }
 

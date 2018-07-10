@@ -36,8 +36,10 @@ public class Map implements Serializable{
     public BufferedImage hardWall2Img;
     public BufferedImage hardWall3Img;
     public BufferedImage hardWall4Img;
-    HashMap<Integer,Integer> plantedSoilPoints = new HashMap<>();
     HashMap<Integer,BufferedImage> mapImages = new HashMap<>();
+    ArrayList<ImageOnMap> imagesOnMap = new ArrayList<>();
+
+
 
 
 
@@ -47,10 +49,6 @@ public class Map implements Serializable{
             plantImg = ImageIO.read(new File("plant.png"));
             wallImg = ImageIO.read(new File("wall.png"));
             plantedSoilImg = ImageIO.read(new File("plantedSoil.png"));
-            hardWall1Img = ImageIO.read(new File("hardWall1.png"));
-            hardWall2Img = ImageIO.read(new File("hardWall2.png"));
-            hardWall3Img = ImageIO.read(new File("hardWall3.png"));
-            hardWall4Img = ImageIO.read(new File("hardWall4.png"));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -59,11 +57,15 @@ public class Map implements Serializable{
         mapImages.put(plant,plantImg);
         mapImages.put(plantedSoil,plantedSoilImg);
         mapImages.put(wall,wallImg);
-        mapImages.put(hardWall,hardWallImg);
-        mapImages.put(hardWall1,hardWall1Img);
-        mapImages.put(hardWall2,hardWall2Img);
-        mapImages.put(hardWall3,hardWall3Img);
-        mapImages.put(hardWall4,hardWall4Img);
+
+        imagesOnMap.add(new ImageOnMap("cactus.png",10,70));
+        imagesOnMap.add(new ImageOnMap("cactus.png",10,110));
+        imagesOnMap.add(new ImageOnMap("cactus.png",2,60));
+        imagesOnMap.add(new ImageOnMap("cactus.png",5,45));
+        imagesOnMap.add(new ImageOnMap("cactus.png",22,130));
+        imagesOnMap.add(new ImageOnMap("cactus.png",10,10));
+        imagesOnMap.add(new ImageOnMap("cactus.png",30,120));
+
         Random r = new Random();
 
         for (int i = 0; i < Tile.numOfHorizontalTiles;i++) {
@@ -78,7 +80,6 @@ public class Map implements Serializable{
     }
 
     public void designMap () {
-
         for (int i = 30; i < 33; i++){
             for (int j = 0; j < 10;j++) {
                 tiles[i][j] = new Tile(wall,true);
@@ -102,6 +103,14 @@ public class Map implements Serializable{
                 }
             }
         }
+
+        for (int i = 0; i < imagesOnMap.size();i++) {
+            System.out.println("locX = " + imagesOnMap.get(i).locX + "locY = " + imagesOnMap.get(i).locY);
+            imagesOnMap.get(i).draw(g2d);
+        }
+
+
+
     }
 
     public static Tile[][] getTiles() {

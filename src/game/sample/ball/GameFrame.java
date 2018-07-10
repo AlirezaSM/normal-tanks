@@ -31,8 +31,6 @@ public class GameFrame extends JFrame {
 
     //uncomment all /*...*/ in the class for using Tank icon instead of a simple circle
 
-    ConstantEnemy ab = new ConstantEnemy();
-
     private long lastRender;
     private ArrayList<Float> fpsHistory;
 

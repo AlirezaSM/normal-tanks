@@ -39,7 +39,9 @@ public class GameFrame extends JFrame {
     double tankGunAngle;
     public static ArrayList<Bullet> bullets = new ArrayList<>();
     public static ArrayList<Enemy> enemies = new ArrayList<>();
-
+    BufferedImage numOfHeavyBullets;
+    BufferedImage numOfMachineGunBullets;
+    BufferedImage health;
     KhengEnemy me2 = new KhengEnemy();
     AlienEnemy ae = new AlienEnemy();
     MachineGun mg = new MachineGun();
@@ -52,6 +54,13 @@ public class GameFrame extends JFrame {
         lastRender = -1;
         ThreadPool.init();
         fpsHistory = new ArrayList<>(100);
+        try {
+            numOfHeavyBullets = ImageIO.read(new File("NumberOfHeavyBullets.png"));
+            numOfMachineGunBullets = ImageIO.read(new File("NumberOfMachineGunBullets.png"));
+            health = ImageIO.read(new File("health.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         /**
          *  firing a bullet with left click
          */
@@ -168,12 +177,30 @@ public class GameFrame extends JFrame {
 
         for (int i = 0; i < enemies.size(); i++) {
             enemies.get(i).draw(g2d);
-            enemies.get(i).move();
+            enemies.get(i).move( );
         }
 
         updateBulletsState(g2d);
         updateEnemiesState(enemies);
         updateHealth(g2d,enemies,bullets);
+
+        /**
+         * bullets monitors
+         */
+        g2d.drawImage(numOfHeavyBullets,25,40,null);
+        g2d.drawImage(numOfMachineGunBullets,30,110,null);
+        g2d.setColor(new Color(0,173,17));
+        g2d.setFont(new Font("TimesRoman", Font.BOLD , 30));
+        g2d.drawString("" + GameState.numOfHeavyBullets,90,100);
+        g2d.drawString("" + GameState.numOfMachineGunBullets,90,170);
+
+        /**
+         * health monitor
+         */
+
+        for (int i = 0; i < (GameState.mainTankHealth / 100) + 1; i++) {
+            g2d.drawImage(health,500 + (50 * i), 50 , null);
+        }
 
 
 
@@ -200,19 +227,11 @@ public class GameFrame extends JFrame {
             String str = String.format("Average FPS = %.1f , Last Interval = %d ms,angle = %f, ctX = %f,ctY = %f, locX = %d, locY = %d,health = %d. direction = %d" +
                             "cameraY = %d",
                     avg, (currentRender - lastRender), mg.movingAngle, mg.centerTileY,mg.centerTileY , mg.locX, mg.locY, GameState.mainTankHealth, state.tankDirection, state.cameraY);
-            g2d.setColor(Color.CYAN);
+            g2d.setColor(Color.BLACK);
             g2d.setFont(g2d.getFont().deriveFont(18.0f));
-            int strWidth = g2d.getFontMetrics().stringWidth(str);
-            int strHeight = g2d.getFontMetrics().getHeight();
-            g2d.drawString(str, (GAME_WIDTH - strWidth) / 2, strHeight + 50);
+            g2d.drawString(str, 10, 700);
         }
         lastRender = currentRender;
-        // Print user guide
-        String userGuide
-                = "Use the MOUSE or ARROW KEYS to move the BALL. "
-                + "Press ESCAPE to end the game.";
-        g2d.setFont(g2d.getFont().deriveFont(18.0f));
-        g2d.drawString(userGuide, 10, GAME_HEIGHT - 10);
         // Draw GAME OVER
         if (state.gameOver) {
             String str = "GAME OVER";

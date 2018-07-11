@@ -28,10 +28,12 @@ public class GameState {
 	private KeyHandler keyHandler;
 	private MouseHandler mouseHandler;
 	public static BufferedImage mainTank, heavyGun, machineGun, gunInUse;
+    public static final int NUMOFLIVES = 3;
 	public static final int Right = 1;
 	public static final int UP = 2;
 	public static final int LEFT = 3;
 	public static final int DOWN = 4;
+
 
 	public GameState() {
 		cameraY = 0;
@@ -56,7 +58,7 @@ public class GameState {
 		keyHandler = new KeyHandler();
 		mouseHandler = new MouseHandler();
 		//
-        mainTankHealth = 100;
+        mainTankHealth = 100 * NUMOFLIVES - 1;
         numOfHeavyBullets = 30;
         numOfMachineGunBullets = 300;
         //

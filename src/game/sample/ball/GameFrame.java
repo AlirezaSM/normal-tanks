@@ -209,15 +209,6 @@ public class GameFrame extends JFrame {
         g2d.setColor(Color.RED);
         g2d.fillOval(state.tankCenterX, state.tankCenterY, 10, 10);
 
-        g2d.drawRect((int) GameState.tankCenterX - 75,(int) GameState.tankCenterY - 75,160,150);
-        g2d.fillRect((int) GameState.tankCenterX - 75,(int) GameState.tankCenterY - 75,160,150);
-
-        g2d.drawRect(846,526,100,100);
-        g2d.fillRect(846,526,100,100);
-
-        g2d.setColor(Color.RED);
-        g2d.fillOval(mg.locX + 25,mg.locY + 35,10,10);
-
         // Print FPS info
         long currentRender = System.currentTimeMillis();
         if (lastRender > 0) {

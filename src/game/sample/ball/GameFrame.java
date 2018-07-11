@@ -209,6 +209,12 @@ public class GameFrame extends JFrame {
         g2d.setColor(Color.RED);
         g2d.fillOval(state.tankCenterX, state.tankCenterY, 10, 10);
 
+        g2d.drawRect((int) GameState.tankCenterX - 75,(int) GameState.tankCenterY - 75,160,150);
+        g2d.fillRect((int) GameState.tankCenterX - 75,(int) GameState.tankCenterY - 75,160,150);
+
+        g2d.drawRect(846,526,100,100);
+        g2d.fillRect(846,526,100,100);
+
         g2d.setColor(Color.RED);
         g2d.fillOval(mg.locX + 25,mg.locY + 35,10,10);
 
@@ -277,6 +283,17 @@ public class GameFrame extends JFrame {
                 System.out.println(GameState.mainTankHealth);
                 bullets.get(j).removed = true;
             }
+            /**
+             * case 4 : bullets fired toward pregnable walls
+             */
+            for (int i = 0; i < Map.pregnableWalls.size(); i++) {
+                if (bullets.get(j).bulletRectangle.intersects(Map.pregnableWalls.get(i).imgRectangle)) {
+                    Map.pregnableWalls.get(i).numOfBulletCollisions++;
+                    Map.pregnableWalls.get(i).updateWall();
+                    bullets.get(j).removed = true;
+                }
+            }
+
             for (int i = 0; i < enemies.size(); i++) {
 //                g2d.drawRect(enemies.get(i).locX,enemies.get(i).locY,enemies.get(i).enemyWidth,enemies.get(j).enemyHeight);
   //              g2d.fillRect(enemies.get(i).locX,enemies.get(i).locY,enemies.get(i).enemyWidth,enemies.get(j).enemyHeight);

@@ -74,4 +74,8 @@ public class ImageOnMap {
             e.printStackTrace();
         }
     }
+
+    public void setImg(BufferedImage img) {
+        this.img = img;
+    }
 }

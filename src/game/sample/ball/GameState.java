@@ -60,7 +60,7 @@ public class GameState {
 		//
         mainTankHealth = 100 * NUMOFLIVES - 1;
         numOfHeavyBullets = 30;
-        numOfMachineGunBullets = 10;
+        numOfMachineGunBullets = 300;
         //
         isUsingHeavyGun = true;
         try {

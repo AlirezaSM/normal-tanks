@@ -39,6 +39,7 @@ public class Map implements Serializable{
     static HashMap<Integer,BufferedImage> mapImages = new HashMap<>();
     static ArrayList<ImageOnMap> imagesOnMap = new ArrayList<>();
     static ArrayList<PregnableWall> pregnableWalls = new ArrayList<>();
+    static ArrayList<Prize> prizes = new ArrayList<>();
 
 
 
@@ -72,6 +73,10 @@ public class Map implements Serializable{
         pregnableWalls.add(new PregnableWall(28,10));
         pregnableWalls.add(new PregnableWall(31,10));
         pregnableWalls.add(new PregnableWall(34,10));
+
+        prizes.add(new TankRepair(15,15));
+        prizes.add(new CannonShell(35,5));
+        prizes.add(new MachineGunCartridge(23,70));
 
         Random r = new Random();
 
@@ -113,6 +118,10 @@ public class Map implements Serializable{
 
         for (int i = 0; i < pregnableWalls.size();i++) {
             pregnableWalls.get(i).draw(g2d);
+        }
+        for (int i = 0; i < prizes.size();i++) {
+            prizes.get(i).draw(g2d);
+            prizes.get(i).checkCollisionWithTank();
         }
 
 

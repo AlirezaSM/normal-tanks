@@ -177,7 +177,7 @@ public class GameFrame extends JFrame {
 
         for (int i = 0; i < enemies.size(); i++) {
             enemies.get(i).draw(g2d);
-            enemies.get(i).move( );
+            enemies.get(i).move(g2d, map.pregnableWalls);
         }
 
         updateBulletsState(g2d);
@@ -203,6 +203,7 @@ public class GameFrame extends JFrame {
         }
 
 
+        System.out.println("x = " + GameState.aimX + "y = " + GameState.aimY);
 
         // 	g2d.drawImage(tankGun,state.locX,state.locY,null);
 
@@ -221,9 +222,9 @@ public class GameFrame extends JFrame {
                 avg += fps;
             }
             avg /= fpsHistory.size();
-            String str = String.format("Average FPS = %.1f , Last Interval = %d ms,angle = %f, ctX = %f,ctY = %f, locX = %d, locY = %d,health = %d. direction = %d" +
+            String str = String.format("Average FPS = %.1f , Last Interval = %d ms,mg-angle = %d, ae-angle = %d,ke-angle = %d, locX = %d, locY = %d,health = %d. direction = %d" +
                             "cameraY = %d",
-                    avg, (currentRender - lastRender), mg.movingAngle, mg.centerTileY,mg.centerTileY , mg.locX, mg.locY, GameState.mainTankHealth, state.tankDirection, state.cameraY);
+                    avg, (currentRender - lastRender), mg.enemyDirection, ae.enemyDirection,me2.enemyDirection, mg.locX, mg.locY, GameState.mainTankHealth, state.tankDirection, state.cameraY);
             g2d.setColor(Color.BLACK);
             g2d.setFont(g2d.getFont().deriveFont(18.0f));
             g2d.drawString(str, 10, 700);

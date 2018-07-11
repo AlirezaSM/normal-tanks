@@ -38,7 +38,7 @@ public class Map implements Serializable{
     public BufferedImage hardWall4Img;
     static HashMap<Integer,BufferedImage> mapImages = new HashMap<>();
     static ArrayList<ImageOnMap> imagesOnMap = new ArrayList<>();
-    static ArrayList<PregnableWall> pregnableWalls = new ArrayList<>();
+    public static ArrayList<PregnableWall> pregnableWalls = new ArrayList<>();
     static ArrayList<Prize> prizes = new ArrayList<>();
 
 
@@ -73,6 +73,16 @@ public class Map implements Serializable{
         pregnableWalls.add(new PregnableWall(28,10));
         pregnableWalls.add(new PregnableWall(31,10));
         pregnableWalls.add(new PregnableWall(34,10));
+        pregnableWalls.add(new PregnableWall(15,30));
+        pregnableWalls.add(new PregnableWall(18,30));
+        pregnableWalls.add(new PregnableWall(21,30));
+        pregnableWalls.add(new PregnableWall(24,30));
+        pregnableWalls.add(new PregnableWall(15,34));
+        pregnableWalls.add(new PregnableWall(18,34));
+        pregnableWalls.add(new PregnableWall(21,34));
+        pregnableWalls.add(new PregnableWall(24,34));
+
+
 
         prizes.add(new TankRepair(15,15));
         prizes.add(new CannonShell(35,5));
@@ -98,6 +108,14 @@ public class Map implements Serializable{
                 tiles[i][j] = new Tile (wall,true);
             }
         }
+
+        for (int i = 20; i < 25; i++){
+            for (int j = 50; j < 52;j++) {
+                tiles[i][j] = new Tile (wall,true);
+            }
+        }
+
+
 
     }
 
@@ -130,5 +148,17 @@ public class Map implements Serializable{
 
     public static Tile[][] getTiles() {
         return tiles;
+    }
+
+    public static Rectangle tileRectangle (int x, int y) {
+        int locX = (int) (x * Tile.tileWidth) - (Tile.tileWidth);
+        int locY = (int) (Map.screenHeight - (y - Enemy.startTile) * Tile.tileHeight) + (Tile.tileHeight);
+        return (new Rectangle(locX, locY, Tile.tileWidth, Tile.tileHeight));
+    }
+
+    public static boolean tileIsVisible (int y) {
+         if (y >= Enemy.startTile && y <= (Enemy.startTile + Tile.numOfVerticalTilesInOneScreen))
+             return true;
+         return false;
     }
 }

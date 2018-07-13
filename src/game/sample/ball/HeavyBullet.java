@@ -12,6 +12,6 @@ public class HeavyBullet extends Bullet {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        bulletSpeed = 10;
+        bulletSpeed = 2;
     }
 }

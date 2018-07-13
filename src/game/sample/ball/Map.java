@@ -3,9 +3,7 @@ package game.sample.ball;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,39 +11,46 @@ import java.util.Random;
 
 
 public class Map implements Serializable{
-    public static int soil = 1;
-    public static int plant = 2;
-    public static int plantedSoil = 3;
-    public static int wall = 4;
-    public static int hardWall = 5;
-    public static int hardWall1 = 6;
-    public static int hardWall2 = 7;
-    public static int hardWall3 = 8;
-    public static int hardWall4 = 9;
-    public static int numOfPlantedSoilPlants = 400;
-    public static int numOfVerticalScreens = 5;
-    public static int screenHeight = 720;
+    public transient static int soil = 1;
+    public transient static int plant = 2;
+    public transient static int plantedSoil = 3;
+    public transient static int wall = 4;
+    public transient static int numOfPlantedSoilPlants = 400;
+    public transient static int numOfVerticalScreens = 5;
+    public transient static int screenHeight = 720;
   //  public static double screenRatio = 16 / 9;
-    static Tile [][] tiles = new Tile[Tile.numOfHorizontalTiles][Tile.numOfVerticalTiles];
-    public BufferedImage soilImg;
-    public BufferedImage plantImg;
-    public BufferedImage wallImg;
-    public BufferedImage plantedSoilImg;
-    public BufferedImage hardWallImg;
-    public BufferedImage hardWall1Img;
-    public BufferedImage hardWall2Img;
-    public BufferedImage hardWall3Img;
-    public BufferedImage hardWall4Img;
-    static HashMap<Integer,BufferedImage> mapImages = new HashMap<>();
-    static ArrayList<ImageOnMap> imagesOnMap = new ArrayList<>();
-    public static ArrayList<PregnableWall> pregnableWalls = new ArrayList<>();
-    static ArrayList<Prize> prizes = new ArrayList<>();
+    static transient Tile [][] tiles = new Tile[Tile.numOfHorizontalTiles][Tile.numOfVerticalTiles];
+    public transient BufferedImage soilImg;
+    public transient BufferedImage plantImg;
+    public transient BufferedImage wallImg;
+    public transient BufferedImage plantedSoilImg;
+    transient FileOutputStream fos = null;
+    transient ObjectOutputStream oos = null;
+    transient BufferedOutputStream bos = null;
+    transient FileInputStream fis = null;
+    transient ObjectInputStream ois = null;
+    transient BufferedInputStream bis = null;
+    static transient HashMap<Integer,BufferedImage> mapImages = new HashMap<>();
+    public transient ArrayList<ImageOnMap> imagesOnMap;
+    public ArrayList<PregnableWall> pregnableWalls;
+    public ArrayList<Prize> prizes;
 
 
 
 
 
     public Map() {
+        try {
+
+
+
+
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         try {
             soilImg = ImageIO.read(new File("soil.png"));
             plantImg = ImageIO.read(new File("plant.png"));
@@ -55,6 +60,11 @@ public class Map implements Serializable{
         catch (Exception e){
             e.printStackTrace();
         }
+
+        imagesOnMap = new ArrayList<>();
+        pregnableWalls = new ArrayList<>();
+        prizes = new ArrayList<>();
+
         mapImages.put(soil,soilImg);
         mapImages.put(plant,plantImg);
         mapImages.put(plantedSoil,plantedSoilImg);
@@ -71,8 +81,6 @@ public class Map implements Serializable{
         pregnableWalls.add(new PregnableWall(28,2));
         pregnableWalls.add(new PregnableWall(28,6));
         pregnableWalls.add(new PregnableWall(28,10));
-        pregnableWalls.add(new PregnableWall(31,10));
-        pregnableWalls.add(new PregnableWall(34,10));
         pregnableWalls.add(new PregnableWall(15,30));
         pregnableWalls.add(new PregnableWall(18,30));
         pregnableWalls.add(new PregnableWall(21,30));
@@ -119,7 +127,7 @@ public class Map implements Serializable{
 
     }
 
-    public void drawMap (Graphics2D g2d,int startingY) {
+    public void drawMap (Graphics2D g2d,int startingY, GameState state) {
 
         for (int i = 0; i < Tile.numOfHorizontalTiles; i++) {
             if (startingY / Tile.tileHeight >= 0) {
@@ -131,18 +139,16 @@ public class Map implements Serializable{
         }
 
         for (int i = 0; i < imagesOnMap.size();i++) {
-            imagesOnMap.get(i).draw(g2d);
+            imagesOnMap.get(i).draw(g2d, state);
         }
 
         for (int i = 0; i < pregnableWalls.size();i++) {
-            pregnableWalls.get(i).draw(g2d);
+            pregnableWalls.get(i).draw(g2d, state);
         }
         for (int i = 0; i < prizes.size();i++) {
-            prizes.get(i).draw(g2d);
-            prizes.get(i).checkCollisionWithTank();
+            prizes.get(i).draw(g2d,state);
+            prizes.get(i).checkCollisionWithTank(state,this);
         }
-
-
 
     }
 
@@ -161,4 +167,39 @@ public class Map implements Serializable{
              return true;
          return false;
     }
+
+    public void serializeAndSave (Map map) {
+        try {
+            fos = new FileOutputStream(new File("map.jtank"));
+            bos = new BufferedOutputStream(fos);
+            oos = new ObjectOutputStream(bos);
+            oos.writeObject(map);
+            oos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deserializeAndUpdate () {
+        try {
+            fis = new FileInputStream(new File("map.jtank"));
+            bis = new BufferedInputStream(fis);
+            ois = new ObjectInputStream(bis);
+            Map temp = (Map) ois.readObject();
+            if (temp.pregnableWalls.size() != pregnableWalls.size())
+                System.out.println("tpreg = " + temp.pregnableWalls.size() + " p = " + pregnableWalls.size());
+            if (temp.prizes.size() != prizes.size())
+                System.out.println("tprize = " + temp.prizes.size() + " p = " + prizes.size());
+
+            for (int i = 0; i < temp.pregnableWalls.size(); i++) {
+                pregnableWalls.get(i).numOfBulletCollisions = temp.pregnableWalls.get(i).numOfBulletCollisions;
+            }
+            for (int i = 0; i < temp.prizes.size(); i++) {
+                prizes.get(i).usable = temp.prizes.get(i).usable;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

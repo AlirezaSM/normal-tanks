@@ -5,20 +5,21 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
-public class ImageOnMap {
-    BufferedImage img;
+public class ImageOnMap implements Serializable {
+    transient BufferedImage img;
     double centerTileX;
     double centerTileY;
-    int width;
-    int height;
+    transient int width;
+    transient int height;
     // upper left location
-    int locX;
-    int locY;
+    transient int locX;
+    transient int locY;
 
-    int startTile;
-    public Rectangle imgRectangle;
-    boolean obstacle;
+    transient int startTile;
+    public transient Rectangle imgRectangle;
+    transient boolean obstacle;
 
     public ImageOnMap(String imageName, double centerTileX, double centerTileY,boolean obstacle) {
         try {
@@ -30,39 +31,39 @@ public class ImageOnMap {
         this.centerTileY = centerTileY;
         width = img.getWidth();
         height = img.getHeight();
-        startTile = GameState.cameraY / Tile.tileHeight;
+        startTile = 0;
         locX = (int) (centerTileX * Tile.tileWidth) - (width / 2);
         locY = (int) (Map.screenHeight - (centerTileY - startTile) * Tile.tileHeight) - (height / 2);
         imgRectangle = new Rectangle(locX,locY,width,height);
         this.obstacle = obstacle;
     }
 
-    public void draw (Graphics2D g2d) {
-        updateLocs();
-        checkForCollisions();
+    public void draw (Graphics2D g2d, GameState state) {
+        updateLocs(state);
+        checkForCollisions(state);
         g2d.drawImage(img, locX, locY, null);
     }
 
-    public void updateLocs () {
-        startTile = GameState.cameraY / Tile.tileHeight;
+    public void updateLocs (GameState state) {
+        startTile = state.cameraY / Tile.tileHeight;
         locX = (int) (centerTileX * Tile.tileWidth) - (width / 2);
         locY = (int) (Map.screenHeight - (centerTileY - startTile) * Tile.tileHeight) - (height / 2);
         imgRectangle = new Rectangle(locX,locY,width,height);
     }
 
-    public void checkForCollisions () {
-        if (GameState.mainTankRectangle().intersects(imgRectangle) && obstacle) {
-            if (GameState.tankDirection == GameState.Right) {
-                GameState.tankCenterX -= 8;
+    public void checkForCollisions (GameState state) {
+        if (state.mainTankRectangle.intersects(imgRectangle) && obstacle) {
+            if (state.tankDirection == GameState.Right) {
+                state.tankCenterX -= 8;
             }
-            if (GameState.tankDirection == GameState.LEFT) {
-                GameState.tankCenterX += 8;
+            if (state.tankDirection == GameState.LEFT) {
+                state.tankCenterX += 8;
             }
-            if (GameState.tankDirection == GameState.UP) {
-                GameState.tankCenterY += 8;
+            if (state.tankDirection == GameState.UP) {
+                state.tankCenterY += 8;
             }
-            if (GameState.tankDirection == GameState.DOWN) {
-                GameState.tankCenterY -= 8;
+            if (state.tankDirection == GameState.DOWN) {
+                state.tankCenterY -= 8;
             }
         }
     }

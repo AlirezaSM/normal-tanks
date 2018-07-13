@@ -8,8 +8,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -24,31 +24,41 @@ import javax.swing.JFrame;
  * 
  * @author Seyed Mohammad Ghaffarian
  */
-public class GameFrame extends JFrame {
+public class GameFrame extends JFrame implements Serializable {
 
-    public static final int GAME_HEIGHT = 720;                  // 720p game resolution
-    public static final int GAME_WIDTH = 16 * GAME_HEIGHT / 9;  // wide aspect ratio
+    transient GameState state;
+    public static transient final int GAME_HEIGHT = 720;                  // 720p game resolution
+    public static transient final int GAME_WIDTH = 16 * GAME_HEIGHT / 9;  // wide aspect ratio
 
     //uncomment all /*...*/ in the class for using Tank icon instead of a simple circle
 
-    private long lastRender;
-    private ArrayList<Float> fpsHistory;
+    private transient long lastRender;
+    private transient ArrayList<Float> fpsHistory;
 
-    private BufferStrategy bufferStrategy;
-    Map map = new Map();
-    double tankGunAngle;
-    public static ArrayList<Bullet> bullets = new ArrayList<>();
-    public static ArrayList<Enemy> enemies = new ArrayList<>();
-    BufferedImage numOfHeavyBullets;
-    BufferedImage numOfMachineGunBullets;
-    BufferedImage health;
-    KhengEnemy me2 = new KhengEnemy();
-    AlienEnemy ae = new AlienEnemy();
-    MachineGun mg = new MachineGun();
+    private transient BufferStrategy bufferStrategy;
+    transient Map map;
+    public  ArrayList<Bullet> bullets = new ArrayList<>();
+    public  ArrayList<Enemy> enemies = new ArrayList<>();
+    public  ArrayList<ArrayList> crucialInfo = new ArrayList<>();
+    transient BufferedImage numOfHeavyBullets;
+    transient BufferedImage numOfMachineGunBullets;
+    transient BufferedImage health;
+    transient KhengEnemy me2 = new KhengEnemy();
+    transient AlienEnemy ae = new AlienEnemy();
+    transient MachineGun mg = new MachineGun();
+    transient FileOutputStream fos;
+    transient ObjectOutputStream oos;
+    transient ObjectInputStream ois;
+    transient FileInputStream fis;
+    transient BufferedInputStream bis;
+    transient BufferedOutputStream bos;
+    LocalTime t1;
+    LocalTime t2;
 
-
-    public GameFrame(String title) {
+    public GameFrame(String title, GameState st) {
         super(title);
+        state = st;
+        map = new Map();
         setResizable(false);
         setSize(GAME_WIDTH, GAME_HEIGHT);
         lastRender = -1;
@@ -61,6 +71,13 @@ public class GameFrame extends JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        try {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         /**
          *  firing a bullet with left click
          */
@@ -70,19 +87,19 @@ public class GameFrame extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 if (e.getButton() == MouseEvent.BUTTON1) {
-                    if (GameState.isUsingHeavyGun && GameState.numOfHeavyBullets > 0) {
-                        int firingLocXOfBullet = (int) (GameState.tankCenterX + 75 * Math.cos(tankGunAngle));
-                        int firingLocYOfBullet = (int) (GameState.tankCenterY + 75 * Math.sin(tankGunAngle));
-                        bullets.add(new HeavyBullet(firingLocXOfBullet, firingLocYOfBullet, tankGunAngle, false));
-                        GameState.numOfHeavyBullets--;
-                        System.out.println(GameState.numOfHeavyBullets);
+                    if (state.isUsingHeavyGun && state.numOfHeavyBullets > 0) {
+                        int firingLocXOfBullet = (int) (state.tankCenterX + 75 * Math.cos(state.tankGunAngle));
+                        int firingLocYOfBullet = (int) (state.tankCenterY + 75 * Math.sin(state.tankGunAngle));
+                        bullets.add(new HeavyBullet(firingLocXOfBullet, firingLocYOfBullet, state.tankGunAngle, false));
+                        state.numOfHeavyBullets--;
+                        System.out.println(state.numOfHeavyBullets);
                     }
-                    if (!GameState.isUsingHeavyGun && GameState.numOfMachineGunBullets > 0) {
-                        int firingLocXOfBullet = (int) (GameState.tankCenterX + 75 * Math.cos(tankGunAngle));
-                        int firingLocYOfBullet = (int) (GameState.tankCenterY + 75 * Math.sin(tankGunAngle));
-                        bullets.add(new MachineGunBullet(firingLocXOfBullet, firingLocYOfBullet, tankGunAngle, false));
-                        GameState.numOfMachineGunBullets--;
-                        System.out.println(GameState.numOfMachineGunBullets);
+                    if (!state.isUsingHeavyGun && state.numOfMachineGunBullets > 0) {
+                        int firingLocXOfBullet = (int) (state.tankCenterX + 75 * Math.cos(state.tankGunAngle));
+                        int firingLocYOfBullet = (int) (state.tankCenterY + 75 * Math.sin(state.tankGunAngle));
+                        bullets.add(new MachineGunBullet(firingLocXOfBullet, firingLocYOfBullet, state.tankGunAngle, false));
+                        state.numOfMachineGunBullets--;
+                        System.out.println(state.numOfMachineGunBullets);
                     }
                 }
             }
@@ -97,13 +114,13 @@ public class GameFrame extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 if (e.getButton() == MouseEvent.BUTTON3) {
-                    if (GameState.isUsingHeavyGun) {
+                    if (state.isUsingHeavyGun) {
                         GameState.gunInUse = GameState.machineGun;
-                        GameState.isUsingHeavyGun = false;
+                        state.isUsingHeavyGun = false;
                     }
                     else {
                         GameState.gunInUse = GameState.heavyGun;
-                        GameState.isUsingHeavyGun = true;
+                        state.isUsingHeavyGun = true;
                     }
                 }
 
@@ -113,6 +130,8 @@ public class GameFrame extends JFrame {
         enemies.add(me2);
         enemies.add(ae);
         enemies.add(mg);
+        crucialInfo.add(enemies);
+        crucialInfo.add(bullets);
     }
 
     /**
@@ -130,7 +149,7 @@ public class GameFrame extends JFrame {
     /**
      * Game rendering with triple-buffering using BufferStrategy.
      */
-    public void render(GameState state) {
+    public void render() {
         // Render single frame
         do {
             // The following loop ensures that the contents of the drawing buffer
@@ -140,7 +159,7 @@ public class GameFrame extends JFrame {
                 // to make sure the strategy is validated
                 Graphics2D graphics = (Graphics2D) bufferStrategy.getDrawGraphics();
                 try {
-                    doRendering(graphics, state);
+                    doRendering(graphics);
                 } finally {
                     // Dispose the graphics
                     graphics.dispose();
@@ -161,28 +180,51 @@ public class GameFrame extends JFrame {
     /**
      * Rendering all game elements based on the game state.
      */
-    private void doRendering(Graphics2D g2d, GameState state) {
+    private void doRendering(Graphics2D g2d) {
+
+        long ti1 = System.currentTimeMillis();
+        System.out.println(GameLoop.loopNum);
+        if (((GameLoop.loopNum - 1) % 30 == 0) || GameLoop.loopNum == 2) {
+            long t1 = System.currentTimeMillis();
+            map.deserializeAndUpdate();
+            deserializeAndUpdate("enemies.jtank");
+            deserializeAndUpdate("bullets.jtank");
+            state.deserializeAndUpdate();
+            long t2 = System.currentTimeMillis();
+            System.out.println("des: " + (t2 - t1));
+        }
 
         // draw the map
         map.designMap();
-        map.drawMap(g2d, state.cameraY);
+        map.drawMap(g2d, state.cameraY,state);
 
         // Drawing the rotated image at the required drawing locations
 
-        tankGunAngle = Math.atan2((state.aimY - state.tankCenterY), (state.aimX - state.tankCenterX));
+        state.tankGunAngle = Math.atan2((state.aimY - state.tankCenterY), (state.aimX - state.tankCenterX));
 
         g2d.drawImage(rotatePic(state.mainTank, state.tankBodyAngle), state.tankCenterX - 90, state.tankCenterY - 90, null);
 
-        g2d.drawImage(rotatePic(state.gunInUse, tankGunAngle), state.tankCenterX - 90, state.tankCenterY - 90, null);
+        g2d.drawImage(rotatePic(state.gunInUse, state.tankGunAngle), state.tankCenterX - 90, state.tankCenterY - 90, null);
 
         for (int i = 0; i < enemies.size(); i++) {
-            enemies.get(i).draw(g2d);
-            enemies.get(i).move(g2d, map.pregnableWalls);
+            enemies.get(i).draw(g2d, state);
+            enemies.get(i).move(g2d, map.pregnableWalls, state, this);
         }
 
         updateBulletsState(g2d);
         updateEnemiesState(enemies);
-        updateHealth(g2d,enemies,bullets);
+        updateHealth(g2d,enemies,bullets,map);
+
+      //  serializeAndSave();
+        if ((GameLoop.loopNum % 30) == 0 && GameLoop.loopNum != 0) {
+            long t1 = System.currentTimeMillis();
+            map.serializeAndSave(map);
+            serializeAndSave(enemies,"enemies.jtank");
+            serializeAndSave(bullets,"bullets.jtank");
+            state.serializeAndSave(state);
+            long t2 = System.currentTimeMillis();
+            System.out.println("ser = " + (t2 - t1));
+        }
 
         /**
          * bullets monitors
@@ -191,19 +233,16 @@ public class GameFrame extends JFrame {
         g2d.drawImage(numOfMachineGunBullets,30,110,null);
         g2d.setColor(new Color(0,173,17));
         g2d.setFont(new Font("TimesRoman", Font.BOLD , 30));
-        g2d.drawString("" + GameState.numOfHeavyBullets,90,100);
-        g2d.drawString("" + GameState.numOfMachineGunBullets,90,170);
+        g2d.drawString("" + state.numOfHeavyBullets,90,100);
+        g2d.drawString("" + state.numOfMachineGunBullets,90,170);
 
         /**
          * health monitor
          */
 
-        for (int i = 0; i < (GameState.mainTankHealth / 100) + 1; i++) {
+        for (int i = 0; i < (state.mainTankHealth / 100) + 1; i++) {
             g2d.drawImage(health,500 + (50 * i), 50 , null);
         }
-
-
-        System.out.println("x = " + GameState.aimX + "y = " + GameState.aimY);
 
         // 	g2d.drawImage(tankGun,state.locX,state.locY,null);
 
@@ -222,9 +261,9 @@ public class GameFrame extends JFrame {
                 avg += fps;
             }
             avg /= fpsHistory.size();
-            String str = String.format("Average FPS = %.1f , Last Interval = %d ms,mg-angle = %d, ae-angle = %d,ke-angle = %d, locX = %d, locY = %d,health = %d. direction = %d" +
+            String str = String.format("Average FPS = %.1f , Last Interval = %d ms,mg-health = %d, ae-health = %d,ke-health = %d, locX = %d, locY = %d,health = %d. direction = %d" +
                             "cameraY = %d",
-                    avg, (currentRender - lastRender), mg.enemyDirection, ae.enemyDirection,me2.enemyDirection, mg.locX, mg.locY, GameState.mainTankHealth, state.tankDirection, state.cameraY);
+                    avg, (currentRender - lastRender), mg.health, ae.health,me2.health, mg.locX, mg.locY, state.mainTankHealth, state.tankDirection, state.cameraY);
             g2d.setColor(Color.BLACK);
             g2d.setFont(g2d.getFont().deriveFont(18.0f));
             g2d.drawString(str, 10, 700);
@@ -238,6 +277,8 @@ public class GameFrame extends JFrame {
             int strWidth = g2d.getFontMetrics().stringWidth(str);
             g2d.drawString(str, (GAME_WIDTH - strWidth) / 2, GAME_HEIGHT / 2);
         }
+        long ti2 = System.currentTimeMillis();
+        System.out.println("full time:" + (ti2 - ti1));
     }
 
     public static BufferedImage rotatePic(BufferedImage img, double angle) {
@@ -250,38 +291,35 @@ public class GameFrame extends JFrame {
 
     public void updateBulletsState(Graphics2D g2d) {
         for (int i = 0; i < bullets.size(); i++) {
-            bullets.get(i).fire(g2d);
-            if (bullets.get(i).isRemoved())
-                bullets.remove(i);
+            bullets.get(i).fire(g2d,  state);
         }
     }
 
     public void updateEnemiesState (ArrayList <Enemy> enemies) {
         for (int i = 0; i < enemies.size(); i++) {
             enemies.get(i).updateRectangles();
-            if (! enemies.get(i).alive)
-                enemies.remove(i);
         }
     }
 
-    public void updateHealth(Graphics2D g2d, ArrayList<Enemy> enemies, ArrayList<Bullet> bullets) {
+    public void updateHealth(Graphics2D g2d, ArrayList<Enemy> enemies, ArrayList<Bullet> bullets,Map map) {
         for (int j = 0; j < bullets.size(); j++) {
             /**
              * case 1 : if enemies fire a bullet toward the main tank
              */
-            if (bullets.get(j).bulletRectangle.intersects(GameState.mainTankRectangle()) && bullets.get(j).firedByEnemy) {
+            if (bullets.get(j).bulletRectangle.intersects(state.mainTankRectangle) && bullets.get(j).firedByEnemy &&
+                    !bullets.get(j).removed) {
                 g2d.drawImage(bullets.get(j).bulletExplodedImg, bullets.get(j).bulletCenterLocX, bullets.get(j).bulletCenterLocY, null);
-                GameState.mainTankHealth -= bullets.get(j).damagingPower;
-                System.out.println(GameState.mainTankHealth);
+                state.mainTankHealth -= bullets.get(j).damagingPower;
+                System.out.println(state.mainTankHealth);
                 bullets.get(j).removed = true;
             }
             /**
              * case 4 : bullets fired toward pregnable walls
              */
-            for (int i = 0; i < Map.pregnableWalls.size(); i++) {
-                if (bullets.get(j).bulletRectangle.intersects(Map.pregnableWalls.get(i).imgRectangle)) {
-                    Map.pregnableWalls.get(i).numOfBulletCollisions++;
-                    Map.pregnableWalls.get(i).updateWall();
+            for (int i = 0; i < map.pregnableWalls.size(); i++) {
+                if (bullets.get(j).bulletRectangle.intersects(map.pregnableWalls.get(i).imgRectangle) &&
+                        map.pregnableWalls.get(i).obstacle && !bullets.get(j).removed) {
+                    map.pregnableWalls.get(i).numOfBulletCollisions++;
                     bullets.get(j).removed = true;
                 }
             }
@@ -293,27 +331,88 @@ public class GameFrame extends JFrame {
                 /**
                  * case 2 : if main tank fires a bullet toward the enemies
                  */
-                if (bullets.get(j).bulletRectangle.intersects(enemies.get(i).enemyRectangle) && !bullets.get(j).firedByEnemy) {
+                if (bullets.get(j).bulletRectangle.intersects(enemies.get(i).enemyRectangle) && !bullets.get(j).firedByEnemy &&
+                        !bullets.get(j).removed && enemies.get(i).alive) {
                     g2d.drawImage(bullets.get(j).bulletExplodedImg, bullets.get(j).bulletCenterLocX, bullets.get(j).bulletCenterLocY, null);
                     enemies.get(i).health -= bullets.get(j).damagingPower;
                     System.out.println("enemies health = " + enemies.get(i).health);
-                    if (enemies.get(i).health == 0)
+                    if (enemies.get(i).health <= 0)
                         enemies.get(i).alive = false;
                     bullets.get(j).removed = true;
                 }
             }
         }
         /**
-         * case 3 : if enemies (except tank) collide with the main tank
+         * case 3 : if explosive enemies collide with the main tank
          */
+
+        /**
+         * case 5 : when the main tank wants to go over non-explosive enemies
+         */
+
+
         for (int i = 0; i < enemies.size(); i++) {
-            if (enemies.get(i).enemyRectangle.intersects(GameState.mainTankRectangle())
-                    && !(enemies.get(i) instanceof MachineGun)) {
+            if (enemies.get(i).enemyRectangle.intersects(state.mainTankRectangle) &&
+                            enemies.get(i).explodeInCollisions && enemies.get(i).alive)
+            {
                 g2d.drawImage(Bullet.bulletExplodedImg, enemies.get(i).locX, enemies.get(i).locY, null);
-                GameState.mainTankHealth -= 25;
+                state.mainTankHealth -= 25;
                 enemies.get(i).alive = false;
             }
-        }
 
+            else if (state.mainTankRectangle.intersects(enemies.get(i).enemyRectangle) &&
+                    !enemies.get(i).explodeInCollisions && enemies.get(i).alive)
+            {
+                if (state.tankDirection == 1)
+                    state.tankCenterX -= 8;
+                if (state.tankDirection == 3)
+                    state.tankCenterX += 8;
+                if (state.tankDirection == 2)
+                    state.tankCenterY += 8;
+                if (state.tankDirection == 4)
+                    state.tankCenterY -= 8;
+            }
+        }
+    }
+
+    public void serializeAndSave (ArrayList ar,String fileName) {
+        try {
+            fos = new FileOutputStream(new File(fileName));
+            bos = new BufferedOutputStream(fos);
+            oos = new ObjectOutputStream(bos);
+            oos.writeObject(ar);
+            oos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deserializeAndUpdate (String fileName) {
+        try {
+            fis = new FileInputStream(new File(fileName));
+            bis = new BufferedInputStream(fis);
+            ois = new ObjectInputStream(bis);
+            if (fileName.equals("enemies.jtank")) {
+                ArrayList<Enemy> temp = (ArrayList<Enemy>) ois.readObject();
+                for (int i = 0; i < temp.size(); i++) {
+                    enemies.get(i).centerTileX = temp.get(i).centerTileX;
+                    enemies.get(i).centerTileY = temp.get(i).centerTileY;
+                    enemies.get(i).health = temp.get(i).health;
+                    enemies.get(i).alive = temp.get(i).alive;
+                }
+            }
+            else if (fileName.equals("bullets.jtank")) {
+                ArrayList<Bullet> temp = (ArrayList<Bullet>) ois.readObject();
+                for (int i = 0; i < temp.size(); i++) {
+                    bullets.get(i).bulletCenterLocX = temp.get(i).bulletCenterLocX;
+                    bullets.get(i).bulletCenterLocY = temp.get(i).bulletCenterLocY;
+                    bullets.get(i).removed = temp.get(i).removed;
+                    bullets.get(i).bulletAngle = temp.get(i).bulletAngle;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

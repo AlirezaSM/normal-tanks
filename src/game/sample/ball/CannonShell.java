@@ -7,11 +7,11 @@ public class CannonShell extends Prize {
     }
 
     @Override
-    public void checkCollisionWithTank() {
-        super.checkCollisionWithTank();
-        if (GameState.mainTankRectangle().intersects(this.imgRectangle)) {
-            GameState.numOfHeavyBullets += 15;
-            Map.prizes.remove(this);
+    public void checkCollisionWithTank(GameState state,Map map) {
+        super.checkCollisionWithTank(state,map);
+        if (state.mainTankRectangle.intersects(this.imgRectangle) && usable) {
+            state.numOfHeavyBullets += 15;
+            usable = false;
         }
     }
 }

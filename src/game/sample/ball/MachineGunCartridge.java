@@ -6,11 +6,11 @@ public class MachineGunCartridge extends Prize {
     }
 
     @Override
-    public void checkCollisionWithTank() {
-        super.checkCollisionWithTank();
-        if (GameState.mainTankRectangle().intersects(this.imgRectangle)) {
-            GameState.numOfMachineGunBullets += 100;
-            Map.prizes.remove(this);
+    public void checkCollisionWithTank(GameState state, Map map) {
+        super.checkCollisionWithTank(state,map);
+        if (state.mainTankRectangle.intersects(this.imgRectangle) && usable) {
+            state.numOfMachineGunBullets += 100;
+            usable = false;
         }
     }
 }

@@ -21,10 +21,11 @@ public class GameLoop implements Runnable {
 	 * Frame Per Second.
 	 * Higher is better, but any value above 24 is fine.
 	 */
-	public static final int FPS = 60;
+	public static final int FPS = 120;
 	
 	private GameFrame canvas;
 	private GameState state;
+	static int loopNum = 1;
 
 	public GameLoop(GameFrame frame) {
 		canvas = frame;
@@ -33,8 +34,8 @@ public class GameLoop implements Runnable {
 	/**
 	 * This must be called before the game loop starts.
 	 */
-	public void init() {
-		state = new GameState();
+	public void init(GameState st) {
+		state = st;
 		canvas.addKeyListener(state.getKeyListener());
 		canvas.addMouseListener(state.getMouseListener());
 		canvas.addMouseMotionListener(state.getMouseMotionListener());
@@ -45,10 +46,11 @@ public class GameLoop implements Runnable {
 		boolean gameOver = false;
 		while (!gameOver) {
 			try {
+				loopNum++;
 				long start = System.currentTimeMillis();
 				//
 				state.update();
-				canvas.render(state);
+				canvas.render();
 				gameOver = state.gameOver;
 				//
 				long delay = (1000 / FPS) - (System.currentTimeMillis() - start);
@@ -58,6 +60,6 @@ public class GameLoop implements Runnable {
 			    ex.printStackTrace();
 			}
 		}
-		canvas.render(state);
+		canvas.render();
 	}
 }

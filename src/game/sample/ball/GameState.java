@@ -5,9 +5,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
+import java.io.*;
+import java.util.ArrayList;
 
 /**
  * This class holds the state of game and all of its elements.
@@ -15,24 +14,32 @@ import java.util.logging.Level;
  * 
  * @author Seyed Mohammad Ghaffarian
  */
-public class GameState {
+public class GameState implements Serializable {
 	
-	public static int tankCenterX,tankCenterY,tankCenterTileX, tankCenterTileY, aimX, aimY, cameraY,tankDirection, diam;
-	public static boolean gameOver, cameraIsMoving = false;
-	public double tankBodyAngle;
-	public static int mainTankHealth, numOfHeavyBullets, numOfMachineGunBullets;
-	private boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
-	private boolean mouseStateChanged;
-	public static boolean isUsingHeavyGun;
-	private int mouseX, mouseY;
-	private KeyHandler keyHandler;
-	private MouseHandler mouseHandler;
-	public static BufferedImage mainTank, heavyGun, machineGun, gunInUse;
-    public static final int NUMOFLIVES = 3;
-	public static final int Right = 1;
-	public static final int UP = 2;
-	public static final int LEFT = 3;
-	public static final int DOWN = 4;
+	public int tankCenterX,tankCenterY,tankCenterTileX, tankCenterTileY, aimX, aimY,tankDirection, diam;
+	public int cameraY;
+	public boolean gameOver;
+	public double tankBodyAngle,tankGunAngle;
+	public int mainTankHealth, numOfHeavyBullets, numOfMachineGunBullets;
+	public boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
+	public boolean mouseStateChanged;
+	public boolean isUsingHeavyGun;
+	public int mouseX, mouseY;
+	private transient KeyHandler keyHandler;
+	private transient MouseHandler mouseHandler;
+	public static transient BufferedImage mainTank, heavyGun, machineGun, gunInUse;
+	public transient Rectangle mainTankRectangle;
+    transient FileOutputStream fos;
+    transient ObjectOutputStream oos;
+    transient FileInputStream fis;
+    transient ObjectInputStream ois;
+    transient BufferedOutputStream bos;
+    transient BufferedInputStream bis;
+    public transient static final int NUMOFLIVES = 3;
+	public transient static final int Right = 1;
+	public transient static final int UP = 2;
+	public transient static final int LEFT = 3;
+	public transient static final int DOWN = 4;
 
 
 	public GameState() {
@@ -58,11 +65,21 @@ public class GameState {
 		keyHandler = new KeyHandler();
 		mouseHandler = new MouseHandler();
 		//
+        mainTankRectangle = new Rectangle(tankCenterX - 90,tankCenterY - 90, 150, 150);
+        //
         mainTankHealth = 100 * NUMOFLIVES - 1;
         numOfHeavyBullets = 30;
         numOfMachineGunBullets = 300;
         //
         isUsingHeavyGun = true;
+        //
+        try {
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         try {
             mainTank = ImageIO.read(new File("tankBody.png"));
             heavyGun = ImageIO.read(new File("tankGun.png"));
@@ -84,11 +101,9 @@ public class GameState {
 		if (keyUP) {
 		    if (Math.abs(tankCenterY - (diam)) > 100) {
                 tankCenterY -= 8;
-                cameraIsMoving = false;
             }
 		    else {
                 cameraY += 8;
-                cameraIsMoving = true;
             }
             changeTankBodyAngle("up");
             tankDirection = UP;
@@ -96,11 +111,9 @@ public class GameState {
 		if (keyDOWN) {
             if (Math.abs(tankCenterY - (720 - diam)) < 25) {
                 cameraY -= 8;
-                cameraIsMoving = true;
             }
             else {
                 tankCenterY += 8;
-                cameraIsMoving = false;
             }
             changeTankBodyAngle("down");
             tankDirection = DOWN;
@@ -109,13 +122,11 @@ public class GameState {
             tankCenterX -= 8;
             changeTankBodyAngle("left");
             tankDirection = LEFT;
-            cameraIsMoving = false;
         }
 		if (keyRIGHT) {
             tankCenterX += 8;
             changeTankBodyAngle("right");
             tankDirection = Right;
-            cameraIsMoving = false;
         }
 
 		tankCenterX = Math.max(tankCenterX, diam);
@@ -124,7 +135,7 @@ public class GameState {
 		tankCenterY = Math.min(tankCenterY, GameFrame.GAME_HEIGHT - diam);
 
 		tankCenterTileX = tankCenterX / Tile.tileWidth;
-        int startTile = GameState.cameraY / Tile.tileHeight;
+        int startTile = cameraY / Tile.tileHeight;
 		tankCenterTileY = (Tile.numOfVerticalTilesInOneScreen - (tankCenterY / Tile.tileHeight)) + startTile;
 
 		if (cameraY < 0)
@@ -133,6 +144,7 @@ public class GameState {
 		    cameraY = 2850;
 
         checkForMainTankCollision();
+        updateMainTankRectangle();
 
 	}
 	
@@ -458,8 +470,40 @@ public class GameState {
 
     }
 
-    public static Rectangle mainTankRectangle () {
-        return new Rectangle((int) GameState.tankCenterX - 90,(int) GameState.tankCenterY - 90,150,150);
+    public void updateMainTankRectangle () {
+        mainTankRectangle = new Rectangle(this.tankCenterX - 90,this.tankCenterY - 90,150,150);
+    }
+
+    public void serializeAndSave (GameState state) {
+        try {
+            fos = new FileOutputStream(new File("state.jtank"));
+            bos = new BufferedOutputStream(fos);
+            oos = new ObjectOutputStream(bos);
+            oos.writeObject(state);
+            oos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deserializeAndUpdate () {
+        try {
+            fis = new FileInputStream(new File("state.jtank"));
+            bis = new BufferedInputStream(fis);
+            ois = new ObjectInputStream(bis);
+            GameState temp = (GameState) ois.readObject();
+            tankCenterX = temp.tankCenterX;
+            tankCenterY = temp.tankCenterY;
+            mainTankHealth = temp.mainTankHealth;
+            numOfMachineGunBullets = temp.numOfMachineGunBullets;
+            numOfHeavyBullets = temp.numOfHeavyBullets;
+            cameraY = temp.cameraY;
+            tankBodyAngle = temp.tankBodyAngle;
+          //  tankGunAngle = temp.tankGunAngle;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 

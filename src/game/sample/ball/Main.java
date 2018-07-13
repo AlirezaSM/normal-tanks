@@ -21,14 +21,15 @@ public class Main {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				GameFrame frame = new GameFrame("Simple Ball !");
+				GameState state = new GameState();
+				GameFrame frame = new GameFrame("Simple Ball !",state);
 				frame.setLocationRelativeTo(null); // put frame at center of screen
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.setVisible(true);
 				frame.initBufferStrategy();
 				// Create and execute the game-loop
 				GameLoop game = new GameLoop(frame);
-				game.init();
+				game.init(state);
 				ThreadPool.execute(game);
 				// and the game starts ...
 			}

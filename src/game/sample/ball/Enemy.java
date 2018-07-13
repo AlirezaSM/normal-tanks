@@ -5,45 +5,45 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Enemy {
-    BufferedImage enemyImg;
+public class Enemy implements Serializable {
+    transient BufferedImage enemyImg;
     // speed is tile per frame
-    public double speed;
+    public transient double speed;
     // firing speed is bullet per second
-    public double firingSpeed;
+    public transient double firingSpeed;
     double centerTileX;
     double centerTileY;
-    int enemyWidth;
-    int enemyHeight;
+    transient int enemyWidth;
+    transient int enemyHeight;
 
     // center location
-    int locX;
-    int locY;
+    transient int locX;
+    transient int locY;
 
-    int firingLocX;
-    int firingLocY;
-    public static int startTile;
-    public double movingAngle = 1;
-    boolean visible;
-    boolean triggered;
+    transient int firingLocX;
+    transient int firingLocY;
+    public transient static int startTile;
+    public transient double movingAngle = 1;
+    transient boolean explodeInCollisions;
+    transient boolean triggered;
     boolean alive = true;
     int health = 100;
-    int distanceBetweenFiringPointAndCenter;
-    Rectangle enemyRectangle;
-    int enemyDirection;
-    public static final int Right = 1;
-    public static final int UP = 2;
-    public static final int LEFT = 3;
-    public static final int DOWN = 4;
-    int i = 0;
+    transient int distanceBetweenFiringPointAndCenter;
+    transient Rectangle enemyRectangle;
+    transient int enemyDirection;
+    public transient static final int Right = 1;
+    public transient static final int UP = 2;
+    public transient static final int LEFT = 3;
+    public transient static final int DOWN = 4;
 
 
     public Enemy(String imageName, double centerTileX, double centerTileY,
                  double speed, double firingSpeed, int health, int distance,
-                 int firingLocX, int firingLocY) {
+                 int firingLocX, int firingLocY, boolean explodeInCollisions) {
         try {
             enemyImg = ImageIO.read(new File(imageName));
         } catch (IOException e) {
@@ -55,57 +55,49 @@ public class Enemy {
         enemyHeight = enemyImg.getHeight();
         locX = (int) (centerTileX * Tile.tileWidth) + (enemyWidth / 2);
         locY = (int) (Map.screenHeight - (centerTileY - startTile) * Tile.tileHeight) + (enemyHeight / 2);
-        startTile = GameState.cameraY / Tile.tileHeight;
+        startTile = 0;
         enemyRectangle = new Rectangle(locX, locY, enemyWidth, enemyHeight);
         this.speed = speed;
         this.firingSpeed = firingSpeed;
-        visible = false;
         triggered = false;
         this.health = health;
         distanceBetweenFiringPointAndCenter = distance;
         this.firingLocX = firingLocX;
         this.firingLocY = firingLocY;
+        this.explodeInCollisions = explodeInCollisions;
     }
 
-    public void checkTriggered() {
-        if (Math.abs(GameState.tankCenterTileY - centerTileY) < 30)
+    public void checkTriggered(GameState state) {
+        if (Math.abs(state.tankCenterTileY - centerTileY) < 30)
             triggered = true;
     }
 
-    public void draw(Graphics2D g2d) {
+    public void draw(Graphics2D g2d,GameState state) {
         if (alive) {
-            checkTriggered();
+            checkTriggered(state);
             g2d.drawImage(enemyImg, locX, locY, null);
-            g2d.drawRect(locX, locY, enemyWidth, enemyHeight);
-            g2d.fillRect(locX, locY, enemyWidth, enemyHeight);
         }
     }
 
-    public void move(Graphics2D g2d, ArrayList<PregnableWall> imgs) {
-        if (triggered) {
-            movingAngle = Math.atan2((locY - GameState.tankCenterY), (locX - GameState.tankCenterX));
+    public void move(Graphics2D g2d, ArrayList<PregnableWall> imgs,GameState state , GameFrame frame) {
+        if (triggered && alive) {
+            movingAngle = Math.atan2((locY - state.tankCenterY), (locX - state.tankCenterX));
             centerTileX = (centerTileX - speed * Math.cos(movingAngle));
             centerTileY = (centerTileY + speed * Math.sin(movingAngle));
-            escapeFromObstacles(imgs, g2d);
-            firingBullet();
-            updateLocs();
+            escapeFromObstacles(imgs, g2d, state);
+            firingBullet(frame);
+            updateLocs(state);
             updateDirection();
         }
     }
 
-    public void firingBullet() {
+    public void firingBullet(GameFrame frame) {
         Random r = new Random();
         if (r.nextInt((int) (60 / firingSpeed)) == 1) {
             int currentFiringLocX = (int) (locX + firingLocX + distanceBetweenFiringPointAndCenter * Math.cos(movingAngle));
             int currentFiringLocY = (int) (locY + firingLocY - distanceBetweenFiringPointAndCenter * Math.sin(movingAngle));
-            GameFrame.bullets.add(new EnemyBullet(currentFiringLocX, currentFiringLocY, movingAngle, true));
+            frame.bullets.add(new EnemyBullet(currentFiringLocX, currentFiringLocY, movingAngle, true));
         }
-    }
-
-    public void checkVisibility() {
-        int endTile = startTile + (Tile.numOfVerticalTiles / Map.numOfVerticalScreens);
-        if (centerTileY >= startTile && centerTileY <= endTile)
-            visible = true;
     }
 
     public void updateDirection() {
@@ -119,24 +111,19 @@ public class Enemy {
             enemyDirection = DOWN;
     }
 
-    public boolean collisioned(ArrayList<PregnableWall> imageObstacles) {
-        int count = 0;
+    public boolean collisioned(ArrayList<PregnableWall> imageObstacles,GameState state) {
         int tileX = (int) centerTileX + (enemyWidth / 32);
         int tileY = (int) centerTileY - (enemyHeight / 24);
         for (int i = 0; i < Tile.numOfHorizontalTiles; i++) {
             for (int j = startTile; j < (startTile + Tile.numOfVerticalTilesInOneScreen); j++) {
                 if (enemyRectangle.intersects(Map.tileRectangle(i, j)) && Map.tiles[i][j].isObstacle()) {
                     if (i > tileX && enemyDirection == Right) {
-                        count++;
                         return true;
                     } else if (i < tileX && enemyDirection == LEFT) {
-                        count++;
                         return true;
                     } else if (j > tileY && enemyDirection == UP) {
-                        count++;
                         return true;
                     } else if (j < tileY && enemyDirection == DOWN) {
-                        count++;
                         return true;
                     }
                 }
@@ -145,24 +132,23 @@ public class Enemy {
         for (int i = 0; i < imageObstacles.size(); i++) {
             if (enemyRectangle.intersects(imageObstacles.get(i).imgRectangle) && imageObstacles.get(i).obstacle) {
                 if (enemyDirection == Right && tileX < imageObstacles.get(i).centerTileX) {
-                    count++;
                     return true;
                 } else if (enemyDirection == LEFT && tileX > imageObstacles.get(i).centerTileX) {
-                    count++;
                     return true;
                 } else if (enemyDirection == UP && tileY < imageObstacles.get(i).centerTileY) {
-                    count++;
                     return true;
                 } else if (enemyDirection == DOWN && tileY > imageObstacles.get(i).centerTileY) {
-                    count++;
                     return true;
                 }
             }
         }
+        if (enemyRectangle.intersects(state.mainTankRectangle) && !explodeInCollisions ) {
+            return true;
+        }
         return false;
     }
 
-    public void escapeFromObstacles(ArrayList<PregnableWall> obstacleImages, Graphics2D g2d) {
+    public void escapeFromObstacles(ArrayList<PregnableWall> obstacleImages, Graphics2D g2d, GameState state) {
         int countR = 0;
         int countL = 0;
         int countU = 0;
@@ -172,7 +158,7 @@ public class Enemy {
         int locX = (int) (tileX * Tile.tileWidth) - (Tile.tileWidth);
         int locY = (int) (Map.screenHeight - (tileY - Enemy.startTile) * Tile.tileHeight) + (Tile.tileHeight);
         g2d.drawRect(locX, locY, Tile.tileWidth, Tile.tileHeight);
-        if (collisioned(obstacleImages)) {
+        if (collisioned(obstacleImages,state)) {
             centerTileX = (centerTileX + speed * Math.cos(movingAngle));
             centerTileY = (centerTileY - speed * Math.sin(movingAngle));
             for (int i = 0; i < 10; i++) {
@@ -188,12 +174,11 @@ public class Enemy {
                         !Map.tiles[tileX][tileY + i].isObstacle()) {
                     countU++;
                 }
-                if (Map.tileIsVisible(tileY) &&
+                if (Map.tileIsVisible(tileY - i) &&
                         !Map.tiles[tileX][tileY - i].isObstacle()) {
                     countD++;
                 }
             }
-            System.out.println("r = " + countR + " l = " + countL + " u = " + countU + " d = " + countD);
             if (countR == 10 && enemyDirection != Right) {
                 centerTileX = (centerTileX + speed);
                 return;
@@ -212,8 +197,8 @@ public class Enemy {
 
 
 
-    public void updateLocs () {
-        startTile = GameState.cameraY / Tile.tileHeight;
+    public void updateLocs (GameState state) {
+        startTile = state.cameraY / Tile.tileHeight;
         locX = (int) (centerTileX * Tile.tileWidth) + (enemyWidth / 2);
         locY = (int) (Map.screenHeight - (centerTileY - startTile) * Tile.tileHeight) + (enemyHeight / 2);
     }

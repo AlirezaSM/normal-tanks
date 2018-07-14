@@ -24,13 +24,16 @@ public class Menu extends JFrame {
     private JButton normalLevelButtton = new JButton(new ImageIcon(".\\menuIcons\\normalButtonIcon.png"));
     private JButton hardLevelButtton = new JButton(new ImageIcon(".\\menuIcons\\hardButtonIcon.png"));
     private JButton backButton = new JButton(new ImageIcon(".\\menuIcons\\backButtonIcon.png"));
+    private JButton serverButton = new JButton(new ImageIcon(".\\menuIcons\\serverButtonIcon.png"));
+    private JButton clientButton = new JButton(new ImageIcon(".\\menuIcons\\clientButtonIcon.png"));
 
     //Background label.
     private JLabel backgroundLabel = new JLabel(new ImageIcon(".\\menuIcons\\menuBackground.png"));
 
     //String of game mode and level.
-    public static boolean multiplayer;
+    public static boolean multiplayer = false;
     public static String gameLevel;
+    public static boolean server = false;
 
     //Soundplayer of menu.
     public SoundPlayer soundPlayer;
@@ -59,6 +62,8 @@ public class Menu extends JFrame {
         hardLevelButtton.setBounds(440, 430, 300, 80);
         backButton.setBounds(1210, 20, 40, 40);
         backgroundLabel.setBounds(0, 0, 1280, 720);
+        serverButton.setBounds(440, 255, 300, 80);
+        clientButton.setBounds(440, 365, 300, 80);
 
         singlePlayerButton.setContentAreaFilled(false);
         multiPlayerButtton.setContentAreaFilled(false);
@@ -66,6 +71,8 @@ public class Menu extends JFrame {
         normalLevelButtton.setContentAreaFilled(false);
         hardLevelButtton.setContentAreaFilled(false);
         backButton.setContentAreaFilled(false);
+        serverButton.setContentAreaFilled(false);
+        clientButton.setContentAreaFilled(false);
 
         singlePlayerButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         multiPlayerButtton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -73,11 +80,15 @@ public class Menu extends JFrame {
         normalLevelButtton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         hardLevelButtton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         backButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        serverButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        clientButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
         easyLevelButtton.setVisible(false);
         normalLevelButtton.setVisible(false);
         hardLevelButtton.setVisible(false);
         backButton.setVisible(false);
+        serverButton.setVisible(false);
+        clientButton.setVisible(false);
 
         add(singlePlayerButton);
         add(multiPlayerButtton);
@@ -85,7 +96,10 @@ public class Menu extends JFrame {
         add(normalLevelButtton);
         add(hardLevelButtton);
         add(backButton);
+        add(serverButton);
+        add(clientButton);
         add(backgroundLabel);
+
 
         //ActionListener of buttons.
         singlePlayerButton.addActionListener(new ActionListener() {
@@ -121,39 +135,89 @@ public class Menu extends JFrame {
         easyLevelButtton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gameLevel = "Easy";
+
+                if(!multiplayer) {
+                    playGame();
+                }else{
+                    easyLevelButtton.setVisible(false);
+                    normalLevelButtton.setVisible(false);
+                    hardLevelButtton.setVisible(false);
+                    serverButton.setVisible(true);
+                    clientButton.setVisible(true);
+                }
                 soundPlayer.menuClick();
-                playGame();
+                gameLevel = "Easy";
             }
         });
 
         normalLevelButtton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gameLevel = "Normal";
+                if(!multiplayer) {
+                    playGame();
+                }else{
+                    easyLevelButtton.setVisible(false);
+                    normalLevelButtton.setVisible(false);
+                    hardLevelButtton.setVisible(false);
+                    serverButton.setVisible(true);
+                    clientButton.setVisible(true);
+                }
                 soundPlayer.menuClick();
-                playGame();
+                gameLevel = "Normal";
             }
         });
 
         hardLevelButtton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gameLevel = "Hard";
+                if(!multiplayer) {
+                    playGame();
+                }else{
+                    easyLevelButtton.setVisible(false);
+                    normalLevelButtton.setVisible(false);
+                    hardLevelButtton.setVisible(false);
+                    serverButton.setVisible(true);
+                    clientButton.setVisible(true);
+                }
                 soundPlayer.menuClick();
-                playGame();
+                gameLevel = "Hard";
             }
         });
 
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                singlePlayerButton.setVisible(true);
-                multiPlayerButtton.setVisible(true);
-                easyLevelButtton.setVisible(false);
-                normalLevelButtton.setVisible(false);
-                hardLevelButtton.setVisible(false);
-                backButton.setVisible(false);
+
+                if(easyLevelButtton.isVisible()) {
+                    singlePlayerButton.setVisible(true);
+                    multiPlayerButtton.setVisible(true);
+                    easyLevelButtton.setVisible(false);
+                    normalLevelButtton.setVisible(false);
+                    hardLevelButtton.setVisible(false);
+                    backButton.setVisible(false);
+                }else if(serverButton.isVisible()){
+                    easyLevelButtton.setVisible(true);
+                    normalLevelButtton.setVisible(true);
+                    hardLevelButtton.setVisible(true);
+                    serverButton.setVisible(false);
+                    clientButton.setVisible(false);
+                }
+            }
+        });
+
+        serverButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                server = true;
+                playGame();
+            }
+        });
+
+        clientButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                server = false;
+                playGame();
             }
         });
 
@@ -212,6 +276,24 @@ public class Menu extends JFrame {
             }
         });
 
+        serverButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                serverButton.setIcon(new ImageIcon(".\\menuIcons\\serverButtonEnteredIcon.png"));
+                soundPlayer.menuEntered();
+            }
+        });
+
+        clientButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                clientButton.setIcon(new ImageIcon(".\\menuIcons\\clientButtonEnteredIcon.png"));
+                soundPlayer.menuEntered();
+            }
+        });
+
         //MouseListener(Exited) of buttons.
         singlePlayerButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -260,6 +342,22 @@ public class Menu extends JFrame {
                 backButton.setIcon(new ImageIcon(".\\menuIcons\\backButtonIcon.png"));
             }
         });
+
+        serverButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                serverButton.setIcon(new ImageIcon(".\\menuIcons\\serverButtonIcon.png"));
+            }
+        });
+
+        clientButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                clientButton.setIcon(new ImageIcon(".\\menuIcons\\clientButtonIcon.png"));
+            }
+        });
     }
 
     public static void playGame(){
@@ -273,7 +371,7 @@ public class Menu extends JFrame {
             @Override
             public void run() {
 
-                boolean server = false;
+
 			/*	try {
 					System.out.println(InetAddress.getLocalHost());
 				} catch (UnknownHostException e) {

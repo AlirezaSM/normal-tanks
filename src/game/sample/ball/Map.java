@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -129,6 +130,8 @@ public class Map implements Serializable{
 
     public void drawMap (Graphics2D g2d,int startingY, GameState state) {
 
+        long time1 = System.currentTimeMillis();
+
         for (int i = 0; i < Tile.numOfHorizontalTiles; i++) {
             if (startingY / Tile.tileHeight >= 0) {
                 for (int j = startingY / Tile.tileHeight; j < ((startingY / Tile.tileHeight) + (Tile.numOfVerticalTiles / 5)); j++) {
@@ -145,6 +148,7 @@ public class Map implements Serializable{
         for (int i = 0; i < pregnableWalls.size();i++) {
             pregnableWalls.get(i).draw(g2d, state);
         }
+
         for (int i = 0; i < prizes.size();i++) {
             prizes.get(i).draw(g2d,state);
             prizes.get(i).checkCollisionWithTank(state,this);

@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
@@ -38,11 +39,12 @@ public class GameFrame extends JFrame implements Serializable {
     private transient BufferStrategy bufferStrategy;
     transient Map map;
     public  ArrayList<Bullet> bullets = new ArrayList<>();
-    public  ArrayList<Enemy> enemies = new ArrayList<>();
-    public  ArrayList<ArrayList> crucialInfo = new ArrayList<>();
+   // public  ArrayList<Enemy> enemies = new ArrayList<>();
+    public  LinkedList<Enemy> enemies = new LinkedList<>();
     transient BufferedImage numOfHeavyBullets;
     transient BufferedImage numOfMachineGunBullets;
     transient BufferedImage health;
+    static int numOfEnemies = 3;
     transient KhengEnemy me2 = new KhengEnemy();
     transient AlienEnemy ae = new AlienEnemy();
     transient MachineGun mg = new MachineGun();
@@ -52,10 +54,16 @@ public class GameFrame extends JFrame implements Serializable {
     transient FileInputStream fis;
     transient BufferedInputStream bis;
     transient BufferedOutputStream bos;
+    Server server;
+    Client client;
+    boolean multiplayer;
+    boolean serverOrClient;
+    Player2Tank player2;
     LocalTime t1;
     LocalTime t2;
+    Bullet b1;
 
-    public GameFrame(String title, GameState st) {
+    public GameFrame(String title, GameState st,boolean multiplayer, boolean serverOrClient) {
         super(title);
         state = st;
         map = new Map();
@@ -63,6 +71,15 @@ public class GameFrame extends JFrame implements Serializable {
         setSize(GAME_WIDTH, GAME_HEIGHT);
         lastRender = -1;
         ThreadPool.init();
+        player2 = new Player2Tank();
+        this.multiplayer = multiplayer;
+        this.serverOrClient = serverOrClient;
+        if (serverOrClient && multiplayer) {
+            server = new Server();
+        }
+        else if (multiplayer) {
+            client = new Client("127.0.0.1");
+        }
         fpsHistory = new ArrayList<>(100);
         try {
             numOfHeavyBullets = ImageIO.read(new File("NumberOfHeavyBullets.png"));
@@ -77,6 +94,10 @@ public class GameFrame extends JFrame implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        b1 = new Bullet(100,100,1,true,25);
+        b1.removed = true;
+        bullets.add(b1);
 
         /**
          *  firing a bullet with left click
@@ -130,8 +151,6 @@ public class GameFrame extends JFrame implements Serializable {
         enemies.add(me2);
         enemies.add(ae);
         enemies.add(mg);
-        crucialInfo.add(enemies);
-        crucialInfo.add(bullets);
     }
 
     /**
@@ -182,21 +201,35 @@ public class GameFrame extends JFrame implements Serializable {
      */
     private void doRendering(Graphics2D g2d) {
 
-        long ti1 = System.currentTimeMillis();
+        long part1 = System.currentTimeMillis();
         System.out.println(GameLoop.loopNum);
-        if (((GameLoop.loopNum - 1) % 30 == 0) || GameLoop.loopNum == 2) {
+
+        if (((GameLoop.loopNum - 1) % 1 == 0) || GameLoop.loopNum == 2 ) {
             long t1 = System.currentTimeMillis();
-            map.deserializeAndUpdate();
+            if (serverOrClient && multiplayer) {
+              //  if (((GameLoop.loopNum - 1) % 1000 == 0) || GameLoop.loopNum == 2)
+                    server.networkWriteState(state);
+            }
+            else if (multiplayer) {
+
+                client.networkWriteState(state);
+            }
+                     /*   map.deserializeAndUpdate();
             deserializeAndUpdate("enemies.jtank");
             deserializeAndUpdate("bullets.jtank");
-            state.deserializeAndUpdate();
+            state.deserializeAndUpdate(); */
             long t2 = System.currentTimeMillis();
             System.out.println("des: " + (t2 - t1));
         }
-
+        System.out.println("1- " + (System.currentTimeMillis() - part1));
         // draw the map
         map.designMap();
+
+        System.out.println("2- " + (System.currentTimeMillis() - part1));
+
         map.drawMap(g2d, state.cameraY,state);
+
+        System.out.println("3- " + (System.currentTimeMillis() - part1));
 
         // Drawing the rotated image at the required drawing locations
 
@@ -206,25 +239,43 @@ public class GameFrame extends JFrame implements Serializable {
 
         g2d.drawImage(rotatePic(state.gunInUse, state.tankGunAngle), state.tankCenterX - 90, state.tankCenterY - 90, null);
 
+        System.out.println("3- " + (System.currentTimeMillis() - part1));
+        if (multiplayer)
+            player2.draw(g2d);
+
+        System.out.println("4- " + (System.currentTimeMillis() - part1));
+
         for (int i = 0; i < enemies.size(); i++) {
             enemies.get(i).draw(g2d, state);
             enemies.get(i).move(g2d, map.pregnableWalls, state, this);
         }
-
         updateBulletsState(g2d);
         updateEnemiesState(enemies);
         updateHealth(g2d,enemies,bullets,map);
+        updatePrizes();
+
+        System.out.println("5- " + (System.currentTimeMillis() - part1));
 
       //  serializeAndSave();
-        if ((GameLoop.loopNum % 30) == 0 && GameLoop.loopNum != 0) {
+        if ((GameLoop.loopNum % 1) == 0 && GameLoop.loopNum != 0) {
             long t1 = System.currentTimeMillis();
-            map.serializeAndSave(map);
+            if (serverOrClient && multiplayer) {
+                server.getAndProcessInfo(map,player2,this,g2d);
+            }
+            else if (multiplayer) {
+            //    if (((GameLoop.loopNum % 1000) == 0) || GameLoop.loopNum == 3 )
+                   client.getAndProcessInfo(map,player2,this,g2d);
+            }
+
+         /*   map.serializeAndSave(map);
             serializeAndSave(enemies,"enemies.jtank");
             serializeAndSave(bullets,"bullets.jtank");
-            state.serializeAndSave(state);
+            state.serializeAndSave(state); */
             long t2 = System.currentTimeMillis();
             System.out.println("ser = " + (t2 - t1));
         }
+
+        System.out.println("6- " + (System.currentTimeMillis() - part1));
 
         /**
          * bullets monitors
@@ -278,7 +329,8 @@ public class GameFrame extends JFrame implements Serializable {
             g2d.drawString(str, (GAME_WIDTH - strWidth) / 2, GAME_HEIGHT / 2);
         }
         long ti2 = System.currentTimeMillis();
-        System.out.println("full time:" + (ti2 - ti1));
+        // System.out.println("full time:" + (ti2 - ti1));
+        System.out.println("7- " + (System.currentTimeMillis() - part1));
     }
 
     public static BufferedImage rotatePic(BufferedImage img, double angle) {
@@ -292,16 +344,68 @@ public class GameFrame extends JFrame implements Serializable {
     public void updateBulletsState(Graphics2D g2d) {
         for (int i = 0; i < bullets.size(); i++) {
             bullets.get(i).fire(g2d,  state);
+            if (!bullets.get(i).removed && serverOrClient && multiplayer) {
+                server.networkWriteBullet(bullets.get(i));
+            }
+            else if (!bullets.get(i).removed && multiplayer) {
+                client.networkWriteBullet(bullets.get(i));
+            }
         }
+
     }
 
-    public void updateEnemiesState (ArrayList <Enemy> enemies) {
+    public void updateEnemiesState (LinkedList <Enemy> enemies) {
         for (int i = 0; i < enemies.size(); i++) {
             enemies.get(i).updateRectangles();
+            if (enemies.get(i).health <= 0)
+                enemies.get(i).alive = false;
         }
     }
 
-    public void updateHealth(Graphics2D g2d, ArrayList<Enemy> enemies, ArrayList<Bullet> bullets,Map map) {
+    public void updatePrizes () {
+        if (multiplayer) {
+            for (int i = 0; i < map.prizes.size(); i++) {
+                if (!map.prizes.get(i).usable) {
+                    if (serverOrClient && multiplayer) {
+                        server.networkWritePregnableWallsAndPrizes(map);
+                    } else if (multiplayer) {
+                        client.networkWritePregnableWallsAndPrizes(map);
+                    }
+                    map.prizes.remove(i);
+                }
+            }
+        }
+    }
+
+    public int coenal () {
+        int counter = 0;
+        for (int i = 0; i < enemies.size(); i++) {
+            if (!enemies.get(i).alive) {
+                counter++;
+            }
+        }
+        return counter;
+    }
+
+    public void networkEnemyUpdate () {
+        if (multiplayer) {
+            for (int i = 0; i < enemies.size(); i++) {
+                if (!enemies.get(i).alive) {
+                    if (serverOrClient && multiplayer) {
+                        System.out.println("------------------------------------------------> enemy server");
+                        server.networkWriteEnemies(enemies);
+                    } else if (multiplayer) {
+                        System.out.println("------------------------------------------------> enemy client");
+                        client.networkWriteEnemies(enemies);
+                    }
+                    enemies.remove(i);
+                }
+            }
+        }
+    }
+
+
+    public void updateHealth(Graphics2D g2d, LinkedList<Enemy> enemies, ArrayList<Bullet> bullets,Map map) {
         for (int j = 0; j < bullets.size(); j++) {
             /**
              * case 1 : if enemies fire a bullet toward the main tank
@@ -321,6 +425,14 @@ public class GameFrame extends JFrame implements Serializable {
                         map.pregnableWalls.get(i).obstacle && !bullets.get(j).removed) {
                     map.pregnableWalls.get(i).numOfBulletCollisions++;
                     bullets.get(j).removed = true;
+                    if (serverOrClient && multiplayer) {
+                        System.out.println("------------------------------------------------> Pregnable server");
+                        server.networkWritePregnableWallsAndPrizes(map);
+                    }
+                    else if (multiplayer) {
+                        System.out.println("------------------------------------------------> Pregnable client");
+                        client.networkWritePregnableWallsAndPrizes(map);
+                    }
                 }
             }
 
@@ -339,6 +451,12 @@ public class GameFrame extends JFrame implements Serializable {
                     if (enemies.get(i).health <= 0)
                         enemies.get(i).alive = false;
                     bullets.get(j).removed = true;
+                    if (serverOrClient && multiplayer) {
+                        server.networkWriteEnemies(enemies);
+                    }
+                    else if (multiplayer) {
+                        client.networkWriteEnemies(enemies);
+                    }
                 }
             }
         }
@@ -357,7 +475,14 @@ public class GameFrame extends JFrame implements Serializable {
             {
                 g2d.drawImage(Bullet.bulletExplodedImg, enemies.get(i).locX, enemies.get(i).locY, null);
                 state.mainTankHealth -= 25;
+                enemies.get(i).health = 0;
                 enemies.get(i).alive = false;
+                if (serverOrClient && multiplayer) {
+                    server.networkWriteEnemies(enemies);
+                }
+                else if (multiplayer) {
+                    client.networkWriteEnemies(enemies);
+                }
             }
 
             else if (state.mainTankRectangle.intersects(enemies.get(i).enemyRectangle) &&

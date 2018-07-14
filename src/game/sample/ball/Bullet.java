@@ -26,6 +26,7 @@ public class Bullet implements Serializable {
     public Bullet(int bulletLocX, int bulletLocY,double bulletAngle,boolean firedByEnemy, int damagingPower) {
         try {
             bulletExplodedImg = ImageIO.read(new File("bulletExploded.png"));
+            bulletImg = ImageIO.read(new File("machineGunBullet.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

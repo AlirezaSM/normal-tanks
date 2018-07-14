@@ -21,8 +21,11 @@ public class Main {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
+
+				boolean multiplayer = true;
+				boolean server = true;
 				GameState state = new GameState();
-				GameFrame frame = new GameFrame("Simple Ball !",state);
+				GameFrame frame = new GameFrame("server",state,multiplayer,server);
 				frame.setLocationRelativeTo(null); // put frame at center of screen
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.setVisible(true);

@@ -16,15 +16,15 @@ import java.util.ArrayList;
  */
 public class GameState implements Serializable {
 	
-	public int tankCenterX,tankCenterY,tankCenterTileX, tankCenterTileY, aimX, aimY,tankDirection, diam;
-	public int cameraY;
-	public boolean gameOver;
+	public int tankCenterX,tankCenterY,cameraY;
+	public transient int tankCenterTileX, tankCenterTileY, aimX, aimY, diam, tankDirection;
+	public transient boolean gameOver;
 	public double tankBodyAngle,tankGunAngle;
 	public int mainTankHealth, numOfHeavyBullets, numOfMachineGunBullets;
-	public boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
-	public boolean mouseStateChanged;
-	public boolean isUsingHeavyGun;
-	public int mouseX, mouseY;
+	public transient boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
+	public transient boolean mouseStateChanged;
+	public  boolean isUsingHeavyGun;
+	public transient int mouseX, mouseY;
 	private transient KeyHandler keyHandler;
 	private transient MouseHandler mouseHandler;
 	public static transient BufferedImage mainTank, heavyGun, machineGun, gunInUse;

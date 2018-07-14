@@ -9,17 +9,19 @@ import java.io.IOException;
 public class Player2Tank  {
 
 
-    public int tankCenterX,tankCenterY,cameraY;
+    public int tankCenterX,tankCenterY;
+    public double tankCenterTileX,tankCenterTileY;
     public double tankBodyAngle,tankGunAngle;
     public  boolean isUsingHeavyGun;
     public static transient BufferedImage mainTank, heavyGun, machineGun;
 
     public Player2Tank() {
-        cameraY = 0;
         tankCenterX = 190;
         tankCenterY = 190;
         //
         tankBodyAngle = 0;
+        //
+
         //
         isUsingHeavyGun = true;
         //
@@ -38,16 +40,19 @@ public class Player2Tank  {
     }
 
     public void draw (Graphics2D g2d) {
+        int startTile = GameState.cameraY / Tile.tileHeight;
+        int locX = (int) (tankCenterTileX * Tile.tileWidth);
+        int locY = (int) (Map.screenHeight - (tankCenterTileY - startTile) * Tile.tileHeight);
         g2d.drawImage(GameFrame.rotatePic(mainTank, tankBodyAngle),
-               tankCenterX - 90, tankCenterY - 90, null);
+               locX - 90, locY - 90, null);
 
         if (isUsingHeavyGun) {
             g2d.drawImage(GameFrame.rotatePic(heavyGun, tankGunAngle),
-                    tankCenterX - 90, tankCenterY - 90, null);
+                    locX - 90, locY - 90, null);
         }
         else {
             g2d.drawImage(GameFrame.rotatePic(machineGun, tankGunAngle),
-                    tankCenterX - 90, tankCenterY - 90, null);
+                    locX - 90, locY - 90, null);
         }
     }
 }

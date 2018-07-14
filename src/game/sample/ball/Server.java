@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class Server {
 
     public Server() {
         try {
-            ss = new ServerSocket(8888, 10);
+            ss = new ServerSocket(8888, 10 /* ,InetAddress.getByName("127.0.0.1") */);
             server = ss.accept();
             System.out.println("----->" + server.getInetAddress().getHostName());
             System.out.println("Successful connection");
@@ -86,8 +87,8 @@ public class Server {
             }
             else if (obj.getClass() ==  GameState.class) {
                 GameState temp = (GameState) obj;
-                player2state.tankCenterX = temp.tankCenterX;
-                player2state.tankCenterY = temp.tankCenterY;
+                player2state.tankCenterTileX = temp.tankCenterTileX;
+                player2state.tankCenterTileY = temp.tankCenterTileY;
                 player2state.tankBodyAngle = temp.tankBodyAngle;
                 player2state.tankGunAngle = temp.tankGunAngle;
                 player2state.isUsingHeavyGun = temp.isUsingHeavyGun;

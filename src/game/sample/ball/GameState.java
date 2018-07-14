@@ -16,9 +16,10 @@ import java.util.ArrayList;
  */
 public class GameState implements Serializable {
 	
-	public int tankCenterX,tankCenterY,cameraY;
-	public transient int tankCenterTileX, tankCenterTileY, aimX, aimY, diam, tankDirection;
+	public double tankCenterTileX, tankCenterTileY;
+	public transient int tankCenterX,tankCenterY, aimX, aimY, diam, tankDirection;
 	public transient boolean gameOver;
+	public static int cameraY;
 	public double tankBodyAngle,tankGunAngle;
 	public int mainTankHealth, numOfHeavyBullets, numOfMachineGunBullets;
 	public transient boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;

@@ -83,8 +83,8 @@ public class Client {
             }
             else if (obj.getClass() ==  GameState.class) {
                 GameState temp = (GameState) obj;
-                player2state.tankCenterX = temp.tankCenterX;
-                player2state.tankCenterY = temp.tankCenterY;
+                player2state.tankCenterTileX = temp.tankCenterTileX;
+                player2state.tankCenterTileY = temp.tankCenterTileY;
                 player2state.tankBodyAngle = temp.tankBodyAngle;
                 player2state.tankGunAngle = temp.tankGunAngle;
                 player2state.isUsingHeavyGun = temp.isUsingHeavyGun;

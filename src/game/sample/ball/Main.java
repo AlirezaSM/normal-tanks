@@ -2,6 +2,8 @@
 package game.sample.ball;
 
 import java.awt.EventQueue;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import javax.swing.JFrame;
 
 /**
@@ -21,9 +23,13 @@ public class Main {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-
 				boolean multiplayer = true;
 				boolean server = true;
+			/*	try {
+					System.out.println(InetAddress.getLocalHost());
+				} catch (UnknownHostException e) {
+					e.printStackTrace();
+				}  */
 				GameState state = new GameState();
 				GameFrame frame = new GameFrame("server",state,multiplayer,server);
 				frame.setLocationRelativeTo(null); // put frame at center of screen

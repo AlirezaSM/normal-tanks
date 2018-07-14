@@ -48,6 +48,7 @@ public class GameFrame extends JFrame implements Serializable {
     transient KhengEnemy me2 = new KhengEnemy(20,40);
     transient AlienEnemy ae = new AlienEnemy(33,5);
     transient MachineGun mg = new MachineGun(15,70);
+    Mine m = new Mine(20,20);
     transient FileOutputStream fos;
     transient ObjectOutputStream oos;
     transient ObjectInputStream ois;
@@ -104,7 +105,7 @@ public class GameFrame extends JFrame implements Serializable {
             e.printStackTrace();
         }
 
-        b1 = new Bullet(100,100,1,true,25);
+        b1 = new Bullet(100,100,1,true);
         b1.removed = true;
         bullets.add(b1);
 
@@ -318,9 +319,9 @@ public class GameFrame extends JFrame implements Serializable {
                 avg += fps;
             }
             avg /= fpsHistory.size();
-            String str = String.format("Average FPS = %.1f , Last Interval = %d ms,mg-health = %d, ae-health = %d,ke-health = %d, locX = %d, locY = %d,health = %d. direction = %d" +
+            String str = String.format("Average FPS = %.1f , Last Interval = %d ms,angle = %f, ae-health = %d,ke-health = %d, locX = %d, locY = %d,health = %d. direction = %d" +
                             "cameraY = %d",
-                    avg, (currentRender - lastRender), mg.health, ae.health,me2.health, mg.locX, mg.locY, state.mainTankHealth, state.tankDirection, state.cameraY);
+                    avg, (currentRender - lastRender), state.tankBodyAngle, ae.health,me2.health, mg.locX, mg.locY, state.mainTankHealth, state.tankDirection, state.cameraY);
             g2d.setColor(Color.BLACK);
             g2d.setFont(g2d.getFont().deriveFont(18.0f));
             g2d.drawString(str, 10, 700);
@@ -394,8 +395,9 @@ public class GameFrame extends JFrame implements Serializable {
             if (bullets.get(j).bulletRectangle.intersects(state.mainTankRectangle) && bullets.get(j).firedByEnemy &&
                     !bullets.get(j).removed) {
                 g2d.drawImage(bullets.get(j).bulletExplodedImg, bullets.get(j).bulletCenterLocX, bullets.get(j).bulletCenterLocY, null);
-                state.mainTankHealth -= bullets.get(j).damagingPower;
-                System.out.println(state.mainTankHealth);
+                state.mainTankHealth -= EnemyBullet.damagingPower;
+                SoundPlayer soundPlayer = new SoundPlayer();
+                soundPlayer.bulletToMainTank();
                 bullets.get(j).removed = true;
             }
             /**
@@ -430,7 +432,10 @@ public class GameFrame extends JFrame implements Serializable {
                 if (bullets.get(j).bulletRectangle.intersects(enemies.get(i).enemyRectangle) && !bullets.get(j).firedByEnemy &&
                         !bullets.get(j).removed && enemies.get(i).alive) {
                     g2d.drawImage(bullets.get(j).bulletExplodedImg, bullets.get(j).bulletCenterLocX, bullets.get(j).bulletCenterLocY, null);
-                    enemies.get(i).health -= bullets.get(j).damagingPower;
+                    if (bullets.get(j) instanceof HeavyBullet)
+                        enemies.get(i).health -= HeavyBullet.damagingPower;
+                    else if (bullets.get(j) instanceof MachineGunBullet)
+                        enemies.get(i).health -= MachineGunBullet.damagingPower;
                     System.out.println("enemies health = " + enemies.get(i).health);
                     if (enemies.get(i).health <= 0)
                         enemies.get(i).alive = false;

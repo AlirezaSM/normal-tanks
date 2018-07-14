@@ -18,7 +18,7 @@ public class Server {
 
     public Server() {
         try {
-            ss = new ServerSocket(8888, 10 /* ,InetAddress.getByName("127.0.0.1") */);
+            ss = new ServerSocket(8888, 10  /* ,InetAddress.getByName("192.168.43.31") */);
             server = ss.accept();
             System.out.println("----->" + server.getInetAddress().getHostName());
             System.out.println("Successful connection");
@@ -97,7 +97,7 @@ public class Server {
 
                 Bullet temp = (Bullet) obj;
                     Bullet tempi = new Bullet(temp.bulletCenterLocX, temp.bulletCenterLocY
-                            , temp.bulletAngle, false, 25);
+                            , temp.bulletAngle, false);
                     tempi.draw(g2d);
             }
             else if (obj instanceof ArrayList) {
@@ -105,7 +105,7 @@ public class Server {
                 for (int i = 0; i < temp.size(); i++) {
                     if (!temp.get(i).removed) {
                         Bullet tempi = new Bullet(temp.get(i).bulletCenterLocX, temp.get(i).bulletCenterLocY
-                                , temp.get(i).bulletAngle, false, 25);
+                                , temp.get(i).bulletAngle, false);
                         tempi.draw(g2d);
                     }
                 }

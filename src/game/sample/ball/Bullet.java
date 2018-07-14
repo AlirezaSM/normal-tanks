@@ -14,7 +14,6 @@ public class Bullet implements Serializable {
     static transient BufferedImage bulletExplodedImg;
     int bulletCenterLocX;
     int bulletCenterLocY;
-    transient int damagingPower;
     transient int bulletSpeed;
     static transient final int bulletWidth  = 40;
     static transient final int bulletHeight = 10;
@@ -23,7 +22,7 @@ public class Bullet implements Serializable {
     boolean removed;
     transient boolean firedByEnemy;
 
-    public Bullet(int bulletLocX, int bulletLocY,double bulletAngle,boolean firedByEnemy, int damagingPower) {
+    public Bullet(int bulletLocX, int bulletLocY,double bulletAngle,boolean firedByEnemy) {
         try {
             bulletExplodedImg = ImageIO.read(new File("bulletExploded.png"));
             bulletImg = ImageIO.read(new File("machineGunBullet.png"));
@@ -33,7 +32,6 @@ public class Bullet implements Serializable {
         bulletCenterLocX = bulletLocX;
         bulletCenterLocY = bulletLocY;
         this.bulletAngle = bulletAngle;
-        this.damagingPower = damagingPower;
         bulletRectangle = new Rectangle(bulletLocX,bulletLocY,bulletWidth,bulletHeight);
         this.firedByEnemy = firedByEnemy;
         removed = false;

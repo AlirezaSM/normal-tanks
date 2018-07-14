@@ -70,6 +70,10 @@ public class SoundPlayer {
         play(new File(".\\sounds\\EnemyBulletToMyTank.wav"));
     }
 
+    public void mineBoom(){
+        play(new File(".\\sounds\\mineBoom.wav"));
+    }
+
     public void tankMove(){
         play(new File(".\\sounds\\tankMove.wav"));
     }

@@ -166,6 +166,7 @@ public class GameFrame extends JFrame implements Serializable {
         enemies.add(me2);
         enemies.add(ae);
         enemies.add(mg);
+        enemies.add(m);
     }
 
     /**
@@ -465,6 +466,8 @@ public class GameFrame extends JFrame implements Serializable {
                 state.mainTankHealth -= 25;
                 enemies.get(i).health = 0;
                 enemies.get(i).alive = false;
+                SoundPlayer soundPlayer = new SoundPlayer();
+                soundPlayer.mineBoom();
                 if (serverOrClient && multiplayer) {
                     server.networkWriteEnemies(enemies);
                 }

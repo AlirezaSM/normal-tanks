@@ -157,7 +157,6 @@ public class Enemy implements Serializable {
         int tileY = (int) centerTileY - (enemyHeight / 24);
         int locX = (int) (tileX * Tile.tileWidth) - (Tile.tileWidth);
         int locY = (int) (Map.screenHeight - (tileY - Enemy.startTile) * Tile.tileHeight) + (Tile.tileHeight);
-        g2d.drawRect(locX, locY, Tile.tileWidth, Tile.tileHeight);
         if (collisioned(obstacleImages,state)) {
             centerTileX = (centerTileX + speed * Math.cos(movingAngle));
             centerTileY = (centerTileY - speed * Math.sin(movingAngle));

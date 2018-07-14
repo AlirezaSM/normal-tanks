@@ -17,9 +17,11 @@ import java.util.ArrayList;
 public class GameState implements Serializable {
 	
 	public double tankCenterTileX, tankCenterTileY;
-	public transient int tankCenterX,tankCenterY, aimX, aimY, diam, tankDirection;
+	public transient int aimX, aimY, diam, tankDirection;
+	public int tankCenterX,tankCenterY;
 	public transient boolean gameOver;
 	public static int cameraY;
+	public int cameraY2;
 	public double tankBodyAngle,tankGunAngle;
 	public int mainTankHealth, numOfHeavyBullets, numOfMachineGunBullets;
 	public transient boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
@@ -146,7 +148,7 @@ public class GameState implements Serializable {
 
         checkForMainTankCollision();
         updateMainTankRectangle();
-
+        cameraY2 = cameraY;
 	}
 	
 	
@@ -498,7 +500,7 @@ public class GameState implements Serializable {
             mainTankHealth = temp.mainTankHealth;
             numOfMachineGunBullets = temp.numOfMachineGunBullets;
             numOfHeavyBullets = temp.numOfHeavyBullets;
-            cameraY = temp.cameraY;
+            cameraY = temp.cameraY2;
             tankBodyAngle = temp.tankBodyAngle;
           //  tankGunAngle = temp.tankGunAngle;
 

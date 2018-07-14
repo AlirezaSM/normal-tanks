@@ -11,6 +11,9 @@ public class MachineGunCartridge extends Prize {
         if (state.mainTankRectangle.intersects(this.imgRectangle) && usable) {
             state.numOfMachineGunBullets += 100;
             usable = false;
+
+            SoundPlayer soundPlayer = new SoundPlayer();
+            soundPlayer.refillBullets();
         }
     }
 }

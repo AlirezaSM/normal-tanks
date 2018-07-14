@@ -12,6 +12,9 @@ public class TankRepair extends Prize {
         if (state.mainTankRectangle.intersects(this.imgRectangle) && usable) {
             state.mainTankHealth += 100;
             usable = false;
+
+            SoundPlayer soundPlayer = new SoundPlayer();
+            soundPlayer.tankRepair();
         }
     }
 }

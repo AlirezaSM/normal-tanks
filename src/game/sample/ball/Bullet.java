@@ -68,6 +68,8 @@ public class Bullet implements Serializable {
         else if (Map.tiles[bulletTileX][bulletTileY].isObstacle()) {
             removed = true;
             g2d.drawImage(bulletExplodedImg, bulletCenterLocX, bulletCenterLocY,null);
+            SoundPlayer soundPlayer = new SoundPlayer();
+            soundPlayer.bulletHitWall();
         }
     }
 

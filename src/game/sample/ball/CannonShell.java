@@ -12,6 +12,8 @@ public class CannonShell extends Prize {
         if (state.mainTankRectangle.intersects(this.imgRectangle) && usable) {
             state.numOfHeavyBullets += 15;
             usable = false;
+            SoundPlayer soundPlayer = new SoundPlayer();
+            soundPlayer.refillBullets();
         }
     }
 }

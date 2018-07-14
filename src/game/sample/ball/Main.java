@@ -23,8 +23,8 @@ public class Main {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				boolean multiplayer = true;
-				boolean server = true;
+				boolean multiplayer = false;
+				boolean server = false;
 			/*	try {
 					System.out.println(InetAddress.getLocalHost());
 				} catch (UnknownHostException e) {

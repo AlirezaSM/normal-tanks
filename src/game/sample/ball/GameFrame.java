@@ -63,6 +63,8 @@ public class GameFrame extends JFrame implements Serializable {
     LocalTime t2;
     Bullet b1;
 
+    public SoundPlayer soundPlayer = new SoundPlayer();
+
     public GameFrame(String title, GameState st,boolean multiplayer, boolean serverOrClient) {
         super(title);
         state = st;
@@ -114,6 +116,9 @@ public class GameFrame extends JFrame implements Serializable {
                         bullets.add(new HeavyBullet(firingLocXOfBullet, firingLocYOfBullet, state.tankGunAngle, false));
                         state.numOfHeavyBullets--;
                         System.out.println(state.numOfHeavyBullets);
+                        soundPlayer.heavyShot();
+                    }else if(state.isUsingHeavyGun && state.numOfHeavyBullets <= 0){
+                        soundPlayer.emptyGun();
                     }
                     if (!state.isUsingHeavyGun && state.numOfMachineGunBullets > 0) {
                         int firingLocXOfBullet = (int) (state.tankCenterX + 75 * Math.cos(state.tankGunAngle));
@@ -121,6 +126,9 @@ public class GameFrame extends JFrame implements Serializable {
                         bullets.add(new MachineGunBullet(firingLocXOfBullet, firingLocYOfBullet, state.tankGunAngle, false));
                         state.numOfMachineGunBullets--;
                         System.out.println(state.numOfMachineGunBullets);
+                        soundPlayer.machinGunShot();
+                    }else if(!state.isUsingHeavyGun && state.numOfMachineGunBullets <= 0){
+                        soundPlayer.emptyGun();
                     }
                 }
             }
@@ -425,6 +433,8 @@ public class GameFrame extends JFrame implements Serializable {
                         map.pregnableWalls.get(i).obstacle && !bullets.get(j).removed) {
                     map.pregnableWalls.get(i).numOfBulletCollisions++;
                     bullets.get(j).removed = true;
+                    SoundPlayer soundPlayer = new SoundPlayer();
+                    soundPlayer.crushedWall();
                     if (serverOrClient && multiplayer) {
                         System.out.println("------------------------------------------------> Pregnable server");
                         server.networkWritePregnableWallsAndPrizes(map);
@@ -435,6 +445,7 @@ public class GameFrame extends JFrame implements Serializable {
                     }
                 }
             }
+
 
             for (int i = 0; i < enemies.size(); i++) {
 //                g2d.drawRect(enemies.get(i).locX,enemies.get(i).locY,enemies.get(i).enemyWidth,enemies.get(j).enemyHeight);

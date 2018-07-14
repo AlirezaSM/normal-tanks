@@ -78,7 +78,7 @@ public class GameFrame extends JFrame implements Serializable {
             server = new Server();
         }
         else if (multiplayer) {
-            client = new Client("127.0.0.1");
+            client = new Client("5.106.46.10");
         }
         fpsHistory = new ArrayList<>(100);
         try {

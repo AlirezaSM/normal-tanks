@@ -17,7 +17,7 @@ public class CheatSheet extends JFrame {
         add(jb);
         jtf.setBounds(30,50,250,40);
         background.setBounds(0, 0, 300, 300);
-        jtf.addActionListener(new ActionListener() {
+        jb.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (e.getActionCommand().equalsIgnoreCase("health")) {

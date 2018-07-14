@@ -43,6 +43,7 @@ public class GameState implements Serializable {
 	public transient static final int UP = 2;
 	public transient static final int LEFT = 3;
 	public transient static final int DOWN = 4;
+	public transient static final int EACHMOVE = 4;
 
 
 	public GameState() {
@@ -103,31 +104,31 @@ public class GameState implements Serializable {
 		}
 		if (keyUP) {
 		    if (Math.abs(tankCenterY - (diam)) > 100) {
-                tankCenterY -= 8;
+                tankCenterY -= EACHMOVE;
             }
 		    else {
-                cameraY += 8;
+                cameraY += EACHMOVE;
             }
             changeTankBodyAngle("up");
             tankDirection = UP;
         }
 		if (keyDOWN) {
             if (Math.abs(tankCenterY - (720 - diam)) < 25) {
-                cameraY -= 8;
+                cameraY -= EACHMOVE;
             }
             else {
-                tankCenterY += 8;
+                tankCenterY += EACHMOVE;
             }
             changeTankBodyAngle("down");
             tankDirection = DOWN;
         }
 		if (keyLEFT) {
-            tankCenterX -= 8;
+            tankCenterX -= EACHMOVE;
             changeTankBodyAngle("left");
             tankDirection = LEFT;
         }
 		if (keyRIGHT) {
-            tankCenterX += 8;
+            tankCenterX += EACHMOVE;
             changeTankBodyAngle("right");
             tankDirection = Right;
         }
@@ -143,9 +144,8 @@ public class GameState implements Serializable {
 
 		if (cameraY < 0)
 		    cameraY = 0;
-		if (cameraY > 2850)
-		    cameraY = 2850;
-
+		if (cameraY > 2880)
+		    cameraY = 2880;
         checkForMainTankCollision();
         updateMainTankRectangle();
         cameraY2 = cameraY;
@@ -259,37 +259,49 @@ public class GameState implements Serializable {
 	    double thirdQuarter = -1.570796;
 	    double forthQuarter = -3.141592;
 	    double zeroQuarter = 0;
-	    double move = 0.03272492347;
+	    double move = 0.15272492347;
         switch (orientation) {
             case "up":
-                if (tankBodyAngle <= firstQuarter && tankBodyAngle >= thirdQuarter && (Math.abs(tankBodyAngle-firstQuarter)) > 0.03)
+                if (tankBodyAngle <= firstQuarter && tankBodyAngle >= thirdQuarter && (Math.abs(tankBodyAngle-firstQuarter)) > move)
                     tankBodyAngle+= move;
-                else if ((Math.abs(tankBodyAngle-firstQuarter)) > 0.03)
+                else if ((Math.abs(tankBodyAngle-firstQuarter)) > move)
                     tankBodyAngle-= move;
                 break;
             case "right":
-                if (tankBodyAngle >= zeroQuarter && tankBodyAngle <= secondQuarter && (Math.abs(tankBodyAngle-zeroQuarter)) > 0.03)
+                if (tankBodyAngle >= zeroQuarter && tankBodyAngle <= secondQuarter && (Math.abs(tankBodyAngle-zeroQuarter)) > move)
                     tankBodyAngle-= move;
-                else if ((Math.abs(tankBodyAngle-zeroQuarter)) > 0.03)
+                else if ((Math.abs(tankBodyAngle-zeroQuarter)) > move)
                     tankBodyAngle+= move;
                 break;
             case "down":
-                if (tankBodyAngle <= firstQuarter && tankBodyAngle >= thirdQuarter && (Math.abs(tankBodyAngle-thirdQuarter)) > 0.03)
+                if (tankBodyAngle <= firstQuarter && tankBodyAngle >= thirdQuarter && (Math.abs(tankBodyAngle-thirdQuarter)) > move)
                     tankBodyAngle-= move;
-                else if ((Math.abs(tankBodyAngle-thirdQuarter)) > 0.03)
+                else if ((Math.abs(tankBodyAngle-thirdQuarter)) > move)
                     tankBodyAngle+= move;
                 break;
             case "left":
-                if (tankBodyAngle >= zeroQuarter && tankBodyAngle <= secondQuarter && (Math.abs(tankBodyAngle-secondQuarter)) > 0.03)
+                if (tankBodyAngle >= zeroQuarter && tankBodyAngle <= secondQuarter && (Math.abs(tankBodyAngle-secondQuarter)) > move)
                     tankBodyAngle+= move;
-                else if ((Math.abs(tankBodyAngle-secondQuarter)) > 0.03)
+                else if ((Math.abs(tankBodyAngle-secondQuarter)) > move)
                     tankBodyAngle-= move;
                 break;
         }
+
         while (tankBodyAngle > 3.14)
             tankBodyAngle -= (6.28);
         while (tankBodyAngle <= -3)
             tankBodyAngle += (6.28);
+
+        if (Math.abs(tankBodyAngle - firstQuarter) < move)
+            tankBodyAngle = firstQuarter;
+        else if (Math.abs(tankBodyAngle - secondQuarter) < move)
+            tankBodyAngle = secondQuarter;
+        else if (Math.abs(tankBodyAngle - thirdQuarter) < move)
+            tankBodyAngle = thirdQuarter;
+        else if (Math.abs(tankBodyAngle - forthQuarter) < move)
+            tankBodyAngle = forthQuarter;
+        else if (Math.abs(tankBodyAngle - zeroQuarter) < move)
+            tankBodyAngle = zeroQuarter;
 
     }
 
@@ -299,185 +311,184 @@ public class GameState implements Serializable {
         Point tankCenterTile = new Point(tankCenterX / Tile.tileWidth, startTile + ((720 - tankCenterY) / Tile.tileHeight));
 
         if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY()].isObstacle()){
-            tankCenterX -= 8;
+            tankCenterX -= EACHMOVE;
         }
         else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() + 1].isObstacle()){
-            tankCenterX -= 8;
+            tankCenterX -= EACHMOVE;
         }
         else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() + 2].isObstacle()){
-            tankCenterX -= 8;
+            tankCenterX -= EACHMOVE;
         }
         else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() - 1].isObstacle()){
-            tankCenterX -= 8;
+            tankCenterX -= EACHMOVE;
         }
         else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() - 2].isObstacle()){
-            tankCenterX -= 8;
+            tankCenterX -= EACHMOVE;
         }
         else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY()].isObstacle()){
-            tankCenterX -= 8;
+            tankCenterX -= EACHMOVE;
         }
         else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY() + 1].isObstacle()){
-            tankCenterX -= 8;
+            tankCenterX -= EACHMOVE;
         }
         else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY() + 2].isObstacle()){
-            tankCenterX -= 8;
+            tankCenterX -= EACHMOVE;
         }
         else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY() - 1].isObstacle()){
-            tankCenterX -= 8;
+            tankCenterX -= EACHMOVE;
         }
         else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY() - 2].isObstacle()){
-            tankCenterX -= 8;
+            tankCenterX -= EACHMOVE;
         }
         else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY()].isObstacle()){
-            tankCenterX -= 8;
+            tankCenterX -= EACHMOVE;
         }
         else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY() + 1].isObstacle()){
-            tankCenterX -= 8;
+            tankCenterX -= EACHMOVE;
         }
         else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY() + 2].isObstacle()){
-            tankCenterX -= 8;
+            tankCenterX -= EACHMOVE;
         }
         else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY() - 1].isObstacle()){
-            tankCenterX -= 8;
+            tankCenterX -= EACHMOVE;
         }
         else if (tankDirection == Right && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY() - 2].isObstacle()){
-            tankCenterX -= 8;
+            tankCenterX -= EACHMOVE;
         }
         else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY()].isObstacle()){
-            tankCenterX += 8;
+            tankCenterX += EACHMOVE;
         }
         else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() + 1].isObstacle()){
-            tankCenterX += 8;
+            tankCenterX += EACHMOVE;
         }
         else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() + 2].isObstacle()){
-            tankCenterX += 8;
+            tankCenterX += EACHMOVE;
         }
         else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() - 1].isObstacle()){
-            tankCenterX += 8;
+            tankCenterX += EACHMOVE;
         }
         else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() - 2].isObstacle()){
-            tankCenterX += 8;
+            tankCenterX += EACHMOVE;
         }
         else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY()].isObstacle()){
-            tankCenterX += 8;
+            tankCenterX += EACHMOVE;
         }
         else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY() + 1].isObstacle()){
-            tankCenterX += 8;
+            tankCenterX += EACHMOVE;
         }
         else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY() + 2].isObstacle()){
-            tankCenterX += 8;
+            tankCenterX += EACHMOVE;
         }
         else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY() - 1].isObstacle()){
-            tankCenterX += 8;
+            tankCenterX += EACHMOVE;
         }
         else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY() - 2].isObstacle()){
-            tankCenterX += 8;
+            tankCenterX += EACHMOVE;
         }
         else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY()].isObstacle()){
-            tankCenterX += 8;
+            tankCenterX += EACHMOVE;
         }
         else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY() + 1].isObstacle()){
-            tankCenterX += 8;
+            tankCenterX += EACHMOVE;
         }
         else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY() + 2].isObstacle()){
-            tankCenterX += 8;
+            tankCenterX += EACHMOVE;
         }
         else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY() - 1].isObstacle()){
-            tankCenterX += 8;
+            tankCenterX += EACHMOVE;
         }
         else if (tankDirection == LEFT && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY() - 2].isObstacle()){
-            tankCenterX += 8;
+            tankCenterX += EACHMOVE;
         }
         else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY()].isObstacle()){
-            tankCenterY += 8;
+            tankCenterY += EACHMOVE;
         }
         else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY()].isObstacle()){
-            tankCenterY += 8;
+            tankCenterY += EACHMOVE;
         }
         else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY()].isObstacle()){
-            tankCenterY += 8;
+            tankCenterY += EACHMOVE;
         }
         else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY()].isObstacle()){
-            tankCenterY += 8;
+            tankCenterY += EACHMOVE;
         }
         else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY()].isObstacle()){
-            tankCenterY += 8;
+            tankCenterY += EACHMOVE;
         }
         else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() + 1].isObstacle()){
-            tankCenterY += 8;
+            tankCenterY += EACHMOVE;
         }
         else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY() + 1].isObstacle()){
-            tankCenterY += 8;
+            tankCenterY += EACHMOVE;
         }
         else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY() + 1].isObstacle()){
-            tankCenterY += 8;
+            tankCenterY += EACHMOVE;
         }
         else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY() + 1].isObstacle()){
-            tankCenterY += 8;
+            tankCenterY += EACHMOVE;
         }
         else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY() + 1].isObstacle()){
-            tankCenterY += 8;
+            tankCenterY += EACHMOVE;
         }
         else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() + 2].isObstacle()){
-            tankCenterY += 8;
+            tankCenterY += EACHMOVE;
         }
         else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY() + 2].isObstacle()){
-            tankCenterY += 8;
+            tankCenterY += EACHMOVE;
         }
         else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY() + 2].isObstacle()){
-            tankCenterY += 8;
+            tankCenterY += EACHMOVE;
         }
         else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY() + 2].isObstacle()){
-            tankCenterY += 8;
+            tankCenterY += EACHMOVE;
         }
         else if (tankDirection == UP && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY() + 2].isObstacle()){
-            tankCenterY += 8;
+            tankCenterY += EACHMOVE;
         }
-
         else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY()].isObstacle()){
-            tankCenterY -= 8;
+            tankCenterY -= EACHMOVE;
         }
         else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY()].isObstacle()){
-            tankCenterY -= 8;
+            tankCenterY -= EACHMOVE;
         }
         else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY()].isObstacle()){
-            tankCenterY -= 8;
+            tankCenterY -= EACHMOVE;
         }
         else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY()].isObstacle()){
-            tankCenterY -= 8;
+            tankCenterY -= EACHMOVE;
         }
         else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY()].isObstacle()){
-            tankCenterY -= 8;
+            tankCenterY -= EACHMOVE;
         }
         else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() - 1].isObstacle()){
-            tankCenterY -= 8;
+            tankCenterY -= EACHMOVE;
         }
         else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY() - 1].isObstacle()){
-            tankCenterY -= 8;
+            tankCenterY -= EACHMOVE;
         }
         else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY() - 1].isObstacle()){
-            tankCenterY -= 8;
+            tankCenterY -= EACHMOVE;
         }
         else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY() - 1].isObstacle()){
-            tankCenterY -= 8;
+            tankCenterY -= EACHMOVE;
         }
         else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY() - 1].isObstacle()){
-            tankCenterY -= 8;
+            tankCenterY -= EACHMOVE;
         }
         else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX()][(int) tankCenterTile.getY() - 2].isObstacle()){
-            tankCenterY -= 8;
+            tankCenterY -= EACHMOVE;
         }
         else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() + 1][(int) tankCenterTile.getY() - 2].isObstacle()){
-            tankCenterY -= 8;
+            tankCenterY -= EACHMOVE;
         }
         else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() + 2][(int) tankCenterTile.getY() - 2].isObstacle()){
-            tankCenterY -= 8;
+            tankCenterY -= EACHMOVE;
         }
         else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() - 1][(int) tankCenterTile.getY() - 2].isObstacle()){
-            tankCenterY -= 8;
+            tankCenterY -= EACHMOVE;
         }
         else if (tankDirection == DOWN && Map.tiles[(int) tankCenterTile.getX() - 2][(int) tankCenterTile.getY() - 2].isObstacle()){
-            tankCenterY -= 8;
+            tankCenterY -= EACHMOVE;
         }
 
     }

@@ -48,7 +48,6 @@ public class GameFrame extends JFrame implements Serializable {
     transient KhengEnemy me2 = new KhengEnemy(20,40);
     transient AlienEnemy ae = new AlienEnemy(33,5);
     transient MachineGun mg = new MachineGun(15,70);
-    Mine m = new Mine(20,20);
     transient FileOutputStream fos;
     transient ObjectOutputStream oos;
     transient ObjectInputStream ois;

@@ -48,8 +48,8 @@ public class GameState implements Serializable {
 
 	public GameState() {
 		cameraY = 0;
-		tankCenterX = 190;
-		tankCenterY = 190;
+		tankCenterX = 140;
+		tankCenterY = 580;
 		aimX = 150;
 		aimY = 150;
 		diam = 75;

@@ -9,8 +9,8 @@ import java.io.IOException;
 public class MachineGun extends Enemy {
 
     transient BufferedImage tankGun;
-    public MachineGun() {
-        super("MachineTank.png", 8, 80,
+    public MachineGun(int tileX, int tileY) {
+        super("MachineTank.png", tileX, tileY,
                 0.1, 2, 200,0,20,75, false);
         try {
             tankGun = ImageIO.read(new File("MachineTankGun.png"));

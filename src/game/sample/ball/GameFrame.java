@@ -45,9 +45,9 @@ public class GameFrame extends JFrame implements Serializable {
     transient BufferedImage numOfMachineGunBullets;
     transient BufferedImage health;
     static int numOfEnemies = 3;
-    transient KhengEnemy me2 = new KhengEnemy();
-    transient AlienEnemy ae = new AlienEnemy();
-    transient MachineGun mg = new MachineGun();
+    transient KhengEnemy me2 = new KhengEnemy(20,40);
+    transient AlienEnemy ae = new AlienEnemy(33,5);
+    transient MachineGun mg = new MachineGun(15,70);
     transient FileOutputStream fos;
     transient ObjectOutputStream oos;
     transient ObjectInputStream ois;

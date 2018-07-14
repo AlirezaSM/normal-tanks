@@ -17,7 +17,7 @@ public class Map implements Serializable{
     public transient static int plantedSoil = 3;
     public transient static int wall = 4;
     public transient static int numOfPlantedSoilPlants = 400;
-    public transient static int numOfVerticalScreens = 5;
+    public transient static int numOfVerticalScreens = 7;
     public transient static int screenHeight = 720;
   //  public static double screenRatio = 16 / 9;
     static transient Tile [][] tiles = new Tile[Tile.numOfHorizontalTiles][Tile.numOfVerticalTiles];

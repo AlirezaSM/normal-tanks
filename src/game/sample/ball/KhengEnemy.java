@@ -1,8 +1,8 @@
 package game.sample.ball;
 
 public class KhengEnemy extends Enemy {
-    public KhengEnemy() {
-        super("constantEnemy.png", 25, 55,
+    public KhengEnemy(int tileX, int tileY) {
+        super("constantEnemy.png", tileX, tileY,
                 0.1,1,100,20,0,0, true);
 
         if(Menu.gameLevel.equals("Easy")){

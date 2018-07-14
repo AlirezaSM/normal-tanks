@@ -93,7 +93,7 @@ public class Client {
 
                 Bullet temp = (Bullet) obj;
                 Bullet tempi = new Bullet(temp.bulletCenterLocX, temp.bulletCenterLocY
-                        , temp.bulletAngle, false, 25);
+                        , temp.bulletAngle, false);
                 tempi.draw(g2d);
 
 
@@ -103,7 +103,7 @@ public class Client {
                 for (int i = 0; i < temp.size(); i++) {
                     if (!temp.get(i).removed) {
                         Bullet tempi = new Bullet(temp.get(i).bulletCenterLocX, temp.get(i).bulletCenterLocY
-                                , temp.get(i).bulletAngle, false, 25);
+                                , temp.get(i).bulletAngle, false);
                         tempi.draw(g2d);
                     }
                 }

@@ -66,6 +66,10 @@ public class SoundPlayer {
         play(new File(".\\sounds\\tankRepair.wav"));
     }
 
+    public void bulletToMainTank(){
+        play(new File(".\\sounds\\EnemyBulletToMyTank.wav"));
+    }
+
     public void tankMove(){
         play(new File(".\\sounds\\tankMove.wav"));
     }

@@ -42,17 +42,6 @@ public class Map implements Serializable{
 
     public Map() {
         try {
-
-
-
-
-
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
             soilImg = ImageIO.read(new File("soil.png"));
             plantImg = ImageIO.read(new File("plant.png"));
             wallImg = ImageIO.read(new File("wall.png"));
@@ -93,7 +82,7 @@ public class Map implements Serializable{
 
 
 
-        prizes.add(new TankRepair(15,15));
+        prizes.add(new TankRepair(28,6));
         prizes.add(new CannonShell(35,5));
         prizes.add(new MachineGunCartridge(23,70));
 
@@ -134,7 +123,7 @@ public class Map implements Serializable{
 
         for (int i = 0; i < Tile.numOfHorizontalTiles; i++) {
             if (startingY / Tile.tileHeight >= 0) {
-                for (int j = startingY / Tile.tileHeight; j < ((startingY / Tile.tileHeight) + (Tile.numOfVerticalTiles / 5)); j++) {
+                for (int j = startingY / Tile.tileHeight; j < ((startingY / Tile.tileHeight) + (Tile.numOfVerticalTiles / Map.numOfVerticalScreens)); j++) {
                     int tileImg = tiles[i][j].getImgNum();
                     g2d.drawImage(mapImages.get(tileImg), i * Tile.tileWidth, screenHeight - (j - startingY / Tile.tileHeight) * Tile.tileHeight, null);
                 }
@@ -145,14 +134,15 @@ public class Map implements Serializable{
             imagesOnMap.get(i).draw(g2d, state);
         }
 
-        for (int i = 0; i < pregnableWalls.size();i++) {
-            pregnableWalls.get(i).draw(g2d, state);
-        }
-
         for (int i = 0; i < prizes.size();i++) {
             prizes.get(i).draw(g2d,state);
             prizes.get(i).checkCollisionWithTank(state,this);
         }
+
+        for (int i = 0; i < pregnableWalls.size();i++) {
+            pregnableWalls.get(i).draw(g2d, state);
+        }
+
 
     }
 

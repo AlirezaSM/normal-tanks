@@ -19,7 +19,7 @@ public class GameState implements Serializable {
 	public double tankCenterTileX, tankCenterTileY;
 	public transient int aimX, aimY, diam, tankDirection;
 	public int tankCenterX,tankCenterY;
-	public transient boolean gameOver;
+	public transient static boolean gameOver,paused;
 	public static int cameraY;
 	public int cameraY2;
 	public double tankBodyAngle,tankGunAngle;
@@ -190,6 +190,13 @@ public class GameState implements Serializable {
 					break;
                 case KeyEvent.VK_BACK_SPACE:
                     CheatSheet cheatSheet = new CheatSheet(GameState.this);
+                    break;
+                case KeyEvent.VK_P:
+                    if (paused)
+                        paused = false;
+                    else
+                        paused = true;
+                    break;
 			}
 		}
 

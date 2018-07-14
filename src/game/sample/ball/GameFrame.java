@@ -231,13 +231,13 @@ public class GameFrame extends JFrame implements Serializable {
 
         map.drawMap(g2d, state.cameraY,state);
 
-        /*while (GameLoop.loopNum > 500) {
+        while (GameState.paused) {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }*/
+        }
 
         // Drawing the rotated image at the required drawing locations
 
@@ -258,6 +258,7 @@ public class GameFrame extends JFrame implements Serializable {
         updateEnemiesState(enemies);
         updateHealth(g2d,enemies,bullets,map);
         updatePrizes();
+        checkIfGameIsOver();
 
         if (multiplayer && ((GameLoop.loopNum % 1) == 0) && GameLoop.loopNum != 0) {
             if (serverOrClient && multiplayer) {
@@ -356,6 +357,11 @@ public class GameFrame extends JFrame implements Serializable {
             if (enemies.get(i).health <= 0)
                 enemies.get(i).alive = false;
         }
+    }
+
+    public void checkIfGameIsOver () {
+        if (state.mainTankHealth <= 0)
+            state.gameOver = true;
     }
 
     public void updatePrizes () {

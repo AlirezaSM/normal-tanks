@@ -231,13 +231,13 @@ public class GameFrame extends JFrame implements Serializable {
 
         map.drawMap(g2d, state.cameraY,state);
 
-        while (GameLoop.loopNum > 500) {
+        /*while (GameLoop.loopNum > 500) {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
 
         // Drawing the rotated image at the required drawing locations
 

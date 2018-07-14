@@ -30,6 +30,7 @@ public class CheatSheet extends JFrame {
                 else if (e.getActionCommand().equalsIgnoreCase("health")) {
                     state.mainTankHealth+= 300;
                 }
+                dispose();
             }
         });
         add(jtf);

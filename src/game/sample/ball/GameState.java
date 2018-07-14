@@ -188,6 +188,8 @@ public class GameState implements Serializable {
 				case KeyEvent.VK_ESCAPE:
 					gameOver = true;
 					break;
+                case KeyEvent.VK_BACK_SPACE:
+                    CheatSheet cheatSheet = new CheatSheet(GameState.this);
 			}
 		}
 

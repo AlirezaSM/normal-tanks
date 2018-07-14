@@ -54,16 +54,16 @@ public class ImageOnMap implements Serializable {
     public void checkForCollisions (GameState state) {
         if (state.mainTankRectangle.intersects(imgRectangle) && obstacle) {
             if (state.tankDirection == GameState.Right) {
-                state.tankCenterX -= 8;
+                state.tankCenterX -= GameState.EACHMOVE;
             }
             if (state.tankDirection == GameState.LEFT) {
-                state.tankCenterX += 8;
+                state.tankCenterX += GameState.EACHMOVE;
             }
             if (state.tankDirection == GameState.UP) {
-                state.tankCenterY += 8;
+                state.tankCenterY += GameState.EACHMOVE;
             }
             if (state.tankDirection == GameState.DOWN) {
-                state.tankCenterY -= 8;
+                state.tankCenterY -= GameState.EACHMOVE;
             }
         }
     }

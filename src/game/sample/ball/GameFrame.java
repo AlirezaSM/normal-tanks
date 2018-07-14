@@ -76,6 +76,13 @@ public class GameFrame extends JFrame implements Serializable {
         player2 = new Player2Tank();
         this.multiplayer = multiplayer;
         this.serverOrClient = serverOrClient;
+        try {
+            BufferedImage cursorIcon = ImageIO.read(new File(".\\cursorIcon.png"));
+            Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorIcon, new Point(0, 0), "Cursor");
+            setCursor(cursor);
+        }catch(Exception e){
+
+        }
         if (serverOrClient && multiplayer) {
             server = new Server();
         }

@@ -29,8 +29,8 @@ public class Menu extends JFrame {
     private JLabel backgroundLabel = new JLabel(new ImageIcon(".\\menuIcons\\menuBackground.png"));
 
     //String of game mode and level.
-    private String gameMode;
-    private String gameLevel;
+    public static boolean multiplayer;
+    public static String gameLevel;
 
     //Soundplayer of menu.
     public SoundPlayer soundPlayer;
@@ -98,7 +98,7 @@ public class Menu extends JFrame {
                 hardLevelButtton.setVisible(true);
                 backButton.setVisible(true);
 
-                gameMode = "Single";
+                multiplayer = false;
                 soundPlayer.menuClick();
             }
         });
@@ -113,7 +113,7 @@ public class Menu extends JFrame {
                 hardLevelButtton.setVisible(true);
                 backButton.setVisible(true);
 
-                gameMode = "Multi";
+                multiplayer = true;
                 soundPlayer.menuClick();
             }
         });
@@ -123,6 +123,7 @@ public class Menu extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 gameLevel = "Easy";
                 soundPlayer.menuClick();
+                playGame();
             }
         });
 
@@ -131,6 +132,7 @@ public class Menu extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 gameLevel = "Normal";
                 soundPlayer.menuClick();
+                playGame();
             }
         });
 
@@ -139,6 +141,7 @@ public class Menu extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 gameLevel = "Hard";
                 soundPlayer.menuClick();
+                playGame();
             }
         });
 
@@ -255,6 +258,38 @@ public class Menu extends JFrame {
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
                 backButton.setIcon(new ImageIcon(".\\menuIcons\\backButtonIcon.png"));
+            }
+        });
+    }
+
+    public static void playGame(){
+        // Initialize the global thread-pool
+        ThreadPool.init();
+
+        // Show the game menu ...
+
+        // After the player clicks 'PLAY' ...
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+
+                boolean server = false;
+			/*	try {
+					System.out.println(InetAddress.getLocalHost());
+				} catch (UnknownHostException e) {
+					e.printStackTrace();
+				}  */
+                GameState state = new GameState();
+                GameFrame frame = new GameFrame("server",state,multiplayer,server);
+                frame.setLocationRelativeTo(null); // put frame at center of screen
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setVisible(true);
+                frame.initBufferStrategy();
+                // Create and execute the game-loop
+                GameLoop game = new GameLoop(frame);
+                game.init(state);
+                ThreadPool.execute(game);
+                // and the game starts ...
             }
         });
     }

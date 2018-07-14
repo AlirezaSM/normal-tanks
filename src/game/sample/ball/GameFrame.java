@@ -80,8 +80,8 @@ public class GameFrame extends JFrame implements Serializable {
             server = new Server();
         }
         else if (multiplayer) {
-            client = new Client("127.0.0.1");
-        }
+            client = new Client("192.168.43.31");
+    }
         fpsHistory = new ArrayList<>(100);
         try {
             numOfHeavyBullets = ImageIO.read(new File("NumberOfHeavyBullets.png"));

@@ -67,6 +67,7 @@ public class Map implements Serializable{
         imagesOnMap.add(new ImageOnMap("cactus.png",22,130,false));
         imagesOnMap.add(new ImageOnMap("cactus.png",10,12,false));
         imagesOnMap.add(new ImageOnMap("cactus.png",30,120,false));
+        imagesOnMap.add(new ImageOnMap("endImage.png",33,Tile.numOfVerticalTiles - 20,false));
 
         pregnableWalls.add(new PregnableWall(Tile.numOfHorizontalTiles - 9,12));
         pregnableWalls.add(new PregnableWall(Tile.numOfHorizontalTiles - 6,12));
@@ -87,7 +88,7 @@ public class Map implements Serializable{
 
 
 
-        //prizes.add(new TankRepair(28,6));
+        prizes.add(new TankRepair(23,93));
         prizes.add(new CannonShell(Tile.numOfHorizontalTiles - 6,12));
         prizes.add(new MachineGunCartridge(23,70));
 
@@ -125,7 +126,7 @@ public class Map implements Serializable{
         }
 
         for (int i = 0; i < Tile.numOfHorizontalTiles; i++){
-            for (int j = Tile.numOfVerticalTiles - 2; j < Tile.numOfVerticalTiles;j++) {
+            for (int j = Tile.numOfVerticalTiles - 14; j < Tile.numOfVerticalTiles;j++) {
                 tiles[i][j] = new Tile (wall,true);
             }
         }
@@ -174,6 +175,12 @@ public class Map implements Serializable{
 
         for (int i = 24; i < Tile.numOfHorizontalTiles - 2; i++){
             for (int j = 93; j < 96;j++) {
+                tiles[i][j] = new Tile (wall,true);
+            }
+        }
+
+        for (int i = 25; i < Tile.numOfHorizontalTiles; i++){
+            for (int j = Tile.numOfVerticalTiles - 27; j < Tile.numOfVerticalTiles - 24;j++) {
                 tiles[i][j] = new Tile (wall,true);
             }
         }

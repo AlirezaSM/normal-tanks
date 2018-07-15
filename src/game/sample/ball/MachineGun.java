@@ -6,6 +6,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * another one of jtank enemies
+ */
+
 public class MachineGun extends Enemy {
 
     transient BufferedImage tankGun;

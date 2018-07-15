@@ -10,6 +10,12 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * another end point of socke;
+ * sever.
+ * other messengers are ecatly
+ */
+
 public class Server {
     ServerSocket ss = null;
     Socket server;

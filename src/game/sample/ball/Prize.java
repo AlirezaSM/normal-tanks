@@ -4,6 +4,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
+/**
+ * all the prizes of this game are extended form this class
+ */
+
 public class Prize extends ImageOnMap implements Serializable {
 
     public transient double angle = 0;

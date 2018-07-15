@@ -53,9 +53,9 @@ public class Menu extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
 
-        continueButton.setBounds(440, 145, 300, 80);
-        singlePlayerButton.setBounds(440, 255, 300, 80);
-        multiPlayerButtton.setBounds(440, 365, 300, 80);
+        continueButton.setBounds(440, 215, 300, 80);
+        singlePlayerButton.setBounds(440, 320, 300, 80);
+        multiPlayerButtton.setBounds(440, 430, 300, 80);
         easyLevelButtton.setBounds(440, 215, 300, 80);
         normalLevelButtton.setBounds(440, 320, 300, 80);
         hardLevelButtton.setBounds(440, 430, 300, 80);
@@ -122,6 +122,7 @@ public class Menu extends JFrame {
                 normalLevelButtton.setVisible(true);
                 hardLevelButtton.setVisible(true);
                 backButton.setVisible(true);
+                continueButton.setVisible(false);
 
                 multiplayer = false;
                 soundPlayer.menuClick();
@@ -137,6 +138,7 @@ public class Menu extends JFrame {
                 normalLevelButtton.setVisible(true);
                 hardLevelButtton.setVisible(true);
                 backButton.setVisible(true);
+                continueButton.setVisible(false);
 
                 multiplayer = true;
                 soundPlayer.menuClick();
@@ -206,6 +208,7 @@ public class Menu extends JFrame {
                     normalLevelButtton.setVisible(false);
                     hardLevelButtton.setVisible(false);
                     backButton.setVisible(false);
+                    continueButton.setVisible(true);
                 }else if(serverButton.isVisible()){
                     easyLevelButtton.setVisible(true);
                     normalLevelButtton.setVisible(true);

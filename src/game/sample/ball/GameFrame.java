@@ -46,9 +46,16 @@ public class GameFrame extends JFrame implements Serializable {
     transient BufferedImage health;
     static int numOfEnemies = 3;
     transient KhengEnemy me2 = new KhengEnemy(3,22);
-    transient AlienEnemy ae = new AlienEnemy(33,60);
+    transient AlienEnemy ae1 = new AlienEnemy(33,60);
+    transient AlienEnemy ae2 = new AlienEnemy(15,120);
     transient MachineGun mg1 = new MachineGun(15,70);
     transient MachineGun mg2 = new MachineGun(20,92);
+    transient MachineGun mg3 = new MachineGun(5,115);
+    transient MachineGun mg4 = new MachineGun(25,115);
+    transient Mine mine1 = new Mine(13,96);
+    transient Mine mine2 = new Mine(5,106);
+    transient Mine mine3 = new Mine(25,106);
+
     Mine m = new Mine(20,20);
     transient FileOutputStream fos;
     transient ObjectOutputStream oos;
@@ -166,9 +173,15 @@ public class GameFrame extends JFrame implements Serializable {
         });
 
         enemies.add(me2);
-        enemies.add(ae);
+        enemies.add(ae1);
+        enemies.add(ae2);
         enemies.add(mg1);
         enemies.add(mg2);
+        enemies.add(mg3);
+        enemies.add(mg4);
+        enemies.add(mine1);
+        enemies.add(mine2);
+        enemies.add(mine3);
         if (!Menu.continueGame)
             deleteSavedInfo();
     }
@@ -325,7 +338,7 @@ public class GameFrame extends JFrame implements Serializable {
             avg /= fpsHistory.size();
             String str = String.format("Average FPS = %.1f , Last Interval = %d ms,angle = %f, ae-health = %d,ke-health = %d, locX = %d, locY = %d,health = %d. direction = %d" +
                             "cameraY = %d",
-                    avg, (currentRender - lastRender), state.tankBodyAngle, ae.health,me2.health, mg1.locX, mg1.locY, state.mainTankHealth, state.tankDirection, state.cameraY);
+                    avg, (currentRender - lastRender), state.tankBodyAngle, ae1.health,me2.health, mg1.locX, mg1.locY, state.mainTankHealth, state.tankDirection, state.cameraY);
             g2d.setColor(Color.BLACK);
             g2d.setFont(g2d.getFont().deriveFont(18.0f));
             g2d.drawString(str, 10, 700);

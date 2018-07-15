@@ -67,7 +67,7 @@ public class Map implements Serializable{
         imagesOnMap.add(new ImageOnMap("cactus.png",22,130,false));
         imagesOnMap.add(new ImageOnMap("cactus.png",10,12,false));
         imagesOnMap.add(new ImageOnMap("cactus.png",30,120,false));
-        imagesOnMap.add(new ImageOnMap("endImage.png",33,Tile.numOfVerticalTiles - 20,false));
+        imagesOnMap.add(new EndingImage(33,Tile.numOfVerticalTiles - 20));
 
         pregnableWalls.add(new PregnableWall(Tile.numOfHorizontalTiles - 9,12));
         pregnableWalls.add(new PregnableWall(Tile.numOfHorizontalTiles - 6,12));
@@ -91,6 +91,7 @@ public class Map implements Serializable{
         prizes.add(new TankRepair(23,93));
         prizes.add(new CannonShell(Tile.numOfHorizontalTiles - 6,12));
         prizes.add(new MachineGunCartridge(23,70));
+        prizes.add(new GunUpdatePrize(19, 81));
 
         Random r = new Random();
 

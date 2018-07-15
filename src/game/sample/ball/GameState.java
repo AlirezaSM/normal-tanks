@@ -103,7 +103,7 @@ public class GameState implements Serializable {
 			aimY = mouseY;
 		}
 		if (keyUP) {
-		    if (Math.abs(tankCenterY - (diam)) > 100) {
+		    if (Math.abs(tankCenterY - (diam)) > 350) {
                 tankCenterY -= EACHMOVE;
             }
 		    else {

@@ -65,7 +65,7 @@ public class Map implements Serializable{
         imagesOnMap.add(new ImageOnMap("cactus.png",2,60,false));
         imagesOnMap.add(new ImageOnMap("cactus.png",5,45,false));
         imagesOnMap.add(new ImageOnMap("cactus.png",22,130,false));
-        imagesOnMap.add(new ImageOnMap("cactus.png",10,10,false));
+        imagesOnMap.add(new ImageOnMap("cactus.png",10,12,false));
         imagesOnMap.add(new ImageOnMap("cactus.png",30,120,false));
 
         pregnableWalls.add(new PregnableWall(Tile.numOfHorizontalTiles - 9,12));
@@ -74,6 +74,16 @@ public class Map implements Serializable{
         pregnableWalls.add(new PregnableWall(3,25));
         pregnableWalls.add(new PregnableWall(6,25));
         pregnableWalls.add(new PregnableWall(9,25));
+        pregnableWalls.add(new PregnableWall(9,21));
+        pregnableWalls.add(new PregnableWall(9,17));
+        pregnableWalls.add(new PregnableWall(15,47));
+        pregnableWalls.add(new PregnableWall(18,47));
+        pregnableWalls.add(new PregnableWall(121,47));
+        pregnableWalls.add(new PregnableWall(124,47));
+        pregnableWalls.add(new PregnableWall(14,93));
+        pregnableWalls.add(new PregnableWall(17,93));
+        pregnableWalls.add(new PregnableWall(20,93));
+        pregnableWalls.add(new PregnableWall(23,93));
 
 
 
@@ -128,6 +138,42 @@ public class Map implements Serializable{
 
         for (int i = 10; i < Tile.numOfHorizontalTiles; i++){
             for (int j = 24; j < 28;j++) {
+                tiles[i][j] = new Tile (wall,true);
+            }
+        }
+
+        for (int i = 10; i < 13; i++){
+            for (int j = 37; j < 67;j++) {
+                tiles[i][j] = new Tile (wall,true);
+            }
+        }
+
+        for (int i = 25; i < 28; i++){
+            for (int j = 37; j < 67;j++) {
+                tiles[i][j] = new Tile (wall,true);
+            }
+        }
+
+        for (int i = 2; i < 13; i++){
+            for (int j = 80; j < 83;j++) {
+                tiles[i][j] = new Tile (wall,true);
+            }
+        }
+
+        for (int i = 25; i < Tile.numOfHorizontalTiles - 2; i++){
+            for (int j = 80; j < 83;j++) {
+                tiles[i][j] = new Tile (wall,true);
+            }
+        }
+
+        for (int i = 2; i < 13; i++){
+            for (int j = 93; j < 96;j++) {
+                tiles[i][j] = new Tile (wall,true);
+            }
+        }
+
+        for (int i = 24; i < Tile.numOfHorizontalTiles - 2; i++){
+            for (int j = 93; j < 96;j++) {
                 tiles[i][j] = new Tile (wall,true);
             }
         }

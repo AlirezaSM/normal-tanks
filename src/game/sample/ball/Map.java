@@ -10,6 +10,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
+/**
+ * Map class which contains the
+ * order in which pictures, tiles
+ * and everything related to the
+ * game are shown
+ */
 
 public class Map implements Serializable{
     public transient static int soil = 1;
@@ -106,6 +112,12 @@ public class Map implements Serializable{
 
     }
 
+    /**
+     * this method is used to design how different tiles
+     * form a map together, put simply, design of the map
+     * is done here.
+     */
+
     public void designMap () {
 
         for (int i = Tile.numOfHorizontalTiles - 2; i < Tile.numOfHorizontalTiles; i++){
@@ -189,6 +201,13 @@ public class Map implements Serializable{
 
     }
 
+    /**
+     * this method draw all the images and prizes and tiles
+     * and every thing related to map
+     * @param g2d
+     * @param startingY
+     * @param state
+     */
     public void drawMap (Graphics2D g2d,int startingY, GameState state) {
 
         long time1 = System.currentTimeMillis();

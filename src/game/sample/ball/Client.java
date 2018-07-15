@@ -9,6 +9,10 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * this is the client part of
+ * socket programming
+ */
 public class Client {
     Socket client;
     ObjectOutputStream oos;
@@ -24,7 +28,10 @@ public class Client {
         }
     }
 
-
+    /**
+     * sends pregnable walls
+     * @param map
+     */
     public void networkWritePregnableWallsAndPrizes(Map map) {
         try {
             oos.flush();
@@ -35,6 +42,10 @@ public class Client {
         }
     }
 
+    /**
+     * sends enemies
+     * @param enemies
+     */
     public void networkWriteEnemies(LinkedList<Enemy> enemies) {
         try {
             oos.flush();
@@ -44,6 +55,11 @@ public class Client {
             e.printStackTrace();
         }
     }
+
+    /**
+     * send tank state frame by frame
+     * @param state
+     */
 
     public void networkWriteState(GameState state) {
         try {
@@ -56,6 +72,11 @@ public class Client {
         }
     }
 
+    /**
+     * sends bullets
+     * @param bullet
+     */
+
     public void networkWriteBullet(Bullet bullet) {
         try {
             oos.flush();
@@ -66,6 +87,16 @@ public class Client {
         }
     }
 
+    /**
+     * this method would do required things with
+     * the information which is sent at the other
+     * end of the network
+     *
+     * @param map
+     * @param player2state
+     * @param frame
+     * @param g2d
+     */
     public void getAndProcessInfo (Map map, Player2Tank player2state, GameFrame frame, Graphics2D g2d) {
         try {
 

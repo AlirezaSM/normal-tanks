@@ -9,6 +9,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * all the enemies which are made in this
+ * game are a subclass of this class which is
+ * predictably called enemy
+ */
+
 public class Enemy implements Serializable {
     transient BufferedImage enemyImg;
     // speed is tile per frame
@@ -67,10 +73,21 @@ public class Enemy implements Serializable {
         this.explodeInCollisions = explodeInCollisions;
     }
 
+    /**
+     * checks if the enemy needs to start acting
+     * @param state
+     */
+
     public void checkTriggered(GameState state) {
         if (Math.abs(state.tankCenterTileY - centerTileY) < 30)
             triggered = true;
     }
+
+    /**
+     * draw the enemy
+     * @param g2d
+     * @param state
+     */
 
     public void draw(Graphics2D g2d,GameState state) {
         if (alive) {
@@ -79,6 +96,14 @@ public class Enemy implements Serializable {
         }
     }
 
+    /**
+     * it first would calculate the angle and then
+     * move it in that direction
+     * @param g2d
+     * @param imgs
+     * @param state
+     * @param frame
+     */
     public void move(Graphics2D g2d, ArrayList<PregnableWall> imgs,GameState state , GameFrame frame) {
         if (triggered && alive) {
             movingAngle = Math.atan2((locY - state.tankCenterY), (locX - state.tankCenterX));
@@ -91,6 +116,11 @@ public class Enemy implements Serializable {
         }
     }
 
+    /**
+     * makes a new instance of bullet class
+     * @param frame
+     */
+
     public void firingBullet(GameFrame frame) {
         Random r = new Random();
         if (r.nextInt((int) (60 / firingSpeed)) == 1) {
@@ -99,6 +129,10 @@ public class Enemy implements Serializable {
             frame.bullets.add(new EnemyBullet(currentFiringLocX, currentFiringLocY, movingAngle, true));
         }
     }
+
+    /**
+     * determine which direction the enemy is going
+     */
 
     public void updateDirection() {
         if ((movingAngle > 0 && movingAngle < 0.7853) || (movingAngle < 0 && movingAngle > -0.7853))
@@ -111,6 +145,13 @@ public class Enemy implements Serializable {
             enemyDirection = DOWN;
     }
 
+    /**
+     * checks if a enemy collide with obstacles and return true
+     * if it's right.
+     * @param imageObstacles
+     * @param state
+     * @return
+     */
     public boolean collisioned(ArrayList<PregnableWall> imageObstacles,GameState state) {
         int tileX = (int) centerTileX + (enemyWidth / 32);
         int tileY = (int) centerTileY - (enemyHeight / 24);
@@ -148,6 +189,14 @@ public class Enemy implements Serializable {
         return false;
     }
 
+    /**
+     * if there is an obstacle in the
+     * way of your enemies
+     * your enemies would try to escape
+     * @param obstacleImages
+     * @param g2d
+     * @param state
+     */
     public void escapeFromObstacles(ArrayList<PregnableWall> obstacleImages, Graphics2D g2d, GameState state) {
         int countR = 0;
         int countL = 0;
@@ -194,7 +243,10 @@ public class Enemy implements Serializable {
         }
     }
 
-
+    /**
+     * each frame, this method updates tank location
+     * @param state
+     */
 
     public void updateLocs (GameState state) {
         startTile = state.cameraY / Tile.tileHeight;
@@ -202,6 +254,9 @@ public class Enemy implements Serializable {
         locY = (int) (Map.screenHeight - (centerTileY - startTile) * Tile.tileHeight) + (enemyHeight / 2);
     }
 
+    /**
+     * updates the rectangle
+     */
     public void updateRectangles () {
         enemyRectangle = new Rectangle(locX,locY,enemyWidth,enemyHeight);
     }

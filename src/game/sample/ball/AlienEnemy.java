@@ -1,5 +1,9 @@
 package game.sample.ball;
 
+/**
+ * a kind of enemy named alien
+ */
+
 public class AlienEnemy extends Enemy {
     public AlienEnemy(int tileX, int tileY) {
         super("AlienEnemy.png", tileX, tileY, 0.1

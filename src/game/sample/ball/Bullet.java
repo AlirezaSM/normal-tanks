@@ -9,6 +9,12 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * this is the class representing a bullet
+ *
+ * @since 6/15
+ */
+
 public class Bullet implements Serializable {
     transient BufferedImage bulletImg;
     static transient BufferedImage bulletExplodedImg;
@@ -37,6 +43,11 @@ public class Bullet implements Serializable {
         removed = false;
     }
 
+    /**
+     * this method would change the location of a bullet
+     * @param isEnemy if it's enemy or not
+     */
+
     public void moveBullet (boolean isEnemy) {
         if (! removed && !isEnemy) {
             bulletCenterLocX = (int) (bulletCenterLocX + bulletSpeed * Math.cos(bulletAngle));
@@ -49,12 +60,20 @@ public class Bullet implements Serializable {
 
     }
 
-
+    /**
+     * draw a bullet
+     * @param g2d Graphics!
+     */
 
     public void draw (Graphics2D g2d) {
         g2d.drawImage(GameFrame.rotatePic(bulletImg, bulletAngle), bulletCenterLocX, bulletCenterLocY, null);
     }
 
+    /**
+     * checks if bullet collide with something like an obstacle
+     * @param g2d graphics
+     * @param state state
+     */
     public void checkForBulletCollision (Graphics2D g2d, GameState state) {
         int startTile = state.cameraY / Tile.tileHeight  ;
         int bulletTileX = (int) (bulletCenterLocX / Tile.tileWidth);

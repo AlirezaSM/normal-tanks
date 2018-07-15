@@ -1,5 +1,8 @@
 package game.sample.ball;
 
+/**
+ * one of the prizes, it fills heavy bullet capacity
+ */
 public class CannonShell extends Prize {
 
     public CannonShell(double centerTileX, double centerTileY) {

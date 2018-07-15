@@ -19,7 +19,7 @@ public class GameState implements Serializable {
 	public double tankCenterTileX, tankCenterTileY;
 	public transient int aimX, aimY, diam, tankDirection;
 	public int tankCenterX,tankCenterY;
-	public transient static boolean gameOver,paused;
+	public transient static boolean gameOver,paused, won;
 	public static int cameraY;
 	public int cameraY2;
 	public double tankBodyAngle,tankGunAngle;
@@ -103,7 +103,7 @@ public class GameState implements Serializable {
 			aimY = mouseY;
 		}
 		if (keyUP) {
-		    if (Math.abs(tankCenterY - (diam)) > 100) {
+		    if (Math.abs(tankCenterY - (diam)) > 200) {
                 tankCenterY -= EACHMOVE;
             }
 		    else {

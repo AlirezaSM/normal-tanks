@@ -167,7 +167,8 @@ public class GameFrame extends JFrame implements Serializable {
         enemies.add(me2);
         enemies.add(ae);
         enemies.add(mg);
-        enemies.add(m);
+        if (!Menu.continueGame)
+            deleteSavedInfo();
     }
 
     /**
@@ -329,8 +330,16 @@ public class GameFrame extends JFrame implements Serializable {
         }
         lastRender = currentRender;
         // Draw GAME OVER
-        if (state.gameOver) {
+        if (state.gameOver && !state.won) {
             String str = "GAME OVER";
+            g2d.setColor(Color.WHITE);
+            g2d.setFont(g2d.getFont().deriveFont(Font.BOLD).deriveFont(64.0f));
+            int strWidth = g2d.getFontMetrics().stringWidth(str);
+            g2d.drawString(str, (GAME_WIDTH - strWidth) / 2, GAME_HEIGHT / 2);
+        }
+
+        if (state.won) {
+            String str = "You Won";
             g2d.setColor(Color.WHITE);
             g2d.setFont(g2d.getFont().deriveFont(Font.BOLD).deriveFont(64.0f));
             int strWidth = g2d.getFontMetrics().stringWidth(str);
@@ -514,6 +523,15 @@ public class GameFrame extends JFrame implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void deleteSavedInfo () {
+        File f1 = new File("enemies.jtank");
+        File f2 = new File("state.jtank");
+        File f3 = new File("map.jtank");
+        f1.delete();
+        f2.delete();
+        f3.delete();
     }
 
     public void deserializeAndUpdate (String fileName) {

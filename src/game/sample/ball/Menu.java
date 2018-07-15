@@ -18,6 +18,7 @@ public class Menu extends JFrame {
     public static final int GAME_WIDTH = 16 * GAME_HEIGHT / 9;  // wide aspect ratio
 
     //Buttons.
+    private JButton continueButton = new JButton(new ImageIcon(".\\menuIcons\\continueButtonIcon.png"));
     private JButton singlePlayerButton = new JButton(new ImageIcon(".\\menuIcons\\singlePlayerButtonIcon.png"));
     private JButton multiPlayerButtton = new JButton(new ImageIcon(".\\menuIcons\\multiplayerButtonIcon.png"));
     private JButton easyLevelButtton = new JButton(new ImageIcon(".\\menuIcons\\easyButtonIcon.png"));
@@ -32,8 +33,9 @@ public class Menu extends JFrame {
 
     //String of game mode and level.
     public static boolean multiplayer = false;
-    public static String gameLevel;
+    public static String gameLevel = "normal";
     public static boolean server = false;
+    public static boolean continueGame = false;
 
     //Soundplayer of menu.
     public SoundPlayer soundPlayer;
@@ -54,7 +56,7 @@ public class Menu extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
 
-
+        continueButton.setBounds(440, 145, 300, 80);
         singlePlayerButton.setBounds(440, 255, 300, 80);
         multiPlayerButtton.setBounds(440, 365, 300, 80);
         easyLevelButtton.setBounds(440, 215, 300, 80);
@@ -65,6 +67,7 @@ public class Menu extends JFrame {
         serverButton.setBounds(440, 255, 300, 80);
         clientButton.setBounds(440, 365, 300, 80);
 
+        continueButton.setContentAreaFilled(false);
         singlePlayerButton.setContentAreaFilled(false);
         multiPlayerButtton.setContentAreaFilled(false);
         easyLevelButtton.setContentAreaFilled(false);
@@ -74,6 +77,7 @@ public class Menu extends JFrame {
         serverButton.setContentAreaFilled(false);
         clientButton.setContentAreaFilled(false);
 
+        continueButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         singlePlayerButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         multiPlayerButtton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         easyLevelButtton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -90,6 +94,7 @@ public class Menu extends JFrame {
         serverButton.setVisible(false);
         clientButton.setVisible(false);
 
+        add(continueButton);
         add(singlePlayerButton);
         add(multiPlayerButtton);
         add(easyLevelButtton);
@@ -102,6 +107,15 @@ public class Menu extends JFrame {
 
 
         //ActionListener of buttons.
+        continueButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                continueGame = true;
+                playGame();
+                soundPlayer.menuClick();
+            }
+        });
+
         singlePlayerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -222,6 +236,15 @@ public class Menu extends JFrame {
         });
 
         //MouseListener(Entered) of buttons.
+        continueButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                continueButton.setIcon(new ImageIcon(".\\menuIcons\\continueButtonEnteredIcon"));
+                soundPlayer.menuEntered();
+            }
+        });
+
         singlePlayerButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {

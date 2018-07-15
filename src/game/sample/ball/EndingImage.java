@@ -8,7 +8,8 @@ public class EndingImage extends ImageOnMap {
     @Override
     public void checkForCollisions(GameState state) {
         if (state.mainTankRectangle.intersects(imgRectangle)) {
-            state.gameOver = true;
+            GameState.won = true;
+            GameState.gameOver = true;
         }
     }
 }

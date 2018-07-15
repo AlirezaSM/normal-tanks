@@ -42,17 +42,6 @@ public class Map implements Serializable{
 
     public Map() {
         try {
-
-
-
-
-
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
             soilImg = ImageIO.read(new File("soil.png"));
             plantImg = ImageIO.read(new File("plant.png"));
             wallImg = ImageIO.read(new File("wall.png"));
@@ -76,25 +65,30 @@ public class Map implements Serializable{
         imagesOnMap.add(new ImageOnMap("cactus.png",2,60,false));
         imagesOnMap.add(new ImageOnMap("cactus.png",5,45,false));
         imagesOnMap.add(new ImageOnMap("cactus.png",22,130,false));
-        imagesOnMap.add(new ImageOnMap("cactus.png",10,10,false));
+        imagesOnMap.add(new ImageOnMap("cactus.png",10,12,false));
         imagesOnMap.add(new ImageOnMap("cactus.png",30,120,false));
 
-        pregnableWalls.add(new PregnableWall(28,2));
-        pregnableWalls.add(new PregnableWall(28,6));
-        pregnableWalls.add(new PregnableWall(28,10));
-        pregnableWalls.add(new PregnableWall(15,30));
-        pregnableWalls.add(new PregnableWall(18,30));
-        pregnableWalls.add(new PregnableWall(21,30));
-        pregnableWalls.add(new PregnableWall(24,30));
-        pregnableWalls.add(new PregnableWall(15,34));
-        pregnableWalls.add(new PregnableWall(18,34));
-        pregnableWalls.add(new PregnableWall(21,34));
-        pregnableWalls.add(new PregnableWall(24,34));
+        pregnableWalls.add(new PregnableWall(Tile.numOfHorizontalTiles - 9,12));
+        pregnableWalls.add(new PregnableWall(Tile.numOfHorizontalTiles - 6,12));
+        pregnableWalls.add(new PregnableWall(Tile.numOfHorizontalTiles - 3,12));
+        pregnableWalls.add(new PregnableWall(3,25));
+        pregnableWalls.add(new PregnableWall(6,25));
+        pregnableWalls.add(new PregnableWall(9,25));
+        pregnableWalls.add(new PregnableWall(9,21));
+        pregnableWalls.add(new PregnableWall(9,17));
+        pregnableWalls.add(new PregnableWall(15,47));
+        pregnableWalls.add(new PregnableWall(18,47));
+        pregnableWalls.add(new PregnableWall(121,47));
+        pregnableWalls.add(new PregnableWall(124,47));
+        pregnableWalls.add(new PregnableWall(14,93));
+        pregnableWalls.add(new PregnableWall(17,93));
+        pregnableWalls.add(new PregnableWall(20,93));
+        pregnableWalls.add(new PregnableWall(23,93));
 
 
 
-        prizes.add(new TankRepair(15,15));
-        prizes.add(new CannonShell(35,5));
+        //prizes.add(new TankRepair(28,6));
+        prizes.add(new CannonShell(Tile.numOfHorizontalTiles - 6,12));
         prizes.add(new MachineGunCartridge(23,70));
 
         Random r = new Random();
@@ -112,18 +106,77 @@ public class Map implements Serializable{
 
     public void designMap () {
 
-        for (int i = 30; i < 33; i++){
-            for (int j = 20; j < Tile.numOfVerticalTiles;j++) {
+        for (int i = Tile.numOfHorizontalTiles - 2; i < Tile.numOfHorizontalTiles; i++){
+            for (int j = 0; j < Tile.numOfVerticalTiles;j++) {
                 tiles[i][j] = new Tile (wall,true);
             }
         }
 
-        for (int i = 20; i < 25; i++){
-            for (int j = 50; j < 52;j++) {
+        for (int i = 0; i < 2; i++){
+            for (int j = 0; j < Tile.numOfVerticalTiles;j++) {
                 tiles[i][j] = new Tile (wall,true);
             }
         }
 
+        for (int i = 0; i < Tile.numOfHorizontalTiles; i++){
+            for (int j = 0; j < 3;j++) {
+                tiles[i][j] = new Tile (wall,true);
+            }
+        }
+
+        for (int i = 0; i < Tile.numOfHorizontalTiles; i++){
+            for (int j = Tile.numOfVerticalTiles - 2; j < Tile.numOfVerticalTiles;j++) {
+                tiles[i][j] = new Tile (wall,true);
+            }
+        }
+
+        for (int i = 0; i < Tile.numOfHorizontalTiles - 10; i++){
+            for (int j = 11; j < 15;j++) {
+                tiles[i][j] = new Tile (wall,true);
+            }
+        }
+
+        for (int i = 10; i < Tile.numOfHorizontalTiles; i++){
+            for (int j = 24; j < 28;j++) {
+                tiles[i][j] = new Tile (wall,true);
+            }
+        }
+
+        for (int i = 10; i < 13; i++){
+            for (int j = 37; j < 67;j++) {
+                tiles[i][j] = new Tile (wall,true);
+            }
+        }
+
+        for (int i = 25; i < 28; i++){
+            for (int j = 37; j < 67;j++) {
+                tiles[i][j] = new Tile (wall,true);
+            }
+        }
+
+        for (int i = 2; i < 13; i++){
+            for (int j = 80; j < 83;j++) {
+                tiles[i][j] = new Tile (wall,true);
+            }
+        }
+
+        for (int i = 25; i < Tile.numOfHorizontalTiles - 2; i++){
+            for (int j = 80; j < 83;j++) {
+                tiles[i][j] = new Tile (wall,true);
+            }
+        }
+
+        for (int i = 2; i < 13; i++){
+            for (int j = 93; j < 96;j++) {
+                tiles[i][j] = new Tile (wall,true);
+            }
+        }
+
+        for (int i = 24; i < Tile.numOfHorizontalTiles - 2; i++){
+            for (int j = 93; j < 96;j++) {
+                tiles[i][j] = new Tile (wall,true);
+            }
+        }
 
 
     }
@@ -134,7 +187,7 @@ public class Map implements Serializable{
 
         for (int i = 0; i < Tile.numOfHorizontalTiles; i++) {
             if (startingY / Tile.tileHeight >= 0) {
-                for (int j = startingY / Tile.tileHeight; j < ((startingY / Tile.tileHeight) + (Tile.numOfVerticalTiles / 5)); j++) {
+                for (int j = startingY / Tile.tileHeight; j < ((startingY / Tile.tileHeight) + (Tile.numOfVerticalTiles / Map.numOfVerticalScreens)); j++) {
                     int tileImg = tiles[i][j].getImgNum();
                     g2d.drawImage(mapImages.get(tileImg), i * Tile.tileWidth, screenHeight - (j - startingY / Tile.tileHeight) * Tile.tileHeight, null);
                 }
@@ -145,14 +198,15 @@ public class Map implements Serializable{
             imagesOnMap.get(i).draw(g2d, state);
         }
 
-        for (int i = 0; i < pregnableWalls.size();i++) {
-            pregnableWalls.get(i).draw(g2d, state);
-        }
-
         for (int i = 0; i < prizes.size();i++) {
             prizes.get(i).draw(g2d,state);
             prizes.get(i).checkCollisionWithTank(state,this);
         }
+
+        for (int i = 0; i < pregnableWalls.size();i++) {
+            pregnableWalls.get(i).draw(g2d, state);
+        }
+
 
     }
 

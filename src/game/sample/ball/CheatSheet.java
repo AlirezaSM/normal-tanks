@@ -20,13 +20,13 @@ public class CheatSheet extends JFrame {
         jb.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (e.getActionCommand().equalsIgnoreCase("health")) {
+                if (jtf.getText().equalsIgnoreCase("health")) {
                     state.mainTankHealth+= 300;
                 }
-                else if (e.getActionCommand().equalsIgnoreCase("cannon")) {
+                else if (jtf.getText().equalsIgnoreCase("cannon")) {
                     state.numOfHeavyBullets+= 100;
                 }
-                else if (e.getActionCommand().equalsIgnoreCase("machineGun")) {
+                else if (jtf.getText().equalsIgnoreCase("machineGun")) {
                     state.numOfMachineGunBullets+= 1000;
                 }
                 dispose();

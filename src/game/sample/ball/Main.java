@@ -1,7 +1,7 @@
 /*** In The Name of Allah ***/
 package game.sample.ball;
 
-import java.awt.EventQueue;
+import java.awt.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import javax.swing.JFrame;

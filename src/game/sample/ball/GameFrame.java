@@ -45,9 +45,10 @@ public class GameFrame extends JFrame implements Serializable {
     transient BufferedImage numOfMachineGunBullets;
     transient BufferedImage health;
     static int numOfEnemies = 3;
-    transient KhengEnemy me2 = new KhengEnemy(20,40);
-    transient AlienEnemy ae = new AlienEnemy(33,5);
-    transient MachineGun mg = new MachineGun(15,70);
+    transient KhengEnemy me2 = new KhengEnemy(3,22);
+    transient AlienEnemy ae = new AlienEnemy(33,60);
+    transient MachineGun mg1 = new MachineGun(15,70);
+    transient MachineGun mg2 = new MachineGun(20,92);
     Mine m = new Mine(20,20);
     transient FileOutputStream fos;
     transient ObjectOutputStream oos;
@@ -166,7 +167,8 @@ public class GameFrame extends JFrame implements Serializable {
 
         enemies.add(me2);
         enemies.add(ae);
-        enemies.add(mg);
+        enemies.add(mg1);
+        enemies.add(mg2);
         if (!Menu.continueGame)
             deleteSavedInfo();
     }
@@ -323,7 +325,7 @@ public class GameFrame extends JFrame implements Serializable {
             avg /= fpsHistory.size();
             String str = String.format("Average FPS = %.1f , Last Interval = %d ms,angle = %f, ae-health = %d,ke-health = %d, locX = %d, locY = %d,health = %d. direction = %d" +
                             "cameraY = %d",
-                    avg, (currentRender - lastRender), state.tankBodyAngle, ae.health,me2.health, mg.locX, mg.locY, state.mainTankHealth, state.tankDirection, state.cameraY);
+                    avg, (currentRender - lastRender), state.tankBodyAngle, ae.health,me2.health, mg1.locX, mg1.locY, state.mainTankHealth, state.tankDirection, state.cameraY);
             g2d.setColor(Color.BLACK);
             g2d.setFont(g2d.getFont().deriveFont(18.0f));
             g2d.drawString(str, 10, 700);

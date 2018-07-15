@@ -237,7 +237,7 @@ public class Menu extends JFrame {
             @Override
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
-                continueButton.setIcon(new ImageIcon(".\\menuIcons\\continueButtonEnteredIcon"));
+                continueButton.setIcon(new ImageIcon(".\\menuIcons\\continueButtonEnteredIcon.png"));
                 soundPlayer.menuEntered();
             }
         });
@@ -315,6 +315,14 @@ public class Menu extends JFrame {
         });
 
         //MouseListener(Exited) of buttons.
+        continueButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                continueButton.setIcon(new ImageIcon(".\\menuIcons\\continueButtonIcon.png"));
+            }
+        });
+
         singlePlayerButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {

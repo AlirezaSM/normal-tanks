@@ -5,6 +5,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * this is our favorite component
+ * it's used to cheat
+ *
+ */
+
 public class CheatSheet extends JFrame {
     JTextField jtf = new JTextField(30);
     JButton jb = new JButton("Cheat And Chill!");

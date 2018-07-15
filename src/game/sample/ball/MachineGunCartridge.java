@@ -1,5 +1,10 @@
 package game.sample.ball;
 
+/**
+ *  a prize which fill your machine gun
+ *  bullets
+ */
+
 public class MachineGunCartridge extends Prize {
     public MachineGunCartridge(double centerTileX, double centerTileY) {
         super("machineGunCartridge.png", centerTileX, centerTileY);

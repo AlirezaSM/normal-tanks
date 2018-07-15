@@ -8,6 +8,12 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
+/**
+ * this is the starting menu of the program,
+ * from here user choose difficulty and mode of
+ * the game
+ */
+
 public class Menu extends JFrame {
 
     //Menu frame height and width.

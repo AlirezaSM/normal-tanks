@@ -253,6 +253,12 @@ public class GameState implements Serializable {
 
     }
 
+    /**
+     * this is the method which determine
+     * the angle of tank body
+     * @param orientation
+     */
+
     public void changeTankBodyAngle (String orientation) {
 	    double firstQuarter = 1.570796;
 	    double secondQuarter = 3.141592;
@@ -305,6 +311,10 @@ public class GameState implements Serializable {
 
     }
 
+    /**
+     * this method checks if the main tank collides
+     * with tiles which are obstacle
+     */
     public void checkForMainTankCollision () {
         int startTile = cameraY / Tile.tileHeight  ;
         int endTile = startTile + (Tile.numOfVerticalTiles / Map.numOfVerticalScreens);

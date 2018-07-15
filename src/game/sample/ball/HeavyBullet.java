@@ -4,6 +4,10 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * a type of bullet aka cannon
+ * it has higher damaging power
+ */
 public class HeavyBullet extends Bullet {
 
     public static transient int damagingPower = 50;

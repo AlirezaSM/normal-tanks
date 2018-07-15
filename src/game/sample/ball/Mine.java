@@ -1,6 +1,12 @@
 package game.sample.ball;
 
 public class Mine extends Enemy {
+    /**
+     * another enemy
+     * a mine!
+     * @param tileX
+     * @param tileY
+     */
     public Mine(int tileX, int tileY) {
         super("mine.png", tileX, tileY, 0
                 , 0, 100, 0,0,0, true);

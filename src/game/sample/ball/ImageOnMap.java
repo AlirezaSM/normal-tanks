@@ -7,6 +7,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 
+/**
+ * one way of designing maps is
+ * adding images to them
+ *
+ */
+
 public class ImageOnMap implements Serializable {
     transient BufferedImage img;
     double centerTileX;
@@ -38,11 +44,21 @@ public class ImageOnMap implements Serializable {
         this.obstacle = obstacle;
     }
 
+    /**
+     * it draws the picture
+     * @param g2d
+     * @param state
+     */
     public void draw (Graphics2D g2d, GameState state) {
         updateLocs(state);
         checkForCollisions(state);
         g2d.drawImage(img, locX, locY, null);
     }
+
+    /**
+     * updates location of
+     * @param state
+     */
 
     public void updateLocs (GameState state) {
         startTile = state.cameraY / Tile.tileHeight;

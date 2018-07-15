@@ -4,9 +4,20 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.io.File;
 
+/**
+ * this class is for playing
+ * all the sounds throughout
+ * this game
+ */
+
 public class SoundPlayer {
     public static Clip clip;
 
+
+    /**
+     * this method would play songs
+     * @param sound
+     */
     public static void play(File sound){
         try{
             clip = AudioSystem.getClip();

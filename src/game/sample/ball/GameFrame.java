@@ -121,6 +121,9 @@ public class GameFrame extends JFrame implements Serializable {
          *  firing a bullet with left click
          */
 
+        /**
+         * this mouse listener is used to fire bullets
+         */
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -363,6 +366,12 @@ public class GameFrame extends JFrame implements Serializable {
 
     }
 
+    /**
+     * this static would get a img and rotate it
+     * @param img
+     * @param angle
+     * @return
+     */
     public static BufferedImage rotatePic(BufferedImage img, double angle) {
         double locationX = img.getWidth() / 2;
         double locationY = img.getHeight() / 2;
@@ -370,6 +379,13 @@ public class GameFrame extends JFrame implements Serializable {
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
         return op.filter(img, null);
     }
+
+    /**
+     * this method updates where bullets are
+     * and if they should be sent through
+     * network
+     * @param g2d
+     */
 
     public void updateBulletsState(Graphics2D g2d) {
         for (int i = 0; i < bullets.size(); i++) {
@@ -384,6 +400,11 @@ public class GameFrame extends JFrame implements Serializable {
 
     }
 
+    /**
+     * updating enemies
+     * @param enemies
+     */
+
     public void updateEnemiesState (LinkedList <Enemy> enemies) {
         for (int i = 0; i < enemies.size(); i++) {
             enemies.get(i).updateRectangles();
@@ -392,10 +413,19 @@ public class GameFrame extends JFrame implements Serializable {
         }
     }
 
+    /**
+     * checks if game is over
+     */
+
     public void checkIfGameIsOver () {
         if (state.mainTankHealth <= 0)
             state.gameOver = true;
     }
+
+    /**
+     * updates where prizes are if it's
+     * needed to send info on network
+     */
 
     public void updatePrizes () {
         if (multiplayer) {
@@ -411,6 +441,16 @@ public class GameFrame extends JFrame implements Serializable {
             }
         }
     }
+
+    /**
+     * checks collision between different objects
+     * in this game and would chnage their health
+     * or send some date on the net
+     * @param g2d
+     * @param enemies
+     * @param bullets
+     * @param map
+     */
 
     public void updateHealth(Graphics2D g2d, LinkedList<Enemy> enemies, ArrayList<Bullet> bullets,Map map) {
         for (int j = 0; j < bullets.size(); j++) {
@@ -528,6 +568,11 @@ public class GameFrame extends JFrame implements Serializable {
         }
     }
 
+    /**
+     * serialize and save it in files.
+     * @param ar
+     * @param fileName
+     */
     public void serializeAndSave (LinkedList ar,String fileName) {
         try {
             fos = new FileOutputStream(new File(fileName));
@@ -540,6 +585,9 @@ public class GameFrame extends JFrame implements Serializable {
         }
     }
 
+    /**
+     * delete saved files
+     */
     public void deleteSavedInfo () {
         File f1 = new File("enemies.jtank");
         File f2 = new File("state.jtank");
@@ -549,6 +597,10 @@ public class GameFrame extends JFrame implements Serializable {
         f3.delete();
     }
 
+    /**
+     * deserialize and update
+     * @param fileName
+     */
     public void deserializeAndUpdate (String fileName) {
         try {
             fis = new FileInputStream(new File(fileName));

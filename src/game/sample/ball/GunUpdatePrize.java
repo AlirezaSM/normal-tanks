@@ -1,5 +1,11 @@
 package game.sample.ball;
 
+/**
+ * this is another one of prizes which
+ * you can find them if you have patience
+ *
+ */
+
 public class GunUpdatePrize extends Prize {
     public GunUpdatePrize( double centerTileX, double centerTileY) {
         super("redstar.png", centerTileX, centerTileY);

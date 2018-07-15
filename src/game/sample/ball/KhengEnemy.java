@@ -1,5 +1,9 @@
 package game.sample.ball;
 
+/**
+ * one type of enemies which are in this
+ * game
+ */
 public class KhengEnemy extends Enemy {
     public KhengEnemy(int tileX, int tileY) {
         super("constantEnemy.png", tileX, tileY,

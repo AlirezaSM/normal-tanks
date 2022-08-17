@@ -7,3 +7,9 @@ This project is a simple implementation of the <a href="https://www.ign.com/arti
 - Network based multiplayer
 
 ## Screenshots
+| ![screenshot_1](/screenshot_1.png) | ![screenshot_2](/screenshot_2.png) |
+| --- | --- |
+
+## Contributors
+- <a href="https://gitlab.com/mahdighajary" target="_blank">Mahdi Ghajary</a>
+
